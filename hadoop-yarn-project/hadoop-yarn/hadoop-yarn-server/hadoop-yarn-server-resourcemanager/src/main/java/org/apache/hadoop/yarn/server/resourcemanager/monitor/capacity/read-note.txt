@@ -1,0 +1,13 @@
+TempQueue.offer: 1.absMaxCapIdealAssignedDelta：最大可能分配的 - 理想状态下分配的，包括CPU和内存，如果最大的满足不了，就当成0.
+                 2.possibleAccepted：（1）先计算A=（现有的+等待的）；（2）A - 理想状态下分配的，与1.中计算出的 absMaxCapIdealAssignedDelta，还有实际可获得的（avail） 取最小的包括CPU和内存）
+                 3.finalAccepted = clone（2.possibleAccepted）
+                 4. （1）如果最紧张的资源是CPU：没有可用的CPU，那就停止分配，把3.中计算结果的内存置为0；同时为了避免占用别人的内存，计算现有的-理想分配的，如果计算结果大于0且小于2.中计算的结果，这个就是最终可接受的分配了
+                                                有可用的CPU的话，按照需求中内存和CPU的比例算一下内存作为最终的分配结果。
+                    （2）如果最紧张的资源是内存，同理的。
+TempQueue的比较：idealAssigned/guaranteed， 按照最紧缺的资源来做除法，作为比较用的数值。
+
+computeIdealResourceDistribution：qAlloc跟踪当前活跃的队列，unassigned记录当前还有多少资源没有被分配，把queues分成两类，一类是容量保证为0的，一类是不为0的。
+                                  根据容量保证是否为0来分别计算FixpointAllocation（不懂什么是不动点分配，但似乎就是理想分配）
+                                  如果仍有未分配的资源：检查queues中的每一个队列，对于那些被抢占了的队列，可以把这些未分配的资源分配给它，让其恢复
+                                  根据理想的分配情况和当前的分配情况，可以判断到底有多少资源是允许被抢占的，也就是当前的减去理想的
+                                  特殊的情况是，可能在某一个队列上，我们需要回收的资源（似乎是一个步长？）可能超过了这个队列允许回收的资源，这种时候就要按比例缩小我们需要回收的资源。
