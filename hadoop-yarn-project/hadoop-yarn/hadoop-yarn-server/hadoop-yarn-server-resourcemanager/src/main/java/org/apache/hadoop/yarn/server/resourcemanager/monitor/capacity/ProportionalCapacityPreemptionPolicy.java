@@ -256,16 +256,16 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 
 		// compute the ideal distribution of resources among queues
 		// updates cloned queues state accordingly
-		tRoot.idealAssigned = tRoot.guaranteed; //先把它当成容量保证来算，这是不抢占的情况下能获得的最大容量
+		tRoot.idealAssigned = tRoot.guaranteed;
 		Resource totalPreemptionAllowed = Resources.multiply(clusterResources,
-			percentageClusterPreemptionAllowed);
+			percentageClusterPreemptionAllowed); // 允许抢占的资源
 		List<TempQueue> queues =
-			recursivelyComputeIdealAssignment(tRoot, totalPreemptionAllowed); //计算理想状态下的分配
+			recursivelyComputeIdealAssignment(tRoot, totalPreemptionAllowed); //计算理想状态下每个app的分配
 
 		// based on ideal allocation select containers to be preempted from each
 		// queue and each application
 		Map<ApplicationAttemptId, Map<RMContainer, Resource>> toPreempt =
-			getContainersToPreempt(queues, clusterResources); // 这一步就是对每个应用要计算抢占的资源了
+			getContainersToPreempt(queues, clusterResources); // 对每个应用里的容器们计算抢占的资源
 
 		LOG.info("toPreempt size: " + toPreempt.size());
 
@@ -313,7 +313,7 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 
 				} else {
 					// 没到等待时间就继续等，维持让它保存上下文的状态，也就是PREEMPT_CONTAINER事件；
-					// 如果是发现这个容器没在被抢占的呃队列里，那就把它加进去，开始抢占它的资源
+					// 如果是发现这个容器没在被抢占呃队列里，那就把它加进去，开始抢占它的资源
 					if (isTest) {
 						dispatcher.handle(new ContainerPreemptEvent(e.getKey(), container,
 							ContainerPreemptEventType.SUSPEND_CONTAINER, resource));
@@ -687,9 +687,9 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 		List<TempQueue> queues, Resource clusterResource) {
 
 		Map<ApplicationAttemptId, Map<RMContainer, Resource>> preemptMap =
-			new HashMap<ApplicationAttemptId, Map<RMContainer, Resource>>();
+			new HashMap<>();
 
-		List<RMContainer> skippedAMContainerlist = new ArrayList<RMContainer>();
+		List<RMContainer> skippedAMContainerlist = new ArrayList<>();
 
 		//for test only
 		if (isTest) {
@@ -698,8 +698,8 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 
 
 		for (TempQueue qT : queues) {
+			// 若qT不是可抢占的，则不抢占qT的资源
 			if (qT.preemptionDisabled && qT.leafQueue != null) {
-				//不抢占qT的资源
 				if (LOG.isDebugEnabled()) {
 					if (Resources.greaterThan(rc, clusterResource,
 						qT.toBePreempted, Resource.newInstance(0, 0))) {
@@ -716,8 +716,11 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 				Resources.multiply(qT.guaranteed, 1.0 + maxIgnoredOverCapacity))) {
 				// we introduce a dampening factor naturalTerminationFactor that
 				// accounts for natural termination of containers
+				// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^把resToObtain当成对每个app都回收这么多，然后总量均摊在每个APP上，
+				// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^均摊的办法是（需求资源）/总资源*APP占有资源
 				Resource resToObtain =
 					Resources.multiply(qT.toBePreempted, naturalTerminationFactor);
+
 				Resource skippedAMSize = Resource.newInstance(0, 0);
 
 				LOG.info("try to preempt: " + resToObtain + " from queue: " + qT.queueName);
@@ -728,19 +731,20 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 				synchronized (qT.leafQueue) {
 					//what is the descending order
 					NavigableSet<FiCaSchedulerApp> ns =
-						(NavigableSet<FiCaSchedulerApp>) qT.leafQueue.getApplications();
+						(NavigableSet<FiCaSchedulerApp>) qT.leafQueue.getApplications(); //------------要改的是这个循环的顺序（？）
+					Map<ApplicationAttemptId, Resource> resToObtainFromEveryApp = new HashMap<>(ns.size());
 					Iterator<FiCaSchedulerApp> desc = ns.descendingIterator();
 					qT.actuallyPreempted = Resources.clone(resToObtain);
 					while (desc.hasNext()) {
 						FiCaSchedulerApp fc = desc.next();
-						if (Resources.lessThanOrEqual(rc, clusterResource, resToObtain,
-							Resources.none())) {
-							break;
-						}
-						LOG.info("now try to preempt applicatin:" + fc.getApplicationId());
+						// 让每个app都均摊一部分需要被抢占的资源，这样可以最大限度地保证app不会因缺少资源而工作受阻。
+						double resourceScaleFactor = (double) Resources.divide(rc, clusterResource, resToObtain, clusterResource);
+						Resource toPreempt = Resources.multiply(fc.getResource((Priority) fc.getPriorities().toArray()[0]), resourceScaleFactor);
+						resToObtainFromEveryApp.put(fc.getApplicationAttemptId(), toPreempt);
+						LOG.info("Determined to preempt applicatin:" + fc.getApplicationId() + ", " + toPreempt.toString());
 						preemptMap.put(
 							fc.getApplicationAttemptId(),
-							preemptFromAppUsingResourceToSort(fc, clusterResource, resToObtain,
+							preemptFromAppUsingResourceToSort(fc, clusterResource, toPreempt,
 								skippedAMContainerlist, skippedAMSize));
 					}
 
@@ -913,9 +917,7 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 				}
 
 			} else {
-
 				preempteThisTime = container.getContainer().getResource();
-
 			}
 
 			result.put(container, preempteThisTime);
