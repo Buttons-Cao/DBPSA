@@ -47,13 +47,18 @@ public class ContainerPBImpl extends Container {
 	private int numOfBeingPreempted = 0;
 	private PreemptionPriority preemptionPriority = null;
 
-	public ContainerPBImpl() {
+	// add deadline for scheduling
+	private long deadline;
+
+	public ContainerPBImpl(long deadline) {
 		builder = ContainerProto.newBuilder();
+		this.deadline = deadline;
 	}
 
-	public ContainerPBImpl(ContainerProto proto) {
+	public ContainerPBImpl(ContainerProto proto, long deadline) {
 		this.proto = proto;
 		viaProto = true;
+		this.deadline = deadline;
 	}
 
 	public ContainerProto getProto() {
@@ -263,6 +268,11 @@ public class ContainerPBImpl extends Container {
 	}
 
 	@Override
+	public long getDeadline(){
+		return deadline;
+	}
+
+	@Override
 	public void setContainerToken(Token containerToken) {
 		maybeInitBuilder();
 		if (containerToken == null)
@@ -318,6 +328,7 @@ public class ContainerPBImpl extends Container {
 		sb.append("NodeId: ").append(getNodeId()).append(", ");
 		sb.append("NodeHttpAddress: ").append(getNodeHttpAddress()).append(", ");
 		sb.append("Resource: ").append(getResource()).append(", ");
+		sb.append("deadline: ").append(getDeadline()).append(",");
 		sb.append("Priority: ").append(getPriority()).append(", ");
 		sb.append("Token: ").append(getContainerToken()).append(", ");
 		sb.append("]");

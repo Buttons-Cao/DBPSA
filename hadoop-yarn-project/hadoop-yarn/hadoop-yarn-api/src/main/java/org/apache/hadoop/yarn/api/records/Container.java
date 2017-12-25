@@ -187,4 +187,8 @@ public abstract class Container implements Comparable<Container> {
 	@Private
 	@Unstable
 	public abstract void setContainerToken(Token containerToken);
+
+	@Private
+	@Unstable
+	public abstract long getDeadline();
 }

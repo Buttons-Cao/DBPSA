@@ -5,74 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dadf9ad0-3e7e-4ace-8045-8e88c6c64459" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-api/src/main/java/org/apache/hadoop/yarn/api/records/PreemptionPriority.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-common/src/main/java/org/apache/hadoop/yarn/api/records/impl/pb/PreemptionPriorityPBImpl.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-resourcemanager/src/main/java/org/apache/hadoop/yarn/server/resourcemanager/monitor/capacity/read-note.txt" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-assemblies/hadoop-assemblies.iml" afterPath="$PROJECT_DIR$/hadoop-assemblies/hadoop-assemblies.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-client/hadoop-client.iml" afterPath="$PROJECT_DIR$/hadoop-client/hadoop-client.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-common-project/hadoop-annotations/hadoop-annotations.iml" afterPath="$PROJECT_DIR$/hadoop-common-project/hadoop-annotations/hadoop-annotations.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-common-project/hadoop-auth-examples/hadoop-auth-examples.iml" afterPath="$PROJECT_DIR$/hadoop-common-project/hadoop-auth-examples/hadoop-auth-examples.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-common-project/hadoop-auth/hadoop-auth.iml" afterPath="$PROJECT_DIR$/hadoop-common-project/hadoop-auth/hadoop-auth.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-common-project/hadoop-common/hadoop-common.iml" afterPath="$PROJECT_DIR$/hadoop-common-project/hadoop-common/hadoop-common.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-common-project/hadoop-kms/hadoop-kms.iml" afterPath="$PROJECT_DIR$/hadoop-common-project/hadoop-kms/hadoop-kms.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-common-project/hadoop-minikdc/hadoop-minikdc.iml" afterPath="$PROJECT_DIR$/hadoop-common-project/hadoop-minikdc/hadoop-minikdc.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-common-project/hadoop-nfs/hadoop-nfs.iml" afterPath="$PROJECT_DIR$/hadoop-common-project/hadoop-nfs/hadoop-nfs.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-dist/hadoop-dist.iml" afterPath="$PROJECT_DIR$/hadoop-dist/hadoop-dist.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-hdfs-project/hadoop-hdfs-httpfs/hadoop-hdfs-httpfs.iml" afterPath="$PROJECT_DIR$/hadoop-hdfs-project/hadoop-hdfs-httpfs/hadoop-hdfs-httpfs.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-hdfs-project/hadoop-hdfs-nfs/hadoop-hdfs-nfs.iml" afterPath="$PROJECT_DIR$/hadoop-hdfs-project/hadoop-hdfs-nfs/hadoop-hdfs-nfs.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-hdfs-project/hadoop-hdfs/hadoop-hdfs.iml" afterPath="$PROJECT_DIR$/hadoop-hdfs-project/hadoop-hdfs/hadoop-hdfs.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-hdfs-project/hadoop-hdfs/src/contrib/bkjournal/hadoop-hdfs-bkjournal.iml" afterPath="$PROJECT_DIR$/hadoop-hdfs-project/hadoop-hdfs/src/contrib/bkjournal/hadoop-hdfs-bkjournal.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-app/hadoop-mapreduce-client-app.iml" afterPath="$PROJECT_DIR$/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-app/hadoop-mapreduce-client-app.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-common/hadoop-mapreduce-client-common.iml" afterPath="$PROJECT_DIR$/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-common/hadoop-mapreduce-client-common.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-common/src/main/java/org/apache/hadoop/mapreduce/v2/api/MRClientProtocol.java" afterPath="$PROJECT_DIR$/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-common/src/main/java/org/apache/hadoop/mapreduce/v2/api/MRClientProtocol.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-core/hadoop-mapreduce-client-core.iml" afterPath="$PROJECT_DIR$/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-core/hadoop-mapreduce-client-core.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-hs-plugins/hadoop-mapreduce-client-hs-plugins.iml" afterPath="$PROJECT_DIR$/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-hs-plugins/hadoop-mapreduce-client-hs-plugins.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-hs/hadoop-mapreduce-client-hs.iml" afterPath="$PROJECT_DIR$/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-hs/hadoop-mapreduce-client-hs.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-jobclient/hadoop-mapreduce-client-jobclient.iml" afterPath="$PROJECT_DIR$/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-jobclient/hadoop-mapreduce-client-jobclient.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-jobclient/src/main/java/org/apache/hadoop/mapred/NotRunningJob.java" afterPath="$PROJECT_DIR$/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-jobclient/src/main/java/org/apache/hadoop/mapred/NotRunningJob.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-shuffle/hadoop-mapreduce-client-shuffle.iml" afterPath="$PROJECT_DIR$/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-shuffle/hadoop-mapreduce-client-shuffle.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-mapreduce-project/hadoop-mapreduce-examples/hadoop-mapreduce-examples.iml" afterPath="$PROJECT_DIR$/hadoop-mapreduce-project/hadoop-mapreduce-examples/hadoop-mapreduce-examples.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-maven-plugins/hadoop-maven-plugins.iml" afterPath="$PROJECT_DIR$/hadoop-maven-plugins/hadoop-maven-plugins.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-minicluster/hadoop-minicluster.iml" afterPath="$PROJECT_DIR$/hadoop-minicluster/hadoop-minicluster.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-tools/hadoop-ant/hadoop-ant.iml" afterPath="$PROJECT_DIR$/hadoop-tools/hadoop-ant/hadoop-ant.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-tools/hadoop-archives/hadoop-archives.iml" afterPath="$PROJECT_DIR$/hadoop-tools/hadoop-archives/hadoop-archives.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-tools/hadoop-aws/hadoop-aws.iml" afterPath="$PROJECT_DIR$/hadoop-tools/hadoop-aws/hadoop-aws.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-tools/hadoop-azure/hadoop-azure.iml" afterPath="$PROJECT_DIR$/hadoop-tools/hadoop-azure/hadoop-azure.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-tools/hadoop-datajoin/hadoop-datajoin.iml" afterPath="$PROJECT_DIR$/hadoop-tools/hadoop-datajoin/hadoop-datajoin.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-tools/hadoop-distcp/hadoop-distcp.iml" afterPath="$PROJECT_DIR$/hadoop-tools/hadoop-distcp/hadoop-distcp.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-tools/hadoop-extras/hadoop-extras.iml" afterPath="$PROJECT_DIR$/hadoop-tools/hadoop-extras/hadoop-extras.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-tools/hadoop-gridmix/hadoop-gridmix.iml" afterPath="$PROJECT_DIR$/hadoop-tools/hadoop-gridmix/hadoop-gridmix.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-tools/hadoop-openstack/hadoop-openstack.iml" afterPath="$PROJECT_DIR$/hadoop-tools/hadoop-openstack/hadoop-openstack.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-tools/hadoop-rumen/hadoop-rumen.iml" afterPath="$PROJECT_DIR$/hadoop-tools/hadoop-rumen/hadoop-rumen.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-tools/hadoop-sls/hadoop-sls.iml" afterPath="$PROJECT_DIR$/hadoop-tools/hadoop-sls/hadoop-sls.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-tools/hadoop-streaming/hadoop-streaming.iml" afterPath="$PROJECT_DIR$/hadoop-tools/hadoop-streaming/hadoop-streaming.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-tools/hadoop-tools-dist/hadoop-tools-dist.iml" afterPath="$PROJECT_DIR$/hadoop-tools/hadoop-tools-dist/hadoop-tools-dist.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-api/hadoop-yarn-api.iml" afterPath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-api/hadoop-yarn-api.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-api/src/main/java/org/apache/hadoop/yarn/api/records/Container.java" afterPath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-api/src/main/java/org/apache/hadoop/yarn/api/records/Container.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-api/src/main/proto/yarn_protos.proto" afterPath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-api/src/main/proto/yarn_protos.proto" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-applications/hadoop-yarn-applications-distributedshell/hadoop-yarn-applications-distributedshell.iml" afterPath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-applications/hadoop-yarn-applications-distributedshell/hadoop-yarn-applications-distributedshell.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-applications/hadoop-yarn-applications-unmanaged-am-launcher/hadoop-yarn-applications-unmanaged-am-launcher.iml" afterPath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-applications/hadoop-yarn-applications-unmanaged-am-launcher/hadoop-yarn-applications-unmanaged-am-launcher.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-client/hadoop-yarn-client.iml" afterPath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-client/hadoop-yarn-client.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-common/hadoop-yarn-common.iml" afterPath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-common/hadoop-yarn-common.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-common/src/main/java/org/apache/hadoop/yarn/api/records/impl/pb/ContainerPBImpl.java" afterPath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-common/src/main/java/org/apache/hadoop/yarn/api/records/impl/pb/ContainerPBImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-registry/hadoop-yarn-registry.iml" afterPath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-registry/hadoop-yarn-registry.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/Pyrolite/pyrolite.iml" afterPath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/Pyrolite/pyrolite.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-applicationhistoryservice/hadoop-yarn-server-applicationhistoryservice.iml" afterPath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-applicationhistoryservice/hadoop-yarn-server-applicationhistoryservice.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-common/hadoop-yarn-server-common.iml" afterPath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-common/hadoop-yarn-server-common.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-nodemanager/hadoop-yarn-server-nodemanager.iml" afterPath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-nodemanager/hadoop-yarn-server-nodemanager.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-nodemanager/src/test/java/org/apache/hadoop/yarn/server/nodemanager/DummyContainerManager.java" afterPath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-nodemanager/src/test/java/org/apache/hadoop/yarn/server/nodemanager/DummyContainerManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-resourcemanager/hadoop-yarn-server-resourcemanager.iml" afterPath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-resourcemanager/hadoop-yarn-server-resourcemanager.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-resourcemanager/src/main/java/org/apache/hadoop/yarn/server/resourcemanager/monitor/capacity/ProportionalCapacityPreemptionPolicy.java" afterPath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-resourcemanager/src/main/java/org/apache/hadoop/yarn/server/resourcemanager/monitor/capacity/ProportionalCapacityPreemptionPolicy.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-resourcemanager/src/main/java/org/apache/hadoop/yarn/server/resourcemanager/rmcontainer/RMContainerImpl.java" afterPath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-resourcemanager/src/main/java/org/apache/hadoop/yarn/server/resourcemanager/rmcontainer/RMContainerImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-resourcemanager/src/main/java/org/apache/hadoop/yarn/server/resourcemanager/scheduler/common/fica/FiCaSchedulerApp.java" afterPath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-resourcemanager/src/main/java/org/apache/hadoop/yarn/server/resourcemanager/scheduler/common/fica/FiCaSchedulerApp.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-resourcemanager/src/main/java/org/apache/hadoop/yarn/server/resourcemanager/scheduler/common/fica/FiCaSchedulerNode.java" afterPath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-resourcemanager/src/main/java/org/apache/hadoop/yarn/server/resourcemanager/scheduler/common/fica/FiCaSchedulerNode.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-resourcemanager/src/main/java/org/apache/hadoop/yarn/server/resourcemanager/scheduler/common/fica/FiCaSchedulerUtils.java" afterPath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-resourcemanager/src/main/java/org/apache/hadoop/yarn/server/resourcemanager/scheduler/common/fica/FiCaSchedulerUtils.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-sharedcachemanager/hadoop-yarn-server-sharedcachemanager.iml" afterPath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-sharedcachemanager/hadoop-yarn-server-sharedcachemanager.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-tests/hadoop-yarn-server-tests.iml" afterPath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-tests/hadoop-yarn-server-tests.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-web-proxy/hadoop-yarn-server-web-proxy.iml" afterPath="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-web-proxy/hadoop-yarn-server-web-proxy.iml" />
     </list>
     <ignored path="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-applicationhistoryservice/target/" />
     <ignored path="$PROJECT_DIR$/hadoop-common-project/hadoop-common/target/" />
@@ -205,18 +139,18 @@
       <file leaf-file-name="Container.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-api/src/main/java/org/apache/hadoop/yarn/api/records/Container.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="297">
-              <caret line="61" column="22" lean-forward="false" selection-start-line="61" selection-start-column="22" selection-end-line="61" selection-end-column="22" />
+            <state relative-caret-position="848">
+              <caret line="192" column="39" lean-forward="false" selection-start-line="192" selection-start-column="39" selection-end-line="192" selection-end-column="39" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ContainerPBImpl.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="ContainerPBImpl.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-common/src/main/java/org/apache/hadoop/yarn/api/records/impl/pb/ContainerPBImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="720">
-              <caret line="238" column="39" lean-forward="true" selection-start-line="238" selection-start-column="39" selection-end-line="238" selection-end-column="39" />
+            <state relative-caret-position="530">
+              <caret line="338" column="13" lean-forward="true" selection-start-line="338" selection-start-column="13" selection-end-line="338" selection-end-column="13" />
               <folding>
                 <element signature="method#equals#0;class#ContainerPBImpl#0" expanded="false" />
                 <element signature="method#mergeLocalToBuilder#0;class#ContainerPBImpl#0" expanded="false" />
@@ -229,20 +163,22 @@
                 <element signature="method#setNodeHttpAddress#0;class#ContainerPBImpl#0" expanded="false" />
                 <element signature="method#getResource#0;class#ContainerPBImpl#0" expanded="false" />
                 <element signature="method#setResource#0;class#ContainerPBImpl#0" expanded="false" />
-                <element signature="e#6689#6690#0" expanded="true" />
-                <element signature="e#6722#6723#0" expanded="true" />
+                <element signature="e#6830#6831#0" expanded="true" />
+                <element signature="e#6863#6864#0" expanded="true" />
                 <element signature="method#getContainerToken#0;class#ContainerPBImpl#0" expanded="false" />
+                <element signature="e#7237#7238#0" expanded="true" />
+                <element signature="e#7259#7260#0" expanded="true" />
                 <element signature="method#setContainerToken#0;class#ContainerPBImpl#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ProportionalCapacityPreemptionPolicy.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ProportionalCapacityPreemptionPolicy.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-resourcemanager/src/main/java/org/apache/hadoop/yarn/server/resourcemanager/monitor/capacity/ProportionalCapacityPreemptionPolicy.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="530">
-              <caret line="1041" column="0" lean-forward="true" selection-start-line="1041" selection-start-column="0" selection-end-line="1041" selection-end-column="0" />
+            <state relative-caret-position="568">
+              <caret line="1045" column="5" lean-forward="true" selection-start-line="1045" selection-start-column="5" selection-end-line="1045" selection-end-column="5" />
               <folding />
             </state>
           </provider>
@@ -342,9 +278,9 @@
         <option value="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-api/src/main/proto/yarn_protos.proto" />
         <option value="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-common/src/main/java/org/apache/hadoop/yarn/api/records/impl/pb/PreemptionPriorityPBImpl.java" />
         <option value="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-api/src/main/java/org/apache/hadoop/yarn/api/records/PreemptionPriority.java" />
+        <option value="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-resourcemanager/src/main/java/org/apache/hadoop/yarn/server/resourcemanager/monitor/capacity/ProportionalCapacityPreemptionPolicy.java" />
         <option value="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-api/src/main/java/org/apache/hadoop/yarn/api/records/Container.java" />
         <option value="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-common/src/main/java/org/apache/hadoop/yarn/api/records/impl/pb/ContainerPBImpl.java" />
-        <option value="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-resourcemanager/src/main/java/org/apache/hadoop/yarn/server/resourcemanager/monitor/capacity/ProportionalCapacityPreemptionPolicy.java" />
       </list>
     </option>
   </component>
@@ -1614,30 +1550,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-common/src/main/java/org/apache/hadoop/yarn/api/records/impl/pb/ContainerPBImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="720">
-          <caret line="238" column="39" lean-forward="true" selection-start-line="238" selection-start-column="39" selection-end-line="238" selection-end-column="39" />
-          <folding>
-            <element signature="method#equals#0;class#ContainerPBImpl#0" expanded="false" />
-            <element signature="method#mergeLocalToBuilder#0;class#ContainerPBImpl#0" expanded="false" />
-            <element signature="method#mergeLocalToProto#0;class#ContainerPBImpl#0" expanded="false" />
-            <element signature="method#getId#0;class#ContainerPBImpl#0" expanded="false" />
-            <element signature="method#setNodeId#0;class#ContainerPBImpl#0" expanded="false" />
-            <element signature="method#getNodeId#0;class#ContainerPBImpl#0" expanded="false" />
-            <element signature="method#setId#0;class#ContainerPBImpl#0" expanded="false" />
-            <element signature="method#getNodeHttpAddress#0;class#ContainerPBImpl#0" expanded="false" />
-            <element signature="method#setNodeHttpAddress#0;class#ContainerPBImpl#0" expanded="false" />
-            <element signature="method#getResource#0;class#ContainerPBImpl#0" expanded="false" />
-            <element signature="method#setResource#0;class#ContainerPBImpl#0" expanded="false" />
-            <element signature="e#6689#6690#0" expanded="true" />
-            <element signature="e#6722#6723#0" expanded="true" />
-            <element signature="method#getContainerToken#0;class#ContainerPBImpl#0" expanded="false" />
-            <element signature="method#setContainerToken#0;class#ContainerPBImpl#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-common/src/main/java/org/apache/hadoop/yarn/api/records/impl/pb/PriorityPBImpl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="228">
@@ -1664,14 +1576,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-api/src/main/java/org/apache/hadoop/yarn/api/records/Container.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="297">
-          <caret line="61" column="22" lean-forward="false" selection-start-line="61" selection-start-column="22" selection-end-line="61" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-api/src/main/proto/yarn_protos.proto">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="296">
@@ -1684,9 +1588,43 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-resourcemanager/src/main/java/org/apache/hadoop/yarn/server/resourcemanager/monitor/capacity/ProportionalCapacityPreemptionPolicy.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="530">
-          <caret line="1041" column="0" lean-forward="true" selection-start-line="1041" selection-start-column="0" selection-end-line="1041" selection-end-column="0" />
+        <state relative-caret-position="568">
+          <caret line="1045" column="5" lean-forward="true" selection-start-line="1045" selection-start-column="5" selection-end-line="1045" selection-end-column="5" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-api/src/main/java/org/apache/hadoop/yarn/api/records/Container.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="848">
+          <caret line="192" column="39" lean-forward="false" selection-start-line="192" selection-start-column="39" selection-end-line="192" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-common/src/main/java/org/apache/hadoop/yarn/api/records/impl/pb/ContainerPBImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="530">
+          <caret line="338" column="13" lean-forward="true" selection-start-line="338" selection-start-column="13" selection-end-line="338" selection-end-column="13" />
+          <folding>
+            <element signature="method#equals#0;class#ContainerPBImpl#0" expanded="false" />
+            <element signature="method#mergeLocalToBuilder#0;class#ContainerPBImpl#0" expanded="false" />
+            <element signature="method#mergeLocalToProto#0;class#ContainerPBImpl#0" expanded="false" />
+            <element signature="method#getId#0;class#ContainerPBImpl#0" expanded="false" />
+            <element signature="method#setNodeId#0;class#ContainerPBImpl#0" expanded="false" />
+            <element signature="method#getNodeId#0;class#ContainerPBImpl#0" expanded="false" />
+            <element signature="method#setId#0;class#ContainerPBImpl#0" expanded="false" />
+            <element signature="method#getNodeHttpAddress#0;class#ContainerPBImpl#0" expanded="false" />
+            <element signature="method#setNodeHttpAddress#0;class#ContainerPBImpl#0" expanded="false" />
+            <element signature="method#getResource#0;class#ContainerPBImpl#0" expanded="false" />
+            <element signature="method#setResource#0;class#ContainerPBImpl#0" expanded="false" />
+            <element signature="e#6830#6831#0" expanded="true" />
+            <element signature="e#6863#6864#0" expanded="true" />
+            <element signature="method#getContainerToken#0;class#ContainerPBImpl#0" expanded="false" />
+            <element signature="e#7237#7238#0" expanded="true" />
+            <element signature="e#7259#7260#0" expanded="true" />
+            <element signature="method#setContainerToken#0;class#ContainerPBImpl#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
