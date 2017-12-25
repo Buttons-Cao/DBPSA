@@ -55,19 +55,19 @@ public interface MRClientProtocol {
    * Address to which the client is connected
    * @return InetSocketAddress
    */
-  public InetSocketAddress getConnectAddress();
-  public GetJobReportResponse getJobReport(GetJobReportRequest request) throws IOException;
-  public GetTaskReportResponse getTaskReport(GetTaskReportRequest request) throws IOException;
-  public GetTaskAttemptReportResponse getTaskAttemptReport(GetTaskAttemptReportRequest request) throws IOException;
-  public GetCountersResponse getCounters(GetCountersRequest request) throws IOException;
-  public GetTaskAttemptCompletionEventsResponse getTaskAttemptCompletionEvents(GetTaskAttemptCompletionEventsRequest request) throws IOException;
-  public GetTaskReportsResponse getTaskReports(GetTaskReportsRequest request) throws IOException;
-  public GetDiagnosticsResponse getDiagnostics(GetDiagnosticsRequest request) throws IOException;
-  public KillJobResponse killJob(KillJobRequest request) throws IOException;
-  public KillTaskResponse killTask(KillTaskRequest request) throws IOException;
-  public KillTaskAttemptResponse killTaskAttempt(KillTaskAttemptRequest request) throws IOException;
-  public FailTaskAttemptResponse failTaskAttempt(FailTaskAttemptRequest request) throws IOException;
-  public GetDelegationTokenResponse getDelegationToken(GetDelegationTokenRequest request) throws IOException;
+  InetSocketAddress getConnectAddress();
+  GetJobReportResponse getJobReport(GetJobReportRequest request) throws IOException;
+  GetTaskReportResponse getTaskReport(GetTaskReportRequest request) throws IOException;
+  GetTaskAttemptReportResponse getTaskAttemptReport(GetTaskAttemptReportRequest request) throws IOException;
+  GetCountersResponse getCounters(GetCountersRequest request) throws IOException;
+  GetTaskAttemptCompletionEventsResponse getTaskAttemptCompletionEvents(GetTaskAttemptCompletionEventsRequest request) throws IOException;
+  GetTaskReportsResponse getTaskReports(GetTaskReportsRequest request) throws IOException;
+  GetDiagnosticsResponse getDiagnostics(GetDiagnosticsRequest request) throws IOException;
+  KillJobResponse killJob(KillJobRequest request) throws IOException;
+  KillTaskResponse killTask(KillTaskRequest request) throws IOException;
+  KillTaskAttemptResponse killTaskAttempt(KillTaskAttemptRequest request) throws IOException;
+  FailTaskAttemptResponse failTaskAttempt(FailTaskAttemptRequest request) throws IOException;
+  GetDelegationTokenResponse getDelegationToken(GetDelegationTokenRequest request) throws IOException;
   
   /**
    * Renew an existing delegation token.
@@ -76,7 +76,7 @@ public interface MRClientProtocol {
    * @return the new expiry time for the delegation token.
    * @throws IOException
    */
-  public RenewDelegationTokenResponse renewDelegationToken(
+  RenewDelegationTokenResponse renewDelegationToken(
       RenewDelegationTokenRequest request) throws IOException;
 
   /**
@@ -86,6 +86,6 @@ public interface MRClientProtocol {
    * @return an empty response.
    * @throws IOException
    */
-  public CancelDelegationTokenResponse cancelDelegationToken(
+   CancelDelegationTokenResponse cancelDelegationToken(
       CancelDelegationTokenRequest request) throws IOException;
 }

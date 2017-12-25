@@ -68,11 +68,11 @@ import com.google.common.annotations.VisibleForTesting;
  * Based on this ideal assignment it determines whether preemption is required
  * and select a set of containers from each application that would be killed if
  * the corresponding amount of resources is not freed up by the application.
- *
+ * <p>
  * If not in {@code observeOnly} mode, it triggers preemption requests via a
  * {@link ContainerPreemptEvent} that the {@code ResourceManager} will ensure
  * to deliver to the application (or to execute).
- *
+ * <p>
  * If the deficit of resources is persistent over a long enough period of time
  * this policy will trigger forced termination of containers (again by generating
  * {@link ContainerPreemptEvent}).
@@ -82,28 +82,38 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 	private static final Log LOG =
 		LogFactory.getLog(ProportionalCapacityPreemptionPolicy.class);
 
-	/** If true, run the policy but do not affect the cluster with preemption and
-	 * kill events. */
+	/**
+	 * If true, run the policy but do not affect the cluster with preemption and
+	 * kill events.
+	 */
 	public static final String OBSERVE_ONLY =
 		"yarn.resourcemanager.monitor.capacity.preemption.observe_only";
-	/** Time in milliseconds between invocations of this policy */
+	/**
+	 * Time in milliseconds between invocations of this policy
+	 */
 	public static final String MONITORING_INTERVAL =
 		"yarn.resourcemanager.monitor.capacity.preemption.monitoring_interval";
-	/** Time in milliseconds between requesting a preemption from an application
-	 * and killing the container. */
+	/**
+	 * Time in milliseconds between requesting a preemption from an application
+	 * and killing the container.
+	 */
 	public static final String WAIT_TIME_BEFORE_KILL =
 		"yarn.resourcemanager.monitor.capacity.preemption.max_wait_before_kill";
-	/** Maximum percentage of resources preempted in a single round. By
+	/**
+	 * Maximum percentage of resources preempted in a single round. By
 	 * controlling this value one can throttle the pace at which containers are
 	 * reclaimed from the cluster. After computing the total desired preemption,
-	 * the policy scales it back within this limit. */
+	 * the policy scales it back within this limit.
+	 */
 	public static final String TOTAL_PREEMPTION_PER_ROUND =
 		"yarn.resourcemanager.monitor.capacity.preemption.total_preemption_per_round";
-	/** Maximum amount of resources above the target capacity ignored for
+	/**
+	 * Maximum amount of resources above the target capacity ignored for
 	 * preemption. This defines a deadzone around the target capacity that helps
 	 * prevent thrashing and oscillations around the computed target balance.
 	 * High values would slow the time to capacity and (absent natural
-	 * completions) it might prevent convergence to guaranteed capacity. */
+	 * completions) it might prevent convergence to guaranteed capacity.
+	 */
 	public static final String MAX_IGNORED_OVER_CAPACITY =
 		"yarn.resourcemanager.monitor.capacity.preemption.max_ignored_over_capacity";
 	/**
@@ -112,7 +122,8 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 	 * the rate of geometric convergence into the deadzone ({@link
 	 * #MAX_IGNORED_OVER_CAPACITY}). For example, a termination factor of 0.5
 	 * will reclaim almost 95% of resources within 5 * {@link
-	 * #WAIT_TIME_BEFORE_KILL}, even absent natural termination. */
+	 * #WAIT_TIME_BEFORE_KILL}, even absent natural termination.
+	 */
 	public static final String NATURAL_TERMINATION_FACTOR =
 		"yarn.resourcemanager.monitor.capacity.preemption.natural_termination_factor";
 
@@ -132,7 +143,7 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 	private CapacityScheduler scheduler;
 	private long monitoringInterval;
 	private final Map<RMContainer, Long> preempted =
-		new HashMap<RMContainer, Long>();
+		new HashMap<>();
 	private static ResourceCalculator rc;
 	private float percentageClusterPreemptionAllowed;
 	private double naturalTerminationFactor;
@@ -242,7 +253,7 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 	 * This method selects and tracks containers to be preempted. If a container
 	 * is in the target list for more than maxWaitTime it is killed.
 	 *
-	 * @param root the root of the CapacityScheduler queue hierarchy
+	 * @param root             the root of the CapacityScheduler queue hierarchy
 	 * @param clusterResources the total amount of resources in the cluster
 	 */
 	private void containerBasedPreemptOrKill(CSQueue root,
@@ -312,8 +323,6 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 					preempted.remove(container);
 
 				} else {
-					// 没到等待时间就继续等，维持让它保存上下文的状态，也就是PREEMPT_CONTAINER事件；
-					// 如果是发现这个容器没在被抢占呃队列里，那就把它加进去，开始抢占它的资源
 					if (isTest) {
 						dispatcher.handle(new ContainerPreemptEvent(e.getKey(), container,
 							ContainerPreemptEventType.SUSPEND_CONTAINER, resource));
@@ -323,6 +332,7 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 					//otherwise just send preemption events
 					dispatcher.handle(new ContainerPreemptEvent(e.getKey(), container,
 						ContainerPreemptEventType.PREEMPT_CONTAINER, resource));
+
 					if (preempted.get(container) == null) {
 						preempted.put(container, clock.getTime());
 					}
@@ -346,13 +356,14 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 	 * with parents within capacity will not be preempted. Preemptions are allowed
 	 * within each subtree according to local over/under capacity.only return leaf nodes for this function
 	 * All subqueues are put in a list, so hierarchical relationship is not emphasize
-	 * @param root the root of the cloned queue hierachy
+	 *
+	 * @param root                   the root of the cloned queue hierachy
 	 * @param totalPreemptionAllowed maximum amount of preemption allowed
 	 * @return a list of leaf queues updated with preemption targets
 	 */
 	private List<TempQueue> recursivelyComputeIdealAssignment(
 		TempQueue root, Resource totalPreemptionAllowed) {
-		List<TempQueue> leafs = new ArrayList<TempQueue>();
+		List<TempQueue> leafs = new ArrayList<>();
 		if (root.getChildren() != null &&
 			root.getChildren().size() > 0) {
 			// compute ideal distribution at this level
@@ -376,25 +387,25 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 	 * demands. It terminates when no resources are left to assign, or when all
 	 * demand is satisfied.
 	 *
-	 * @param rc resource calculator
-	 * @param queues a list of cloned queues to be assigned capacity to (this is
-	 * an out param)
+	 * @param rc                     resource calculator
+	 * @param queues                 a list of cloned queues to be assigned capacity to (this is
+	 *                               an out param)
 	 * @param totalPreemptionAllowed total amount of preemption we allow
-	 * @param tot_guarant the amount of capacity assigned to this pool of queues
+	 * @param tot_guarant            the amount of capacity assigned to this pool of queues
 	 */
 	private void computeIdealResourceDistribution(ResourceCalculator rc,
 	                                              List<TempQueue> queues, Resource totalPreemptionAllowed, Resource tot_guarant) {
 
 		// qAlloc tracks currently active queues (will decrease progressively as
 		// demand is met)
-		List<TempQueue> qAlloc = new ArrayList<TempQueue>(queues);
+		List<TempQueue> qAlloc = new ArrayList<>(queues);
 		// unassigned tracks how much resources are still to assign, initialized
 		// with the total capacity for this set of queues
 		Resource unassigned = Resources.clone(tot_guarant);
 
 		// group queues based on whether they have non-zero guaranteed capacity
-		Set<TempQueue> nonZeroGuarQueues = new HashSet<TempQueue>();
-		Set<TempQueue> zeroGuarQueues = new HashSet<TempQueue>();
+		Set<TempQueue> nonZeroGuarQueues = new HashSet<>();
+		Set<TempQueue> zeroGuarQueues = new HashSet<>();
 
 		for (TempQueue q : qAlloc) {
 			if (Resources
@@ -416,19 +427,20 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 			computeFixpointAllocation(rc, tot_guarant, zeroGuarQueues, unassigned,
 				true);
 		}
-		//we still have resource left, we set fast resumtion option
+		// if we still have resource left, we set fast resumtion option
 		if (unassigned.getMemory() > 0 && unassigned.getVirtualCores() > 0) {
 
 			for (TempQueue t : queues) {
 				Resource currentPrempted = scheduler.getQueue(t.queueName).getPreemptedResource();
 				if (Resources.greaterThan(rc, tot_guarant, currentPrempted, Resources.none())) {
 					LOG.info("set " + t.queueName + " fast preempted resource: " + currentPrempted + " avail: " + unassigned);
-					scheduler.getQueue(t.queueName).setFastResumption(true); //把unassigned的资源分配给那些被抢占了的队列，让它们恢复
+					scheduler.getQueue(t.queueName).setFastResumption(true);
 				}
 			}
 		}
 		// based on ideal assignment computed above and current assignment we derive
 		// how much preemption is required overall,this is resource that are preemptable
+		// ---------------------------------------------- to be modified -----------------------------------------------
 		Resource totPreemptionNeeded = Resource.newInstance(0, 0);
 		for (TempQueue t : queues) {
 			if (Resources.greaterThan(rc, tot_guarant, t.current, t.idealAssigned)) {
@@ -441,7 +453,7 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 		}
 
 		// if we need to preempt more than is allowed, compute a factor (0<f<1)
-		// that is used to scale down how much we ask back from each queue（缩小从每个队列回收的）
+		// that is used to scale down how much we ask back from each queue
 		float scalingFactor = 1.0F;
 		if (Resources.greaterThan(rc, tot_guarant,
 			totPreemptionNeeded, totalPreemptionAllowed)) {
@@ -553,9 +565,10 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 
 	}
 
-	/** Take the most underserved TempQueue (the one on the head). Collect and
-	 *  return the list of all queues that have the same idealAssigned
-	 *  percentage of guaranteed. the less this value, the more underserved this queue
+	/**
+	 * Take the most underserved TempQueue (the one on the head). Collect and
+	 * return the list of all queues that have the same idealAssigned
+	 * percentage of guaranteed. the less this value, the more underserved this queue
 	 */
 	protected Collection<TempQueue> getMostUnderservedQueues(
 		PriorityQueue<TempQueue> orderedByNeed, TQComparator tqComparator) {
@@ -577,9 +590,10 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 
 	/**
 	 * Computes a normalizedGuaranteed capacity based on active queues
-	 * @param rc resource calculator
+	 *
+	 * @param rc              resource calculator
 	 * @param clusterResource the total amount of resources in the cluster
-	 * @param queues the list of queues to consider
+	 * @param queues          the list of queues to consider
 	 */
 	private void resetCapacity(ResourceCalculator rc, Resource clusterResource,
 	                           Collection<TempQueue> queues, boolean ignoreGuar) {
@@ -603,14 +617,11 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 	 * Randomly preempt container
 	 *
 	 * @param queues set of leaf queues to preempt from
-	 * @param clusterResource total amount of cluster resources
 	 * @return a map of applciationID to set of containers to preempt
 	 */
 
 	private void getContainersToPreemptForTest(Map<ApplicationAttemptId, Map<RMContainer, Resource>> preemptMap,
-	                                           List<TempQueue> queues, Resource clusterResource) {
-
-
+	                                           List<TempQueue> queues) {
 		for (TempQueue qT : queues) {
 			if (qT.preemptionDisabled && qT.leafQueue != null) {
 				continue;
@@ -679,12 +690,12 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 	 * over-capacity queue. It uses {@link #NATURAL_TERMINATION_FACTOR} to
 	 * account for containers that will naturally complete.
 	 *
-	 * @param queues set of leaf queues to preempt from
+	 * @param queues          set of leaf queues to preempt from
 	 * @param clusterResource total amount of cluster resources
 	 * @return a map of applciationID to set of containers to preempt
 	 */
 	private Map<ApplicationAttemptId, Map<RMContainer, Resource>> getContainersToPreempt(
-		List<TempQueue> queues, Resource clusterResource) {
+		List<TempQueue> queues, final Resource clusterResource) {
 
 		Map<ApplicationAttemptId, Map<RMContainer, Resource>> preemptMap =
 			new HashMap<>();
@@ -732,19 +743,31 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 					//what is the descending order
 					NavigableSet<FiCaSchedulerApp> ns =
 						(NavigableSet<FiCaSchedulerApp>) qT.leafQueue.getApplications(); //------------要改的是这个循环的顺序（？）
-					Map<ApplicationAttemptId, Resource> resToObtainFromEveryApp = new HashMap<>(ns.size());
+					List<FiCaSchedulerApp> appList = new ArrayList<>(ns);
+					Collections.sort(appList, new Comparator<FiCaSchedulerApp>() {
+						@Override
+						public int compare(FiCaSchedulerApp o1, FiCaSchedulerApp o2) {
+							return rc.compare(clusterResource, o1.getHeadroom(), o2.getHeadroom());
+						}
+					});
 					Iterator<FiCaSchedulerApp> desc = ns.descendingIterator();
 					qT.actuallyPreempted = Resources.clone(resToObtain);
 					while (desc.hasNext()) {
 						FiCaSchedulerApp fc = desc.next();
+						/*
 						// 让每个app都均摊一部分需要被抢占的资源，这样可以最大限度地保证app不会因缺少资源而工作受阻。
 						double resourceScaleFactor = (double) Resources.divide(rc, clusterResource, resToObtain, clusterResource);
-						Resource toPreempt = Resources.multiply(fc.getResource((Priority) fc.getPriorities().toArray()[0]), resourceScaleFactor);
-						resToObtainFromEveryApp.put(fc.getApplicationAttemptId(), toPreempt);
-						LOG.info("Determined to preempt applicatin:" + fc.getApplicationId() + ", " + toPreempt.toString());
+						Resource totalRes = Resource.newInstance(0, 0);
+						for (Priority priority: fc.getPriorities()
+						     ) {
+							Resources.addTo(totalRes, fc.getResource(priority));
+						}
+						Resource toPreempt = Resources.multiply(fc.getHeadroom(), resourceScaleFactor);
+						*/
+						LOG.info("Determined to preempt applicatin:" + fc.getApplicationId() + ", " + resToObtain.toString());
 						preemptMap.put(
 							fc.getApplicationAttemptId(),
-							preemptFromAppUsingResourceToSort(fc, clusterResource, toPreempt,
+							preemptFromAppUsingResourceToSort(fc, clusterResource, resToObtain,
 								skippedAMContainerlist, skippedAMSize));
 					}
 
@@ -839,10 +862,10 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 	 * @param rsrcPreempt
 	 * @return Map<RMContainer,Resource> mapping from container to resource
 	 */
-	private Map<RMContainer, Resource> preemptFromAppUsingPriorityToSort(FiCaSchedulerApp app, Resource clusterResource,
-	                                                                     Resource rsrcPreempt,
-	                                                                     List<RMContainer> skippedAMContainerlist,
-	                                                                     Resource skippedAMSize) {
+	private Map<RMContainer, Resource> preemptFromAppUsingPreemptionPriorityToSort(FiCaSchedulerApp app, Resource clusterResource,
+	                                                                               Resource rsrcPreempt,
+	                                                                               List<RMContainer> skippedAMContainerlist,
+	                                                                               Resource skippedAMSize) {
 		return preemptFromApp(app, clusterResource, rsrcPreempt, skippedAMContainerlist, skippedAMSize, "priority");
 	}
 
@@ -850,12 +873,26 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 	 * Given a target preemption for a specific application, select containers
 	 * to preempt (after unreserving all reservation for that app).
 	 *
-	 * 容器抢占
+	 * @param app
+	 * @param clusterResource
+	 * @param rsrcPreempt
+	 * @return Map<RMContainer,Resource> mapping from container to resource
+	 */
+	private Map<RMContainer, Resource> preemptFromAppUsingPriorityToSort(FiCaSchedulerApp app, Resource clusterResource,
+	                                                                     Resource rsrcPreempt,
+	                                                                     List<RMContainer> skippedAMContainerlist,
+	                                                                     Resource skippedAMSize) {
+		return preemptFromApp(app, clusterResource, rsrcPreempt, skippedAMContainerlist, skippedAMSize, "preemption priority");
+	}
+
+	/**
+	 * Given a target preemption for a specific application, select containers
+	 * to preempt (after unreserving all reservation for that app).
 	 *
 	 * @param app
 	 * @param clusterResource
 	 * @param rsrcPreempt
-	 * @param kw "resource" or "priority", determine how the container is sorted and scheduled
+	 * @param kw              "resource" or "priority", determine how the container is sorted and scheduled
 	 * @return Map<RMContainer,Resource> mapping from container to resource
 	 */
 	private Map<RMContainer, Resource> preemptFromApp(FiCaSchedulerApp app,
@@ -879,10 +916,12 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 
 		List<RMContainer> containers =
 			new ArrayList<>(((FiCaSchedulerApp) app).getUnPreemtedContainers());
-		if (kw.equals("priority")) {
+		if ("priority".equals(kw)) {
 			sortContainersByPriority(containers);
-		} else if (kw.equals("resource")) {
+		} else if ("resource".equals(kw)) {
 			sortContainersByResource(containers, clusterResource);
+		} else if ("preemption priority".equals(kw)) {
+			sortContainersByPreemptionPriority(containers);
 		}
 
 
@@ -939,8 +978,9 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 	}
 
 	/**
-	 * Compare by reversed priority order first, and then reversed containerId 按照优先级和id来排序
+	 * Compare by reversed priority order first, and then reversed containerId
 	 * order
+	 *
 	 * @param containers
 	 */
 	@VisibleForTesting
@@ -956,6 +996,23 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 					return priorityComp;
 				}
 				return b.getContainerId().compareTo(a.getContainerId());
+			}
+		});
+	}
+
+	/**
+	 * Compare by preemption priority order first, and then reversed containerId
+	 * order
+	 *
+	 * @param containers
+	 */
+	@VisibleForTesting
+	static void sortContainersByPreemptionPriority(List<RMContainer> containers) {
+		Collections.sort(containers, new Comparator<RMContainer>() {
+			@Override
+			public int compare(RMContainer a, RMContainer b) {
+
+				return b.getContainer().getPreemptionPriority().compareTo(a.getContainer().getPreemptionPriority());
 			}
 		});
 	}
@@ -995,7 +1052,7 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 	 * the leaves. Finally it aggregates pending resources in each queue and rolls
 	 * it up to higher levels.
 	 *
-	 * @param root the root of the CapacityScheduler queue hierarchy
+	 * @param root             the root of the CapacityScheduler queue hierarchy
 	 * @param clusterResources the total amount of resources in the cluster
 	 * @return the root of the cloned queue hierarchy
 	 */
@@ -1138,6 +1195,7 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 
 		/**
 		 * When adding a child we also aggregate its pending resource needs.
+		 *
 		 * @param q the child queue to add to this queue
 		 */
 		public void addChild(TempQueue q) {
