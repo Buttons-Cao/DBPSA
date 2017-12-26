@@ -22,6 +22,7 @@ import org.apache.hadoop.classification.InterfaceAudience.Private;
 import org.apache.hadoop.classification.InterfaceAudience.Public;
 import org.apache.hadoop.classification.InterfaceStability.Stable;
 import org.apache.hadoop.classification.InterfaceStability.Unstable;
+import org.apache.hadoop.util.Time;
 import org.apache.hadoop.yarn.api.ApplicationMasterProtocol;
 import org.apache.hadoop.yarn.api.ContainerManagementProtocol;
 import org.apache.hadoop.yarn.util.Records;
@@ -190,5 +191,13 @@ public abstract class Container implements Comparable<Container> {
 
 	@Private
 	@Unstable
-	public abstract long getDeadline();
+	public abstract Time getDeadline();
+
+	@Private
+	@Unstable
+	public abstract int getNumOfBeingPreempted();
+
+	@Private
+	@Unstable
+	public abstract void updateNumOfBeingPreempted();
 }

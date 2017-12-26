@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,6 +24,7 @@ import java.util.Set;
 import org.apache.hadoop.classification.InterfaceAudience.Private;
 import org.apache.hadoop.classification.InterfaceStability.Unstable;
 import org.apache.hadoop.util.StringUtils;
+import org.apache.hadoop.util.Time;
 import org.apache.hadoop.yarn.api.records.ApplicationId;
 import org.apache.hadoop.yarn.api.records.ApplicationSubmissionContext;
 import org.apache.hadoop.yarn.api.records.ContainerLaunchContext;
@@ -46,506 +47,548 @@ import org.apache.hadoop.yarn.proto.YarnProtos.ResourceRequestProto;
 import com.google.common.base.CharMatcher;
 import com.google.protobuf.TextFormat;
 
+/**
+ * @author deqianzou modified on 12/26/2017.
+ */
 @Private
 @Unstable
-public class ApplicationSubmissionContextPBImpl 
-extends ApplicationSubmissionContext {
-  ApplicationSubmissionContextProto proto = 
-      ApplicationSubmissionContextProto.getDefaultInstance();
-  ApplicationSubmissionContextProto.Builder builder = null;
-  boolean viaProto = false;
-  
-  private ApplicationId applicationId = null;
-  private Priority priority = null;
-  private ContainerLaunchContext amContainer = null;
-  private Resource resource = null;
-  private Set<String> applicationTags = null;
-  private ResourceRequest amResourceRequest = null;
-  private LogAggregationContext logAggregationContext = null;
-  private ReservationId reservationId = null;
+public class ApplicationSubmissionContextPBImpl extends ApplicationSubmissionContext {
+	ApplicationSubmissionContextProto proto =
+		ApplicationSubmissionContextProto.getDefaultInstance();
+	ApplicationSubmissionContextProto.Builder builder = null;
+	boolean viaProto = false;
 
-  public ApplicationSubmissionContextPBImpl() {
-    builder = ApplicationSubmissionContextProto.newBuilder();
-  }
+	private Time deadline;
+	private Time arrivalTime;
 
-  public ApplicationSubmissionContextPBImpl(
-      ApplicationSubmissionContextProto proto) {
-    this.proto = proto;
-    viaProto = true;
-  }
-  
-  public ApplicationSubmissionContextProto getProto() {
-      mergeLocalToProto();
-    proto = viaProto ? proto : builder.build();
-    viaProto = true;
-    return proto;
-  }
+	private ApplicationId applicationId = null;
+	private Priority priority = null;
+	private ContainerLaunchContext amContainer = null;
+	private Resource resource = null;
+	private Set<String> applicationTags = null;
+	private ResourceRequest amResourceRequest = null;
+	private LogAggregationContext logAggregationContext = null;
+	private ReservationId reservationId = null;
 
-  @Override
-  public int hashCode() {
-    return getProto().hashCode();
-  }
+	public ApplicationSubmissionContextPBImpl() {
+		builder = ApplicationSubmissionContextProto.newBuilder();
+	}
 
-  @Override
-  public boolean equals(Object other) {
-    if (other == null)
-      return false;
-    if (other.getClass().isAssignableFrom(this.getClass())) {
-      return this.getProto().equals(this.getClass().cast(other).getProto());
-    }
-    return false;
-  }
+	public ApplicationSubmissionContextPBImpl(
+		ApplicationSubmissionContextProto proto) {
+		this.proto = proto;
+		viaProto = true;
+	}
 
-  @Override
-  public String toString() {
-    return TextFormat.shortDebugString(getProto());
-  }
+	public ApplicationSubmissionContextProto getProto() {
+		mergeLocalToProto();
+		proto = viaProto ? proto : builder.build();
+		viaProto = true;
+		return proto;
+	}
 
-  private void mergeLocalToBuilder() {
-    if (this.applicationId != null) {
-      builder.setApplicationId(convertToProtoFormat(this.applicationId));
-    }
-    if (this.priority != null) {
-      builder.setPriority(convertToProtoFormat(this.priority));
-    }
-    if (this.amContainer != null) {
-      builder.setAmContainerSpec(convertToProtoFormat(this.amContainer));
-    }
-    if (this.resource != null &&
-        !((ResourcePBImpl) this.resource).getProto().equals(
-            builder.getResource())) {
-      builder.setResource(convertToProtoFormat(this.resource));
-    }
-    if (this.applicationTags != null && !this.applicationTags.isEmpty()) {
-      builder.clearApplicationTags();
-      builder.addAllApplicationTags(this.applicationTags);
-    }
-    if (this.amResourceRequest != null) {
-      builder.setAmContainerResourceRequest(
-          convertToProtoFormat(this.amResourceRequest));
-    }
-    if (this.logAggregationContext != null) {
-      builder.setLogAggregationContext(
-          convertToProtoFormat(this.logAggregationContext));
-    }
-    if (this.reservationId != null) {
-      builder.setReservationId(convertToProtoFormat(this.reservationId));
-    }
-  }
+	@Override
+	public int hashCode() {
+		return getProto().hashCode();
+	}
 
-  private void mergeLocalToProto() {
-    if (viaProto) 
-      maybeInitBuilder();
-    mergeLocalToBuilder();
-    proto = builder.build();
-    viaProto = true;
-  }
+	@Override
+	public boolean equals(Object other) {
+		if (other == null) {
+			return false;
+		}
+		if (other.getClass().isAssignableFrom(this.getClass())) {
+			return this.getProto().equals(this.getClass().cast(other).getProto());
+		}
+		return false;
+	}
 
-  private void maybeInitBuilder() {
-    if (viaProto || builder == null) {
-      builder = ApplicationSubmissionContextProto.newBuilder(proto);
-    }
-    viaProto = false;
-  }
+	@Override
+	public String toString() {
+		return TextFormat.shortDebugString(getProto());
+	}
 
-  @Override
-  public Priority getPriority() {
-    ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
-    if (this.priority != null) {
-      return this.priority;
-    }
-    if (!p.hasPriority()) {
-      return null;
-    }
-    this.priority = convertFromProtoFormat(p.getPriority());
-    return this.priority;
-  }
-  
-  @Override
-  public void setPriority(Priority priority) {
-    maybeInitBuilder();
-    if (priority == null)
-      builder.clearPriority();
-    this.priority = priority;
-  }
-  
-  @Override
-  public ApplicationId getApplicationId() {
-    ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
-    if (this.applicationId != null) {
-      return applicationId;
-    } // Else via proto
-    if (!p.hasApplicationId()) {
-      return null;
-    }
-    applicationId = convertFromProtoFormat(p.getApplicationId());
-    return applicationId;
-  }
+	private void mergeLocalToBuilder() {
+		if (this.applicationId != null) {
+			builder.setApplicationId(convertToProtoFormat(this.applicationId));
+		}
+		if (this.priority != null) {
+			builder.setPriority(convertToProtoFormat(this.priority));
+		}
+		if (this.amContainer != null) {
+			builder.setAmContainerSpec(convertToProtoFormat(this.amContainer));
+		}
+		if (this.resource != null &&
+			!((ResourcePBImpl) this.resource).getProto().equals(
+				builder.getResource())) {
+			builder.setResource(convertToProtoFormat(this.resource));
+		}
+		if (this.applicationTags != null && !this.applicationTags.isEmpty()) {
+			builder.clearApplicationTags();
+			builder.addAllApplicationTags(this.applicationTags);
+		}
+		if (this.amResourceRequest != null) {
+			builder.setAmContainerResourceRequest(
+				convertToProtoFormat(this.amResourceRequest));
+		}
+		if (this.logAggregationContext != null) {
+			builder.setLogAggregationContext(
+				convertToProtoFormat(this.logAggregationContext));
+		}
+		if (this.reservationId != null) {
+			builder.setReservationId(convertToProtoFormat(this.reservationId));
+		}
+	}
 
-  @Override
-  public void setApplicationId(ApplicationId applicationId) {
-    maybeInitBuilder();
-    if (applicationId == null)
-      builder.clearApplicationId();
-    this.applicationId = applicationId;
-  }
-  
-  @Override
-  public String getApplicationName() {
-    ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
-    if (!p.hasApplicationName()) {
-      return null;
-    }
-    return (p.getApplicationName());
-  }
+	private void mergeLocalToProto() {
+		if (viaProto) {
+			maybeInitBuilder();
+		}
+		mergeLocalToBuilder();
+		proto = builder.build();
+		viaProto = true;
+	}
 
-  @Override
-  public void setApplicationName(String applicationName) {
-    maybeInitBuilder();
-    if (applicationName == null) {
-      builder.clearApplicationName();
-      return;
-    }
-    builder.setApplicationName((applicationName));
-  }
+	private void maybeInitBuilder() {
+		if (viaProto || builder == null) {
+			builder = ApplicationSubmissionContextProto.newBuilder(proto);
+		}
+		viaProto = false;
+	}
 
-  @Override
-  public String getQueue() {
-    ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
-    if (!p.hasQueue()) {
-      return null;
-    }
-    return (p.getQueue());
-  }
+	@Override
+	public Priority getPriority() {
+		ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
+		if (this.priority != null) {
+			return this.priority;
+		}
+		if (!p.hasPriority()) {
+			return null;
+		}
+		this.priority = convertFromProtoFormat(p.getPriority());
+		return this.priority;
+	}
 
-  @Override
-  public String getApplicationType() {
-    ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
-    if (!p.hasApplicationType()) {
-      return null;
-    }
-    return (p.getApplicationType());
-  }
+	@Override
+	public void setPriority(Priority priority) {
+		maybeInitBuilder();
+		if (priority == null) {
+			builder.clearPriority();
+		}
+		this.priority = priority;
+	}
 
-  private void initApplicationTags() {
-    if (this.applicationTags != null) {
-      return;
-    }
-    ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
-    this.applicationTags = new HashSet<String>();
-    this.applicationTags.addAll(p.getApplicationTagsList());
-  }
+	@Override
+	public ApplicationId getApplicationId() {
+		ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
+		if (this.applicationId != null) {
+			return applicationId;
+		} // Else via proto
+		if (!p.hasApplicationId()) {
+			return null;
+		}
+		applicationId = convertFromProtoFormat(p.getApplicationId());
+		return applicationId;
+	}
 
-  @Override
-  public Set<String> getApplicationTags() {
-    initApplicationTags();
-    return this.applicationTags;
-  }
+	@Override
+	public void setApplicationId(ApplicationId applicationId) {
+		maybeInitBuilder();
+		if (applicationId == null) {
+			builder.clearApplicationId();
+		}
+		this.applicationId = applicationId;
+	}
 
-  @Override
-  public void setQueue(String queue) {
-    maybeInitBuilder();
-    if (queue == null) {
-      builder.clearQueue();
-      return;
-    }
-    builder.setQueue((queue));
-  }
-  
-  @Override
-  public void setApplicationType(String applicationType) {
-    maybeInitBuilder();
-    if (applicationType == null) {
-      builder.clearApplicationType();
-      return;
-    }
-    builder.setApplicationType((applicationType));
-  }
+	@Override
+	public String getApplicationName() {
+		ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
+		if (!p.hasApplicationName()) {
+			return null;
+		}
+		return (p.getApplicationName());
+	}
 
-  private void checkTags(Set<String> tags) {
-    if (tags.size() > YarnConfiguration.APPLICATION_MAX_TAGS) {
-      throw new IllegalArgumentException("Too many applicationTags, a maximum of only "
-          + YarnConfiguration.APPLICATION_MAX_TAGS + " are allowed!");
-    }
-    for (String tag : tags) {
-      if (tag.length() > YarnConfiguration.APPLICATION_MAX_TAG_LENGTH) {
-        throw new IllegalArgumentException("Tag " + tag + " is too long, " +
-            "maximum allowed length of a tag is " +
-            YarnConfiguration.APPLICATION_MAX_TAG_LENGTH);
-      }
-      if (!CharMatcher.ASCII.matchesAllOf(tag)) {
-        throw new IllegalArgumentException("A tag can only have ASCII " +
-            "characters! Invalid tag - " + tag);
-      }
-    }
-  }
+	@Override
+	public void setApplicationName(String applicationName) {
+		maybeInitBuilder();
+		if (applicationName == null) {
+			builder.clearApplicationName();
+			return;
+		}
+		builder.setApplicationName((applicationName));
+	}
 
-  @Override
-  public void setApplicationTags(Set<String> tags) {
-    maybeInitBuilder();
-    if (tags == null || tags.isEmpty()) {
-      builder.clearApplicationTags();
-      this.applicationTags = null;
-      return;
-    }
-    checkTags(tags);
-    // Convert applicationTags to lower case and add
-    this.applicationTags = new HashSet<String>();
-    for (String tag : tags) {
-      this.applicationTags.add(StringUtils.toLowerCase(tag));
-    }
-  }
+	@Override
+	public String getQueue() {
+		ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
+		if (!p.hasQueue()) {
+			return null;
+		}
+		return (p.getQueue());
+	}
 
-  @Override
-  public ContainerLaunchContext getAMContainerSpec() {
-    ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
-    if (this.amContainer != null) {
-      return amContainer;
-    } // Else via proto
-    if (!p.hasAmContainerSpec()) {
-      return null;
-    }
-    amContainer = convertFromProtoFormat(p.getAmContainerSpec());
-    return amContainer;
-  }
+	@Override
+	public String getApplicationType() {
+		ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
+		if (!p.hasApplicationType()) {
+			return null;
+		}
+		return (p.getApplicationType());
+	}
 
-  @Override
-  public void setAMContainerSpec(ContainerLaunchContext amContainer) {
-    maybeInitBuilder();
-    if (amContainer == null) {
-      builder.clearAmContainerSpec();
-    }
-    this.amContainer = amContainer;
-  }
-  
-  @Override
-  public boolean getUnmanagedAM() {
-    ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
-    return p.getUnmanagedAm();
-  }
-  
-  @Override
-  public void setUnmanagedAM(boolean value) {
-    maybeInitBuilder();
-    builder.setUnmanagedAm(value);
-  }
-  
-  @Override
-  public boolean getCancelTokensWhenComplete() {
-    ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
-    //There is a default so cancelTokens should never be null
-    return p.getCancelTokensWhenComplete();
-  }
-  
-  @Override
-  public void setCancelTokensWhenComplete(boolean cancel) {
-    maybeInitBuilder();
-    builder.setCancelTokensWhenComplete(cancel);
-  }
+	private void initApplicationTags() {
+		if (this.applicationTags != null) {
+			return;
+		}
+		ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
+		this.applicationTags = new HashSet<String>();
+		this.applicationTags.addAll(p.getApplicationTagsList());
+	}
 
-  @Override
-  public int getMaxAppAttempts() {
-    ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
-    return p.getMaxAppAttempts();
-  }
+	@Override
+	public Set<String> getApplicationTags() {
+		initApplicationTags();
+		return this.applicationTags;
+	}
 
-  @Override
-  public void setMaxAppAttempts(int maxAppAttempts) {
-    maybeInitBuilder();
-    builder.setMaxAppAttempts(maxAppAttempts);
-  }
+	@Override
+	public void setQueue(String queue) {
+		maybeInitBuilder();
+		if (queue == null) {
+			builder.clearQueue();
+			return;
+		}
+		builder.setQueue((queue));
+	}
 
-  @Override
-  public Resource getResource() {
-    ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
-    if (this.resource != null) {
-      return this.resource;
-    }
-    if (!p.hasResource()) {
-      return null;
-    }
-    this.resource = convertFromProtoFormat(p.getResource());
-    return this.resource;
-  }
+	@Override
+	public void setApplicationType(String applicationType) {
+		maybeInitBuilder();
+		if (applicationType == null) {
+			builder.clearApplicationType();
+			return;
+		}
+		builder.setApplicationType((applicationType));
+	}
 
-  @Override
-  public void setResource(Resource resource) {
-    maybeInitBuilder();
-    if (resource == null) {
-      builder.clearResource();
-    }
-    this.resource = resource;
-  }
+	private void checkTags(Set<String> tags) {
+		if (tags.size() > YarnConfiguration.APPLICATION_MAX_TAGS) {
+			throw new IllegalArgumentException("Too many applicationTags, a maximum of only "
+				+ YarnConfiguration.APPLICATION_MAX_TAGS + " are allowed!");
+		}
+		for (String tag : tags) {
+			if (tag.length() > YarnConfiguration.APPLICATION_MAX_TAG_LENGTH) {
+				throw new IllegalArgumentException("Tag " + tag + " is too long, " +
+					"maximum allowed length of a tag is " +
+					YarnConfiguration.APPLICATION_MAX_TAG_LENGTH);
+			}
+			if (!CharMatcher.ASCII.matchesAllOf(tag)) {
+				throw new IllegalArgumentException("A tag can only have ASCII " +
+					"characters! Invalid tag - " + tag);
+			}
+		}
+	}
 
-  @Override
-  public ReservationId getReservationID() {
-    ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
-    if (reservationId != null) {
-      return reservationId;
-    }
-    if (!p.hasReservationId()) {
-      return null;
-    }
-    reservationId = convertFromProtoFormat(p.getReservationId());
-    return reservationId;
-  }
+	@Override
+	public void setApplicationTags(Set<String> tags) {
+		maybeInitBuilder();
+		if (tags == null || tags.isEmpty()) {
+			builder.clearApplicationTags();
+			this.applicationTags = null;
+			return;
+		}
+		checkTags(tags);
+		// Convert applicationTags to lower case and add
+		this.applicationTags = new HashSet<String>();
+		for (String tag : tags) {
+			this.applicationTags.add(StringUtils.toLowerCase(tag));
+		}
+	}
 
-  @Override
-  public void setReservationID(ReservationId reservationID) {
-    maybeInitBuilder();
-    if (reservationID == null) {
-      builder.clearReservationId();
-      return;
-    }
-    this.reservationId = reservationID;
-  }
+	@Override
+	public ContainerLaunchContext getAMContainerSpec() {
+		ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
+		if (this.amContainer != null) {
+			return amContainer;
+		} // Else via proto
+		if (!p.hasAmContainerSpec()) {
+			return null;
+		}
+		amContainer = convertFromProtoFormat(p.getAmContainerSpec());
+		return amContainer;
+	}
 
-  @Override
-  public void
-      setKeepContainersAcrossApplicationAttempts(boolean keepContainers) {
-    maybeInitBuilder();
-    builder.setKeepContainersAcrossApplicationAttempts(keepContainers);
-  }
+	@Override
+	public void setAMContainerSpec(ContainerLaunchContext amContainer) {
+		maybeInitBuilder();
+		if (amContainer == null) {
+			builder.clearAmContainerSpec();
+		}
+		this.amContainer = amContainer;
+	}
 
-  @Override
-  public boolean getKeepContainersAcrossApplicationAttempts() {
-    ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
-    return p.getKeepContainersAcrossApplicationAttempts();
-  }
+	@Override
+	public boolean getUnmanagedAM() {
+		ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
+		return p.getUnmanagedAm();
+	}
 
-  private PriorityPBImpl convertFromProtoFormat(PriorityProto p) {
-    return new PriorityPBImpl(p);
-  }
+	@Override
+	public void setUnmanagedAM(boolean value) {
+		maybeInitBuilder();
+		builder.setUnmanagedAm(value);
+	}
 
-  private PriorityProto convertToProtoFormat(Priority t) {
-    return ((PriorityPBImpl)t).getProto();
-  }
-  
-  private ResourceRequestPBImpl convertFromProtoFormat(ResourceRequestProto p) {
-    return new ResourceRequestPBImpl(p);
-  }
+	@Override
+	public boolean getCancelTokensWhenComplete() {
+		ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
+		//There is a default so cancelTokens should never be null
+		return p.getCancelTokensWhenComplete();
+	}
 
-  private ResourceRequestProto convertToProtoFormat(ResourceRequest t) {
-    return ((ResourceRequestPBImpl)t).getProto();
-  }
+	@Override
+	public void setCancelTokensWhenComplete(boolean cancel) {
+		maybeInitBuilder();
+		builder.setCancelTokensWhenComplete(cancel);
+	}
 
-  private ApplicationIdPBImpl convertFromProtoFormat(ApplicationIdProto p) {
-    return new ApplicationIdPBImpl(p);
-  }
+	@Override
+	public int getMaxAppAttempts() {
+		ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
+		return p.getMaxAppAttempts();
+	}
 
-  private ApplicationIdProto convertToProtoFormat(ApplicationId t) {
-    return ((ApplicationIdPBImpl)t).getProto();
-  }
+	@Override
+	public void setMaxAppAttempts(int maxAppAttempts) {
+		maybeInitBuilder();
+		builder.setMaxAppAttempts(maxAppAttempts);
+	}
 
-  private ContainerLaunchContextPBImpl convertFromProtoFormat(
-      ContainerLaunchContextProto p) {
-    return new ContainerLaunchContextPBImpl(p);
-  }
+	@Override
+	public Resource getResource() {
+		ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
+		if (this.resource != null) {
+			return this.resource;
+		}
+		if (!p.hasResource()) {
+			return null;
+		}
+		this.resource = convertFromProtoFormat(p.getResource());
+		return this.resource;
+	}
 
-  private ContainerLaunchContextProto convertToProtoFormat(
-      ContainerLaunchContext t) {
-    return ((ContainerLaunchContextPBImpl)t).getProto();
-  }
+	@Override
+	public void setResource(Resource resource) {
+		maybeInitBuilder();
+		if (resource == null) {
+			builder.clearResource();
+		}
+		this.resource = resource;
+	}
 
-  private ResourcePBImpl convertFromProtoFormat(ResourceProto p) {
-    return new ResourcePBImpl(p);
-  }
+	@Override
+	public ReservationId getReservationID() {
+		ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
+		if (reservationId != null) {
+			return reservationId;
+		}
+		if (!p.hasReservationId()) {
+			return null;
+		}
+		reservationId = convertFromProtoFormat(p.getReservationId());
+		return reservationId;
+	}
 
-  private ResourceProto convertToProtoFormat(Resource t) {
-    return ((ResourcePBImpl)t).getProto();
-  }
+	@Override
+	public void setReservationID(ReservationId reservationID) {
+		maybeInitBuilder();
+		if (reservationID == null) {
+			builder.clearReservationId();
+			return;
+		}
+		this.reservationId = reservationID;
+	}
 
-  @Override
-  public String getNodeLabelExpression() {
-    ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
-    if (!p.hasNodeLabelExpression()) {
-      return null;
-    }
-    return p.getNodeLabelExpression();
-  }
+	@Override
+	public void
+	setKeepContainersAcrossApplicationAttempts(boolean keepContainers) {
+		maybeInitBuilder();
+		builder.setKeepContainersAcrossApplicationAttempts(keepContainers);
+	}
 
-  @Override
-  public void setNodeLabelExpression(String labelExpression) {
-    maybeInitBuilder();
-    if (labelExpression == null) {
-      builder.clearNodeLabelExpression();
-      return;
-    }
-    builder.setNodeLabelExpression(labelExpression);
-  }
-  
-  @Override
-  public ResourceRequest getAMContainerResourceRequest() {
-    ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
-    if (this.amResourceRequest != null) {
-      return amResourceRequest;
-    } // Else via proto
-    if (!p.hasAmContainerResourceRequest()) {
-      return null;
-    }
-    amResourceRequest = convertFromProtoFormat(p.getAmContainerResourceRequest());
-    return amResourceRequest;
-  }
+	@Override
+	public boolean getKeepContainersAcrossApplicationAttempts() {
+		ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
+		return p.getKeepContainersAcrossApplicationAttempts();
+	}
 
-  @Override
-  public void setAMContainerResourceRequest(ResourceRequest request) {
-    maybeInitBuilder();
-    if (request == null) {
-      builder.clearAmContainerResourceRequest();
-    }
-    this.amResourceRequest = request;
-  }
+	private PriorityPBImpl convertFromProtoFormat(PriorityProto p) {
+		return new PriorityPBImpl(p);
+	}
 
-  @Override
-  public long getAttemptFailuresValidityInterval() {
-    ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
-    return p.getAttemptFailuresValidityInterval();
-  }
+	private PriorityProto convertToProtoFormat(Priority t) {
+		return ((PriorityPBImpl) t).getProto();
+	}
 
-  @Override
-  public void setAttemptFailuresValidityInterval(
-      long attemptFailuresValidityInterval) {
-    maybeInitBuilder();
-    builder.setAttemptFailuresValidityInterval(attemptFailuresValidityInterval);
-  }
+	private ResourceRequestPBImpl convertFromProtoFormat(ResourceRequestProto p) {
+		return new ResourceRequestPBImpl(p);
+	}
 
-  private LogAggregationContextPBImpl convertFromProtoFormat(
-      LogAggregationContextProto p) {
-    return new LogAggregationContextPBImpl(p);
-  }
+	private ResourceRequestProto convertToProtoFormat(ResourceRequest t) {
+		return ((ResourceRequestPBImpl) t).getProto();
+	}
 
-  private LogAggregationContextProto convertToProtoFormat(
-      LogAggregationContext t) {
-    return ((LogAggregationContextPBImpl) t).getProto();
-  }
+	private ApplicationIdPBImpl convertFromProtoFormat(ApplicationIdProto p) {
+		return new ApplicationIdPBImpl(p);
+	}
 
-  @Override
-  public LogAggregationContext getLogAggregationContext() {
-    ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
-    if (this.logAggregationContext != null) {
-      return this.logAggregationContext;
-    } // Else via proto
-    if (!p.hasLogAggregationContext()) {
-      return null;
-    }
-    logAggregationContext = convertFromProtoFormat(p.getLogAggregationContext());
-    return logAggregationContext;
-  }
+	private ApplicationIdProto convertToProtoFormat(ApplicationId t) {
+		return ((ApplicationIdPBImpl) t).getProto();
+	}
 
-  @Override
-  public void setLogAggregationContext(
-      LogAggregationContext logAggregationContext) {
-    maybeInitBuilder();
-    if (logAggregationContext == null)
-      builder.clearLogAggregationContext();
-    this.logAggregationContext = logAggregationContext;
-  }
+	private ContainerLaunchContextPBImpl convertFromProtoFormat(
+		ContainerLaunchContextProto p) {
+		return new ContainerLaunchContextPBImpl(p);
+	}
 
-  private ReservationIdPBImpl convertFromProtoFormat(ReservationIdProto p) {
-    return new ReservationIdPBImpl(p);
-  }
+	private ContainerLaunchContextProto convertToProtoFormat(
+		ContainerLaunchContext t) {
+		return ((ContainerLaunchContextPBImpl) t).getProto();
+	}
 
-  private ReservationIdProto convertToProtoFormat(ReservationId t) {
-    return ((ReservationIdPBImpl) t).getProto();
-  }
+	private ResourcePBImpl convertFromProtoFormat(ResourceProto p) {
+		return new ResourcePBImpl(p);
+	}
+
+	private ResourceProto convertToProtoFormat(Resource t) {
+		return ((ResourcePBImpl) t).getProto();
+	}
+
+	@Override
+	public String getNodeLabelExpression() {
+		ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
+		if (!p.hasNodeLabelExpression()) {
+			return null;
+		}
+		return p.getNodeLabelExpression();
+	}
+
+	@Override
+	public void setNodeLabelExpression(String labelExpression) {
+		maybeInitBuilder();
+		if (labelExpression == null) {
+			builder.clearNodeLabelExpression();
+			return;
+		}
+		builder.setNodeLabelExpression(labelExpression);
+	}
+
+	@Override
+	public ResourceRequest getAMContainerResourceRequest() {
+		ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
+		if (this.amResourceRequest != null) {
+			return amResourceRequest;
+		} // Else via proto
+		if (!p.hasAmContainerResourceRequest()) {
+			return null;
+		}
+		amResourceRequest = convertFromProtoFormat(p.getAmContainerResourceRequest());
+		return amResourceRequest;
+	}
+
+	@Override
+	public void setAMContainerResourceRequest(ResourceRequest request) {
+		maybeInitBuilder();
+		if (request == null) {
+			builder.clearAmContainerResourceRequest();
+		}
+		this.amResourceRequest = request;
+	}
+
+	@Override
+	public long getAttemptFailuresValidityInterval() {
+		ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
+		return p.getAttemptFailuresValidityInterval();
+	}
+
+	@Override
+	public void setAttemptFailuresValidityInterval(
+		long attemptFailuresValidityInterval) {
+		maybeInitBuilder();
+		builder.setAttemptFailuresValidityInterval(attemptFailuresValidityInterval);
+	}
+
+	private LogAggregationContextPBImpl convertFromProtoFormat(
+		LogAggregationContextProto p) {
+		return new LogAggregationContextPBImpl(p);
+	}
+
+	private LogAggregationContextProto convertToProtoFormat(
+		LogAggregationContext t) {
+		return ((LogAggregationContextPBImpl) t).getProto();
+	}
+
+	@Override
+	public LogAggregationContext getLogAggregationContext() {
+		ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
+		if (this.logAggregationContext != null) {
+			return this.logAggregationContext;
+		} // Else via proto
+		if (!p.hasLogAggregationContext()) {
+			return null;
+		}
+		logAggregationContext = convertFromProtoFormat(p.getLogAggregationContext());
+		return logAggregationContext;
+	}
+
+	@Override
+	public void setLogAggregationContext(LogAggregationContext logAggregationContext) {
+		maybeInitBuilder();
+		if (logAggregationContext == null) {
+			builder.clearLogAggregationContext();
+		}
+		this.logAggregationContext = logAggregationContext;
+	}
+
+	@Override
+	public Time getDeadline() {
+		ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
+		if (this.deadline != null) {
+			return this.deadline;
+		} // Else via proto
+		if (!p.hasDeadline()) {
+			return null;
+		}
+		deadline = convertFromProtoFormat(p.getDeadline());
+		return deadline;
+	}
+
+	@Override
+	public Time getArrivalTime() {
+		ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
+		if (this.arrivalTime != null) {
+			return this.arrivalTime;
+		} // Else via proto
+		if (!p.hasArrivalTime()) {
+			return null;
+		}
+		arrivalTime = convertFromProtoFormat(p.getArrivalTime());
+		return arrivalTime;
+	}
+
+	@Override
+	public void setDeadline(long deadline) {
+	}
+
+	public void setArriavalTime(long arrivalTime) {
+	}
+
+	private ReservationIdPBImpl convertFromProtoFormat(ReservationIdProto p) {
+		return new ReservationIdPBImpl(p);
+	}
+
+	private ReservationIdProto convertToProtoFormat(ReservationId t) {
+		return ((ReservationIdPBImpl) t).getProto();
+	}
 }  

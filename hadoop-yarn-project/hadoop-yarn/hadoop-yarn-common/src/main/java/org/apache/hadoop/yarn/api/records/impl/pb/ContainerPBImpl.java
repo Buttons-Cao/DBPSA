@@ -21,6 +21,7 @@ package org.apache.hadoop.yarn.api.records.impl.pb;
 import org.apache.hadoop.classification.InterfaceAudience.Private;
 import org.apache.hadoop.classification.InterfaceStability.Unstable;
 import org.apache.hadoop.security.proto.SecurityProtos.TokenProto;
+import org.apache.hadoop.util.Time;
 import org.apache.hadoop.yarn.api.records.*;
 import org.apache.hadoop.yarn.proto.YarnProtos.ContainerIdProto;
 import org.apache.hadoop.yarn.proto.YarnProtos.ContainerProto;
@@ -48,14 +49,14 @@ public class ContainerPBImpl extends Container {
 	private PreemptionPriority preemptionPriority = null;
 
 	// add deadline for scheduling
-	private long deadline;
+	private Time deadline;
 
-	public ContainerPBImpl(long deadline) {
+	public ContainerPBImpl(Time deadline) {
 		builder = ContainerProto.newBuilder();
 		this.deadline = deadline;
 	}
 
-	public ContainerPBImpl(ContainerProto proto, long deadline) {
+	public ContainerPBImpl(ContainerProto proto, Time deadline) {
 		this.proto = proto;
 		viaProto = true;
 		this.deadline = deadline;
@@ -237,7 +238,7 @@ public class ContainerPBImpl extends Container {
 		if (this.preemptionPriority != null) {
 			return this.preemptionPriority;
 		}
-		if (!p.hasPriority()) {
+		if (!p.hasPreemptionPriority()) {
 			return null;
 		}
 		this.preemptionPriority = convertFromProtoFormat(p.getPreemptionPriority());
@@ -250,8 +251,30 @@ public class ContainerPBImpl extends Container {
 		preemptionPriority.setPreemptionPriority(p);
 	}
 
+	@Override
 	public int getNumOfBeingPreempted() {
-		return numOfBeingPreempted;
+		if (this.numOfBeingPreempted >= 0) {
+			return this.numOfBeingPreempted;
+		}
+		ContainerProtoOrBuilder p = viaProto ? proto : builder;
+		if (!p.hasNumOfBeingPreempted()) {
+			return 0;
+		}
+		this.numOfBeingPreempted = convertFromProtoFormat(p.getNumOfBeingPreempted());
+		return this.numOfBeingPreempted;
+	}
+
+	@Override
+	public void updateNumOfBeingPreempted(){
+		if (this.numOfBeingPreempted >= 0) {
+			return this.numOfBeingPreempted;
+		}
+		ContainerProtoOrBuilder p = viaProto ? proto : builder;
+		if (!p.hasNumOfBeingPreempted()) {
+			return 0;
+		}
+		this.numOfBeingPreempted = convertFromProtoFormat(p.getNumOfBeingPreempted());
+		numOfBeingPreempted++;
 	}
 
 	@Override
@@ -268,8 +291,16 @@ public class ContainerPBImpl extends Container {
 	}
 
 	@Override
-	public long getDeadline(){
-		return deadline;
+	public Time getDeadline(){
+		if (this.deadline != null) {
+			return this.deadline;
+		}
+		ContainerProtoOrBuilder p = viaProto ? proto : builder;
+		if (!p.hasDeadline()) {
+			return null;
+		}
+		this.deadline = convertFromProtoFormat(p.getDeadline());
+		return this.deadline;
 	}
 
 	@Override

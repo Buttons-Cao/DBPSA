@@ -704,7 +704,7 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 
 		//for test only
 		if (isTest) {
-			getContainersToPreemptForTest(preemptMap, queues, clusterResource);
+			getContainersToPreemptForTest(preemptMap, queues);
 		}
 
 

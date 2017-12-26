@@ -29,6 +29,7 @@ option java_generate_equals_and_hash = true;
 package hadoop.yarn;
 
 import "Security.proto";
+import "org.apache.hadoop.util.Time";
 
 message SerializedExceptionProto {
     optional string message = 1;
@@ -90,6 +91,8 @@ message ContainerProto {
     optional PriorityProto priority = 5;
     optional PreemptionPriorityProto preemptionPriority = 6;
     optional hadoop.common.TokenProto container_token = 7;
+    optional org.apache.hadoop.util.Time deadline = 8;
+    optional int32 numOfBeingPreempted = 9;
 }
 
 message ContainerReportProto {
@@ -317,6 +320,8 @@ message ApplicationSubmissionContextProto {
     optional ReservationIdProto reservation_id = 16;
     optional string node_label_expression = 17;
     optional ResourceRequestProto am_container_resource_request = 18;
+    optional org.apache.hadoop.util.Time deadline = 19;
+    optional org.apache.hadoop.util.Time arravalTime = 20;
 }
 
 message LogAggregationContextProto {
