@@ -53,13 +53,12 @@ import com.google.protobuf.TextFormat;
 @Private
 @Unstable
 public class ApplicationSubmissionContextPBImpl extends ApplicationSubmissionContext {
-	ApplicationSubmissionContextProto proto =
-		ApplicationSubmissionContextProto.getDefaultInstance();
+	ApplicationSubmissionContextProto proto = ApplicationSubmissionContextProto.getDefaultInstance();
 	ApplicationSubmissionContextProto.Builder builder = null;
 	boolean viaProto = false;
 
-	private Time deadline;
-	private Time arrivalTime;
+	private long deadline;
+	private long arrivalTime;
 
 	private ApplicationId applicationId = null;
 	private Priority priority = null;
@@ -552,26 +551,26 @@ public class ApplicationSubmissionContextPBImpl extends ApplicationSubmissionCon
 	}
 
 	@Override
-	public Time getDeadline() {
+	public long getDeadline() {
 		ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
-		if (this.deadline != null) {
+		if (this.deadline > 0) {
 			return this.deadline;
 		} // Else via proto
 		if (!p.hasDeadline()) {
-			return null;
+			return 0;
 		}
 		deadline = convertFromProtoFormat(p.getDeadline());
 		return deadline;
 	}
 
 	@Override
-	public Time getArrivalTime() {
+	public long getArrivalTime() {
 		ApplicationSubmissionContextProtoOrBuilder p = viaProto ? proto : builder;
-		if (this.arrivalTime != null) {
+		if (this.arrivalTime > 0) {
 			return this.arrivalTime;
 		} // Else via proto
 		if (!p.hasArrivalTime()) {
-			return null;
+			return 0;
 		}
 		arrivalTime = convertFromProtoFormat(p.getArrivalTime());
 		return arrivalTime;

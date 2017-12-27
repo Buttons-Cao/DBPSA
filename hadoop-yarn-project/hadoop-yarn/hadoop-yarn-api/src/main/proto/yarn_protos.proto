@@ -306,22 +306,21 @@ message ApplicationSubmissionContextProto {
     optional string application_name = 2 [default = "N/A"];
     optional string queue = 3 [default = "default"];
     optional PriorityProto priority = 4;
-    optional PreemptionPriorityProto preemptionPriority = 5;
-    optional ContainerLaunchContextProto am_container_spec = 6;
-    optional bool cancel_tokens_when_complete = 7 [default = true];
-    optional bool unmanaged_am = 8 [default = false];
-    optional int32 maxAppAttempts = 9 [default = 0];
-    optional ResourceProto resource = 10;
-    optional string applicationType = 11 [default = "YARN"];
-    optional bool keep_containers_across_application_attempts = 12 [default = false];
-    repeated string applicationTags = 13;
-    optional int64 attempt_failures_validity_interval = 14 [default = -1];
-    optional LogAggregationContextProto log_aggregation_context = 15;
-    optional ReservationIdProto reservation_id = 16;
-    optional string node_label_expression = 17;
-    optional ResourceRequestProto am_container_resource_request = 18;
-    optional org.apache.hadoop.util.Time deadline = 19;
-    optional org.apache.hadoop.util.Time arravalTime = 20;
+    optional ContainerLaunchContextProto am_container_spec = 5;
+    optional bool cancel_tokens_when_complete = 6 [default = true];
+    optional bool unmanaged_am = 7 [default = false];
+    optional int32 maxAppAttempts = 8 [default = 0];
+    optional ResourceProto resource = 9;
+    optional string applicationType = 10 [default = "YARN"];
+    optional bool keep_containers_across_application_attempts = 11 [default = false];
+    repeated string applicationTags = 12;
+    optional int64 attempt_failures_validity_interval = 13 [default = -1];
+    optional LogAggregationContextProto log_aggregation_context = 14;
+    optional ReservationIdProto reservation_id = 15;
+    optional string node_label_expression = 16;
+    optional ResourceRequestProto am_container_resource_request = 17;
+    optional org.apache.hadoop.util.Time deadline = 18;
+    optional org.apache.hadoop.util.Time arravalTime = 19;
 }
 
 message LogAggregationContextProto {

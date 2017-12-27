@@ -72,7 +72,7 @@ public abstract class ApplicationSubmissionContext {
 
 	@Public
 	@Stable
-	public static ApplicationSubmissionContext newInstance(Time deadline, Time arrivalTime, ApplicationId applicationId, String applicationName, String queue,
+	public static ApplicationSubmissionContext newInstance(long deadline, long arrivalTime, ApplicationId applicationId, String applicationName, String queue,
 		Priority priority, ContainerLaunchContext amContainer, boolean isUnmanagedAM, boolean cancelTokensWhenComplete,
 		int maxAppAttempts, Resource resource, String applicationType, boolean keepContainers, String appLabelExpression,
 		String amContainerLabelExpression) {
@@ -104,7 +104,7 @@ public abstract class ApplicationSubmissionContext {
 
 
 
-	public static ApplicationSubmissionContext newInstance(Time deadline, Time arrivalTime,	ApplicationId applicationId,
+	public static ApplicationSubmissionContext newInstance(long deadline, long arrivalTime,	ApplicationId applicationId,
 	                                                       String applicationName, String queue,
 		Priority priority, ContainerLaunchContext amContainer,	boolean isUnmanagedAM, boolean cancelTokensWhenComplete,
 		int maxAppAttempts, Resource resource, String applicationType,	boolean keepContainers) {
@@ -115,7 +115,7 @@ public abstract class ApplicationSubmissionContext {
 
 	@Public
 	@Stable
-	public static ApplicationSubmissionContext newInstance(Time deadline, Time arrivalTime,	ApplicationId applicationId,
+	public static ApplicationSubmissionContext newInstance(long deadline, long arrivalTime,	ApplicationId applicationId,
 	                                                       String applicationName, String queue,
 		Priority priority, ContainerLaunchContext amContainer,	boolean isUnmanagedAM, boolean cancelTokensWhenComplete,
 		int maxAppAttempts, Resource resource, String applicationType) {
@@ -126,7 +126,7 @@ public abstract class ApplicationSubmissionContext {
 
 	@Public
 	@Stable
-	public static ApplicationSubmissionContext newInstance(Time deadline, Time arrivalTime,	ApplicationId applicationId,
+	public static ApplicationSubmissionContext newInstance(long deadline, long arrivalTime,	ApplicationId applicationId,
 	                                                       String applicationName, String queue,
 		Priority priority, ContainerLaunchContext amContainer,	boolean isUnmanagedAM, boolean cancelTokensWhenComplete,
 		int maxAppAttempts, Resource resource) {
@@ -137,7 +137,7 @@ public abstract class ApplicationSubmissionContext {
 
 	@Public
 	@Stable
-	public static ApplicationSubmissionContext newInstance(Time deadline, Time arrivalTime,	ApplicationId applicationId,
+	public static ApplicationSubmissionContext newInstance(long deadline, long arrivalTime,	ApplicationId applicationId,
 	                                                       String applicationName, String queue,
 		ContainerLaunchContext amContainer, boolean isUnmanagedAM,	boolean cancelTokensWhenComplete, int maxAppAttempts,
 		String applicationType, boolean keepContainers,	String appLabelExpression, ResourceRequest resourceRequest) {
@@ -161,7 +161,7 @@ public abstract class ApplicationSubmissionContext {
 
 	@Public
 	@Stable
-	public static ApplicationSubmissionContext newInstance(Time deadline, Time arrivalTime,	ApplicationId applicationId,
+	public static ApplicationSubmissionContext newInstance(long deadline, long arrivalTime,	ApplicationId applicationId,
 	                                                       String applicationName, String queue,
 		Priority priority, ContainerLaunchContext amContainer,	boolean isUnmanagedAM, boolean cancelTokensWhenComplete,
 		int maxAppAttempts, Resource resource, String applicationType,boolean keepContainers,
@@ -175,7 +175,7 @@ public abstract class ApplicationSubmissionContext {
 
 	@Public
 	@Stable
-	public static ApplicationSubmissionContext newInstance(Time deadline, Time arrivalTime,ApplicationId applicationId,
+	public static ApplicationSubmissionContext newInstance(long deadline, long arrivalTime,ApplicationId applicationId,
 	                                                       String applicationName, String queue,
 		Priority priority, ContainerLaunchContext amContainer, boolean isUnmanagedAM, boolean cancelTokensWhenComplete,
 		int maxAppAttempts, Resource resource, String applicationType,
@@ -531,17 +531,17 @@ public abstract class ApplicationSubmissionContext {
 
 	@Public
 	@Unstable
-	public abstract void setDeadline(Time deadline);
+	public abstract void setDeadline(long deadline);
 
 	@Public
 	@Unstable
-	public abstract Time getDeadline();
+	public abstract long getDeadline();
 
 	@Public
 	@Unstable
-	public abstract void setArriavalTime(Time arrivalTime);
+	public abstract void setArriavalTime(long arrivalTime);
 
 	@Public
 	@Unstable
-	public abstract Time getArrivalTime();
+	public abstract long getArrivalTime();
 }

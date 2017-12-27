@@ -366,4 +366,12 @@ public interface ClientProtocol extends VersionedProtocol {
    */
   public LogParams getLogFileParams(JobID jobID, TaskAttemptID taskAttemptID)
       throws IOException, InterruptedException;
+
+  public void setDeadline(long deadline);
+
+  public long getDeadline();
+
+  public void setArrivalTime(long arrivalTime);
+
+  public long getArrivalTime();
 }
