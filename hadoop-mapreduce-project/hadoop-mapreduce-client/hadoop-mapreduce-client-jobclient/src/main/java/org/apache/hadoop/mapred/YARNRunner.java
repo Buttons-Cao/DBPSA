@@ -30,6 +30,7 @@ import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.classification.InterfaceAudience.Private;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileContext;
@@ -324,6 +325,7 @@ public class YARNRunner implements ClientProtocol {
 	public ApplicationSubmissionContext createApplicationSubmissionContext(
 		Configuration jobConf,
 		String jobSubmitDir, Credentials ts) throws IOException {
+		// 生成appID，获取资源信息，获取提交路径信息
 		ApplicationId applicationId = resMgrDelegate.getApplicationId();
 
 		// Setup resource requirements
@@ -342,20 +344,18 @@ public class YARNRunner implements ClientProtocol {
 
 		// Setup LocalResources
 		Map<String, LocalResource> localResources =
-			new HashMap<String, LocalResource>();
+			new HashMap<>(); // 包含job.xml, mapred.jar的位置等本地文件资源的信息？
 
 		Path jobConfPath = new Path(jobSubmitDir, MRJobConfig.JOB_CONF_FILE);
 
 		URL yarnUrlForJobSubmitDir = ConverterUtils
 			.getYarnUrlFromPath(defaultFileContext.getDefaultFileSystem()
-				.resolvePath(
-					defaultFileContext.makeQualified(new Path(jobSubmitDir))));
+				.resolvePath(defaultFileContext.makeQualified(new Path(jobSubmitDir))));
 		LOG.debug("Creating setup context, jobSubmitDir url is "
 			+ yarnUrlForJobSubmitDir);
 
 		localResources.put(MRJobConfig.JOB_CONF_FILE,
-			createApplicationResource(defaultFileContext,
-				jobConfPath, LocalResourceType.FILE));
+			createApplicationResource(defaultFileContext, jobConfPath, LocalResourceType.FILE));
 		if (jobConf.get(MRJobConfig.JAR) != null) {
 			Path jobJarPath = new Path(jobConf.get(MRJobConfig.JAR));
 			LocalResource rc = createApplicationResource(
@@ -389,7 +389,7 @@ public class YARNRunner implements ClientProtocol {
 		ByteBuffer securityTokens = ByteBuffer.wrap(dob.getData(), 0, dob.getLength());
 
 		// Setup the command to run the AM
-		List<String> vargs = new ArrayList<String>(8);
+		List<String> vargs = new ArrayList<>(8);
 		vargs.add(MRApps.crossPlatformifyMREnv(jobConf, Environment.JAVA_HOME)
 			+ "/bin/java");
 
@@ -438,7 +438,7 @@ public class YARNRunner implements ClientProtocol {
 			Path.SEPARATOR + ApplicationConstants.STDERR);
 
 
-		Vector<String> vargsFinal = new Vector<String>(8);
+		Vector<String> vargsFinal = new Vector<>(8);
 		// Final command
 		StringBuilder mergedCommand = new StringBuilder();
 		for (CharSequence str : vargs) {
@@ -451,7 +451,7 @@ public class YARNRunner implements ClientProtocol {
 
 		// Setup the CLASSPATH in environment
 		// i.e. add { Hadoop jars, job jar, CWD } to classpath.
-		Map<String, String> environment = new HashMap<String, String>();
+		Map<String, String> environment = new HashMap<>();
 		MRApps.setClasspath(environment, conf);
 
 		// Shell
@@ -527,7 +527,7 @@ public class YARNRunner implements ClientProtocol {
 				MRJobConfig.DEFAULT_MR_AM_MAX_ATTEMPTS));
 		appContext.setResource(capability);
 		appContext.setApplicationType(MRJobConfig.MR_APPLICATION_TYPE);
-		appContext.setDeadline();
+		appContext.setDeadline(Time.now() + conf.getLong(JobContext.JOB_DEADLINE, 180000L));
 		appContext.setArriavalTime(Time.now());
 		if (tagsFromConf != null && !tagsFromConf.isEmpty()) {
 			appContext.setApplicationTags(new HashSet<>(tagsFromConf));
@@ -710,8 +710,4 @@ public class YARNRunner implements ClientProtocol {
 		}
 	}
 
-	@Override
-	public void setDeadline(long deadline){
-
-	}
 }
