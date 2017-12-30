@@ -19,6 +19,7 @@
 package org.apache.hadoop.tools.mapred.lib;
 
 import org.apache.hadoop.tools.DistCpConstants;
+import org.apache.hadoop.util.Time;
 import org.junit.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -117,7 +118,7 @@ public class TestDynamicInputFormat {
             new Path(cluster.getFileSystem().getUri().toString()
                     +"/tmp/testDynInputFormat/fileList.seq"), options);
 
-    JobContext jobContext = new JobContextImpl(configuration, new JobID());
+    JobContext jobContext = new JobContextImpl(configuration, new JobID(), Time.now(), 123940L);
     DynamicInputFormat<Text, CopyListingFileStatus> inputFormat =
         new DynamicInputFormat<Text, CopyListingFileStatus>();
     List<InputSplit> splits = inputFormat.getSplits(jobContext);

@@ -95,14 +95,14 @@ public class TestCopyOutputFormat {
       JobID jobID = new JobID("200707121733", 1);
 
       try {
-        JobContext context = new JobContextImpl(job.getConfiguration(), jobID);
+        JobContext context = new JobContextImpl(job.getConfiguration(), jobID, job.getArrivalTime(), job.getDeadline());
         outputFormat.checkOutputSpecs(context);
         Assert.fail("No checking for invalid work/commit path");
       } catch (IllegalStateException ignore) { }
 
       CopyOutputFormat.setWorkingDirectory(job, new Path("/tmp/work"));
       try {
-        JobContext context = new JobContextImpl(job.getConfiguration(), jobID);
+        JobContext context = new JobContextImpl(job.getConfiguration(), jobID, job.getArrivalTime(), job.getDeadline());
         outputFormat.checkOutputSpecs(context);
         Assert.fail("No checking for invalid commit path");
       } catch (IllegalStateException ignore) { }
@@ -110,7 +110,7 @@ public class TestCopyOutputFormat {
       job.getConfiguration().set(DistCpConstants.CONF_LABEL_TARGET_WORK_PATH, "");
       CopyOutputFormat.setCommitDirectory(job, new Path("/tmp/commit"));
       try {
-        JobContext context = new JobContextImpl(job.getConfiguration(), jobID);
+        JobContext context = new JobContextImpl(job.getConfiguration(), jobID, job.getArrivalTime(), job.getDeadline());
         outputFormat.checkOutputSpecs(context);
         Assert.fail("No checking for invalid work path");
       } catch (IllegalStateException ignore) { }
@@ -118,7 +118,7 @@ public class TestCopyOutputFormat {
       CopyOutputFormat.setWorkingDirectory(job, new Path("/tmp/work"));
       CopyOutputFormat.setCommitDirectory(job, new Path("/tmp/commit"));
       try {
-        JobContext context = new JobContextImpl(job.getConfiguration(), jobID);
+        JobContext context = new JobContextImpl(job.getConfiguration(), jobID, job.getArrivalTime(), job.getDeadline());
         outputFormat.checkOutputSpecs(context);
       } catch (IllegalStateException ignore) {
         Assert.fail("Output spec check failed.");

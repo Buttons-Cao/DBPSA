@@ -456,4 +456,5 @@ public class ResourceMgrDelegate extends YarnClient {
       throws YarnException, IOException {
     return client.getClusterNodeLabels();
   }
+
 }

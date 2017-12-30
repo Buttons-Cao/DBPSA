@@ -34,6 +34,7 @@ import org.apache.hadoop.tools.CopyListingFileStatus;
 import org.apache.hadoop.tools.DistCpOptions;
 import org.apache.hadoop.tools.StubContext;
 import org.apache.hadoop.security.Credentials;
+import org.apache.hadoop.util.Time;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -109,7 +110,7 @@ public class TestUniformSizeInputFormat {
     CopyListing.getCopyListing(configuration, CREDENTIALS, options).
         buildListing(listFile, options);
 
-    JobContext jobContext = new JobContextImpl(configuration, new JobID());
+    JobContext jobContext = new JobContextImpl(configuration, new JobID(), Time.now(), 123940L);
     UniformSizeInputFormat uniformSizeInputFormat = new UniformSizeInputFormat();
     List<InputSplit> splits
             = uniformSizeInputFormat.getSplits(jobContext);

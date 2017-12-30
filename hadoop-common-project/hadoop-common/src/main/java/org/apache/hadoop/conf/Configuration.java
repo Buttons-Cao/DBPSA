@@ -175,17 +175,17 @@ import com.google.common.base.Preconditions;
 public class Configuration implements Iterable<Map.Entry<String,String>>,
                                       Writable {
   private static final Log LOG =
-    LogFactory.getLog(Configuration.class);
+    LogFactory.getLog(Configuration.class); // LOG
 
   private static final Log LOG_DEPRECATION =
-    LogFactory.getLog("org.apache.hadoop.conf.Configuration.deprecation");
+    LogFactory.getLog("org.apache.hadoop.conf.Configuration.deprecation"); // 弃用？
 
   private boolean quietmode = true;
 
   private static final String DEFAULT_STRING_CHECK =
     "testingforemptydefaultvalue";
 
-  private boolean allowNullValueProperties = false;
+  private boolean allowNullValueProperties = false; // a null point is not valid.
   
   private static class Resource {
     private final Object resource;
@@ -217,20 +217,20 @@ public class Configuration implements Iterable<Map.Entry<String,String>>,
   /**
    * List of configuration resources.
    */
-  private ArrayList<Resource> resources = new ArrayList<Resource>();
+  private ArrayList<Resource> resources = new ArrayList<>();
   
   /**
    * The value reported as the setting resource when a key is set
    * by code rather than a file resource by dumpConfiguration.
    */
-  static final String UNKNOWN_RESOURCE = "Unknown";
+  static final String UNKNOWN_RESOURCE = "Unknown"; // 通过不同的手段设置key会有不同的值
 
 
   /**
    * List of configuration parameters marked <b>final</b>. 
    */
   private Set<String> finalParameters = Collections.newSetFromMap(
-      new ConcurrentHashMap<String, Boolean>());
+      new ConcurrentHashMap<String, Boolean>()); // 一系列布尔类型的值？应该是mapred-site.xml里面的? 为什么有个final？
   
   private boolean loadDefaults = true;
   
@@ -238,14 +238,14 @@ public class Configuration implements Iterable<Map.Entry<String,String>>,
    * Configuration objects
    */
   private static final WeakHashMap<Configuration,Object> REGISTRY = 
-    new WeakHashMap<Configuration,Object>();
+    new WeakHashMap<>();
   
   /**
    * List of default Resources. Resources are loaded in the order of the list 
    * entries
    */
   private static final CopyOnWriteArrayList<String> defaultResources =
-    new CopyOnWriteArrayList<String>();
+    new CopyOnWriteArrayList<>();
 
   private static final Map<ClassLoader, Map<String, WeakReference<Class<?>>>>
     CACHE_CLASSES = new WeakHashMap<ClassLoader, Map<String, WeakReference<Class<?>>>>();
@@ -254,13 +254,13 @@ public class Configuration implements Iterable<Map.Entry<String,String>>,
    * Sentinel value to store negative cache results in {@link #CACHE_CLASSES}.
    */
   private static final Class<?> NEGATIVE_CACHE_SENTINEL =
-    NegativeCacheSentinel.class;
+    NegativeCacheSentinel.class; // 哨兵？阈值？
 
   /**
    * Stores the mapping of key to the resource which modifies or loads 
    * the key most recently
    */
-  private Map<String, String[]> updatingResource;
+  private Map<String, String[]> updatingResource; // ???
  
   /**
    * Class to keep the information about the keys which replace the deprecated
@@ -299,7 +299,7 @@ public class Configuration implements Iterable<Map.Entry<String,String>>,
             message.append(", ");
           }
         }
-        warningMessage = message.toString();
+        warningMessage = message.toString(); // {key} is deprecated. Instead, use {newkey}
       }
       else {
         warningMessage = customMessage;

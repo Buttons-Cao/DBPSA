@@ -22,6 +22,7 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.mapreduce.lib.map.WrappedMapper;
 import org.apache.hadoop.mapreduce.task.JobContextImpl;
 import org.apache.hadoop.mapreduce.task.MapContextImpl;
+import org.apache.hadoop.util.Time;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,7 +36,7 @@ public class TestContextFactory {
   public void setUp() throws Exception {
     conf = new Configuration();
     jobId = new JobID("test", 1);
-    jobContext = new JobContextImpl(conf, jobId);
+    jobContext = new JobContextImpl(conf, jobId, Time.now(), 123940L);
   }
   
   @Test

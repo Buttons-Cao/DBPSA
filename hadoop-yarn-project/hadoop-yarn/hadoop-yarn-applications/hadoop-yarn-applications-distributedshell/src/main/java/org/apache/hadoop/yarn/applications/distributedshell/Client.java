@@ -145,7 +145,7 @@ public class Client {
 	// Args to be passed to the shell command
 	private String[] shellArgs = new String[]{};
 	// Env variables to be setup for the shell command
-	private Map<String, String> shellEnv = new HashMap<String, String>();
+	private Map<String, String> shellEnv = new HashMap<>();
 	// Shell Command Container priority
 	private int shellCmdPriority = 0;
 
