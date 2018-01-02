@@ -27,6 +27,7 @@ import org.apache.hadoop.mapreduce.Counters;
 import org.apache.hadoop.mapreduce.StatusReporter;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.TaskAttemptID;
+import org.apache.hadoop.util.Time;
 
 /**
  * The context for task attempts.
@@ -46,7 +47,7 @@ public class TaskAttemptContextImpl extends JobContextImpl
 
   public TaskAttemptContextImpl(Configuration conf, 
       TaskAttemptID taskId, StatusReporter reporter) {
-    super(conf, taskId.getJobID());
+    super(conf, taskId.getJobID(), Time.now(), 123940L);
     this.taskId = taskId;
     this.reporter = reporter;
   }

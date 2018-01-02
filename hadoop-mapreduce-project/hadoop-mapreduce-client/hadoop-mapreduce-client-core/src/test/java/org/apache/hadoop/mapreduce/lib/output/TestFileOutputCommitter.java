@@ -51,6 +51,7 @@ import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.TaskAttemptID;
 import org.apache.hadoop.mapreduce.task.JobContextImpl;
 import org.apache.hadoop.mapreduce.task.TaskAttemptContextImpl;
+import org.apache.hadoop.util.Time;
 
 @SuppressWarnings("unchecked")
 public class TestFileOutputCommitter extends TestCase {
@@ -137,7 +138,7 @@ public class TestFileOutputCommitter extends TestCase {
     conf.setInt(MRJobConfig.APPLICATION_ATTEMPT_ID, 1);
     conf.setInt(FileOutputCommitter.FILEOUTPUTCOMMITTER_ALGORITHM_VERSION,
         commitVersion);
-    JobContext jContext = new JobContextImpl(conf, taskID.getJobID());
+    JobContext jContext = new JobContextImpl(conf, taskID.getJobID(), Time.now(), 123940L);
     TaskAttemptContext tContext = new TaskAttemptContextImpl(conf, taskID);
     FileOutputCommitter committer = new FileOutputCommitter(outDir, tContext);
 
@@ -169,7 +170,7 @@ public class TestFileOutputCommitter extends TestCase {
     conf2.setInt(MRJobConfig.APPLICATION_ATTEMPT_ID, 2);
     conf2.setInt(FileOutputCommitter.FILEOUTPUTCOMMITTER_ALGORITHM_VERSION,
         recoveryVersion);
-    JobContext jContext2 = new JobContextImpl(conf2, taskID.getJobID());
+    JobContext jContext2 = new JobContextImpl(conf2, taskID.getJobID(), Time.now(), 123940L);
     TaskAttemptContext tContext2 = new TaskAttemptContextImpl(conf2, taskID);
     FileOutputCommitter committer2 = new FileOutputCommitter(outDir, tContext2);
     committer2.setupJob(tContext2);
@@ -254,7 +255,7 @@ public class TestFileOutputCommitter extends TestCase {
     conf.set(MRJobConfig.TASK_ATTEMPT_ID, attempt);
     conf.setInt(FileOutputCommitter.FILEOUTPUTCOMMITTER_ALGORITHM_VERSION,
         version);
-    JobContext jContext = new JobContextImpl(conf, taskID.getJobID());
+    JobContext jContext = new JobContextImpl(conf, taskID.getJobID(), Time.now(), 123940L);
     TaskAttemptContext tContext = new TaskAttemptContextImpl(conf, taskID);
     FileOutputCommitter committer = new FileOutputCommitter(outDir, tContext);
 
@@ -292,7 +293,7 @@ public class TestFileOutputCommitter extends TestCase {
     conf.set(MRJobConfig.TASK_ATTEMPT_ID, attempt);
     conf.setInt(FileOutputCommitter.FILEOUTPUTCOMMITTER_ALGORITHM_VERSION,
         version);
-    JobContext jContext = new JobContextImpl(conf, taskID.getJobID());    
+    JobContext jContext = new JobContextImpl(conf, taskID.getJobID(), Time.now(), 123940L);
     TaskAttemptContext tContext = new TaskAttemptContextImpl(conf, taskID);
     FileOutputCommitter committer = new FileOutputCommitter(outDir, tContext);
 
@@ -345,7 +346,7 @@ public class TestFileOutputCommitter extends TestCase {
     conf.set(MRJobConfig.TASK_ATTEMPT_ID, attempt);
     conf.setInt(FileOutputCommitter.FILEOUTPUTCOMMITTER_ALGORITHM_VERSION,
         version);
-    JobContext jContext = new JobContextImpl(conf, taskID.getJobID());
+    JobContext jContext = new JobContextImpl(conf, taskID.getJobID(), Time.now(), 123940L);
     TaskAttemptContext tContext = new TaskAttemptContextImpl(conf, taskID);
     FileOutputCommitter committer = new FileOutputCommitter(outDir, tContext);
 
@@ -408,7 +409,7 @@ public class TestFileOutputCommitter extends TestCase {
     conf.setInt(FileOutputCommitter.FILEOUTPUTCOMMITTER_ALGORITHM_VERSION,
         version);
     FileOutputFormat.setOutputPath(job, outDir);
-    JobContext jContext = new JobContextImpl(conf, taskID.getJobID());
+    JobContext jContext = new JobContextImpl(conf, taskID.getJobID(), Time.now(), 123940L);
     TaskAttemptContext tContext = new TaskAttemptContextImpl(conf, taskID);
     FileOutputCommitter committer = new FileOutputCommitter(outDir, tContext);
 
@@ -494,7 +495,7 @@ public class TestFileOutputCommitter extends TestCase {
     conf.setClass("fs.file.impl", RLFS.class, FileSystem.class);
     FileSystem.closeAll();
 
-    final JobContext jContext = new JobContextImpl(conf, taskID.getJobID());
+    final JobContext jContext = new JobContextImpl(conf, taskID.getJobID(), Time.now(), 12340L);
     final FileOutputCommitter amCommitter =
         new FileOutputCommitter(outDir, jContext);
     amCommitter.setupJob(jContext);

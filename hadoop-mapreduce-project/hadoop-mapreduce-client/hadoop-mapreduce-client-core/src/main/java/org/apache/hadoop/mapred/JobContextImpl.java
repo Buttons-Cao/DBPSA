@@ -30,14 +30,14 @@ public class JobContextImpl
   private Progressable progress;
 
   public JobContextImpl(JobConf conf, org.apache.hadoop.mapreduce.JobID jobId, 
-                 Progressable progress) {
-    super(conf, jobId);
+                 Progressable progress, long arrivalTime, long deadline) {
+    super(conf, jobId, arrivalTime, deadline);
     this.job = conf;
     this.progress = progress;
   }
 
-  public JobContextImpl(JobConf conf, org.apache.hadoop.mapreduce.JobID jobId) {
-    this(conf, jobId, Reporter.NULL);
+  public JobContextImpl(JobConf conf, org.apache.hadoop.mapreduce.JobID jobId, long arrivalTime, long deadline) {
+    this(conf, jobId, Reporter.NULL, arrivalTime, deadline);
   }
   
   /**

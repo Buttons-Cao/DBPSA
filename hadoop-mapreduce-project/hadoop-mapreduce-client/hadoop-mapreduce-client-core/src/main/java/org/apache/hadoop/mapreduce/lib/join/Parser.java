@@ -332,7 +332,7 @@ public abstract static class Node extends ComposableInputFormat {
         throws IOException, InterruptedException {
       return inf.getSplits(
                  new JobContextImpl(getConf(context.getConfiguration()), 
-                                    context.getJobID()));
+                                    context.getJobID(), context.getArrivalTime(), context.getDeadline()));
     }
 
     public ComposableRecordReader<?, ?> createRecordReader(InputSplit split, 

@@ -38,6 +38,7 @@ import org.apache.hadoop.mapreduce.protocol.ClientProtocol;
 import org.apache.hadoop.mapreduce.task.JobContextImpl;
 import org.apache.hadoop.mapreduce.util.ConfigUtil;
 import org.apache.hadoop.util.StringUtils;
+import org.apache.hadoop.util.Time;
 import org.apache.hadoop.yarn.api.records.ReservationId;
 
 /**
@@ -139,7 +140,7 @@ public class Job extends JobContextImpl implements JobContext {
   }
 
   Job(JobConf conf) throws IOException {
-    super(conf, null);
+    super(conf, null, Time.now(), 123940L);
     // propagate existing user credentials to job
     this.credentials.mergeAll(this.ugi.getCredentials());
     this.cluster = null;
