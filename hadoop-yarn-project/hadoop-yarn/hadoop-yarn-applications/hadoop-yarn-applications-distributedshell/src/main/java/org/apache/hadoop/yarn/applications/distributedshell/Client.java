@@ -109,7 +109,7 @@ import org.apache.hadoop.yarn.util.timeline.TimelineUtils;
  * for an {@link ApplicationReport} at regular time intervals. In case of the application taking too long, the client 
  * kills the application by submitting a {@link KillApplicationRequest} to the <code>ResourceManager</code>. </p>
  *
- * 29/12/2017 deqianzou added. The {@link ApplicationSubmissionContext} now can deal with deadline and arrival time
+ * 29/12/2017 deqianzou modified. The {@link ApplicationSubmissionContext} now can deal with deadline and arrival time
  * information of an App and  {@link ContainerLaunchContext} was added field PreemptionPriority which is designed for
  * preemption algorithm.
  */
@@ -132,6 +132,9 @@ public class Client {
 	private int amMemory = 10;
 	// Amt. of virtual core resource to request for to run the App Master
 	private int amVCores = 1;
+
+	// deadline info
+	private long deadline;
 
 	// Application master jar file
 	private String appMasterJar = "";
@@ -290,6 +293,9 @@ public class Client {
 				+ " will be allocated, \"\" means containers"
 				+ " can be allocated anywhere, if you don't specify the option,"
 				+ " default node_label_expression of queue will be used.");
+
+		// the deadline info user order
+		opts.addOption("deadline", false, "deadline of the application");
 	}
 
 	/**
@@ -335,7 +341,6 @@ public class Client {
 
 		if (cliParser.hasOption("debug")) {
 			debugFlag = true;
-
 		}
 
 		if (cliParser.hasOption("keep_containers_across_application_attempts")) {
@@ -348,6 +353,7 @@ public class Client {
 		amQueue = cliParser.getOptionValue("queue", "default");
 		amMemory = Integer.parseInt(cliParser.getOptionValue("master_memory", "10"));
 		amVCores = Integer.parseInt(cliParser.getOptionValue("master_vcores", "1"));
+		deadline = Long.parseLong(cliParser.getOptionValue("deadline", "123940"));
 
 		if (amMemory < 0) {
 			throw new IllegalArgumentException("Invalid memory specified for application master, exiting."
@@ -431,7 +437,6 @@ public class Client {
 				modifyACLs = cliParser.getOptionValue("modify_acls");
 			}
 		}
-
 		return true;
 	}
 
