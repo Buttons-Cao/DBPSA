@@ -48,6 +48,7 @@ import org.apache.hadoop.io.DataOutputBuffer;
 import org.apache.hadoop.security.Credentials;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.Token;
+import org.apache.hadoop.util.Time;
 import org.apache.hadoop.yarn.api.ApplicationClientProtocol;
 import org.apache.hadoop.yarn.api.ApplicationConstants;
 import org.apache.hadoop.yarn.api.ApplicationConstants.Environment;
@@ -449,9 +450,11 @@ public class Client {
 	public boolean run() throws IOException, YarnException {
 
 		LOG.info("Running Client");
+		// service start
 		yarnClient.start();
 
 		YarnClusterMetrics clusterMetrics = yarnClient.getYarnClusterMetrics();
+		// seems like yarnClinet is ASM
 		LOG.info("Got Cluster metric info from ASM"
 			+ ", numNodeManagers=" + clusterMetrics.getNumNodeManagers());
 
@@ -528,6 +531,10 @@ public class Client {
 				.setAttemptFailuresValidityInterval(attemptFailuresValidityInterval);
 		}
 
+		long arrivalTime = Time.now();
+		appContext.setArriavalTime(arrivalTime);
+		appContext.setDeadline(deadline);
+
 		// set local resources for the application master
 		// local files or archives as needed
 		// In this scenario, the jar file for the application master is part of the local resources
@@ -583,7 +590,7 @@ public class Client {
 
 		// Set the env variables to be setup in the env where the application master will be run
 		LOG.info("Set the environment for the application master");
-		Map<String, String> env = new HashMap<String, String>();
+		Map<String, String> env = new HashMap<>();
 
 		// put location of shell script into env
 		// using the env info, the application master will create the correct local resource for the
@@ -646,6 +653,8 @@ public class Client {
 			vargs.add("--debug");
 		}
 
+		//vargs.add("--deadline" + String.valueOf(deadline));
+
 		vargs.add("1>" + ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/AppMaster.stdout");
 		vargs.add("2>" + ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/AppMaster.stderr");
 
@@ -656,11 +665,11 @@ public class Client {
 		}
 
 		LOG.info("Completed setting up app master command " + command.toString());
-		List<String> commands = new ArrayList<String>();
+		List<String> commands = new ArrayList<>();
 		commands.add(command.toString());
 
 		// Set up the container launch context for the application master
-		ContainerLaunchContext amContainer = ContainerLaunchContext.newInstance(
+		ContainerLaunchContext amContainer = ContainerLaunchContext.newInstance(arrivalTime, deadline,
 			localResources, env, commands, null, null, null);
 
 		// Set up resource type requirements
