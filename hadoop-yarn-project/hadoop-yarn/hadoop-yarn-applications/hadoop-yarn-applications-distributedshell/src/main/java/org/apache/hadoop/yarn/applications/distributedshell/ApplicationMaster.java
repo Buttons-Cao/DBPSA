@@ -239,7 +239,7 @@ public class ApplicationMaster {
 	// Args to be passed to the shell command
 	private String shellArgs = "";
 	// Env variables to be setup for the shell command
-	private Map<String, String> shellEnv = new HashMap<String, String>();
+	private Map<String, String> shellEnv = new HashMap<>();
 
 	// Location of shell script ( obtained from info set in env )
 	// Shell script path in fs
@@ -268,7 +268,7 @@ public class ApplicationMaster {
 	private ByteBuffer allTokens;
 
 	// Launch threads
-	private List<Thread> launchThreads = new ArrayList<Thread>();
+	private List<Thread> launchThreads = new ArrayList<>();
 
 	// Timeline Client
 	@VisibleForTesting

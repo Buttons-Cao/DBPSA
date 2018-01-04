@@ -52,6 +52,7 @@ import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.UserGroupInformation.AuthenticationMethod;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenIdentifier;
+import org.apache.hadoop.util.Time;
 import org.apache.hadoop.yarn.api.ApplicationClientProtocol;
 import org.apache.hadoop.yarn.api.protocolrecords.GetApplicationAttemptReportRequest;
 import org.apache.hadoop.yarn.api.protocolrecords.GetApplicationAttemptReportResponse;
@@ -1073,8 +1074,9 @@ public class TestYarnClient {
         }
         credentials.writeTokenStorageToStream(dob);
         ByteBuffer tokens = ByteBuffer.wrap(dob.getData(), 0, dob.getLength());
-        ContainerLaunchContext clc = ContainerLaunchContext.newInstance(
-            null, null, null, null, tokens, null);
+        long arrivalTime = Time.now();
+        ContainerLaunchContext clc = ContainerLaunchContext.newInstance(arrivalTime, arrivalTime + 123940L,
+	        null, null, null, null, tokens, null);
         when(context.getAMContainerSpec()).thenReturn(clc);
         client.submitApplication(context);
         if (i == 0) {

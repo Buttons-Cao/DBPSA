@@ -24,6 +24,7 @@ import java.security.PrivilegedExceptionAction;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.hadoop.util.Time;
 import org.junit.Assert;
 
 import org.apache.commons.logging.Log;
@@ -215,13 +216,15 @@ public abstract class QueueACLsTestBase {
 
     Resource resource = BuilderUtils.newResource(1024, 1);
     Map<ApplicationAccessType, String> acls = createACLs(submitter, setupACLs);
+    long arrivalTime = Time.now();
     ContainerLaunchContext amContainerSpec =
-        ContainerLaunchContext.newInstance(null, null, null, null, null, acls);
+        ContainerLaunchContext.newInstance(arrivalTime, arrivalTime + 123940L,
+            null, null, null, null, null, acls);
 
     ApplicationSubmissionContext appSubmissionContext =
-        ApplicationSubmissionContext.newInstance(applicationId,
-          "applicationName", queueName, null, amContainerSpec, false, true, 1,
-          resource, "applicationType");
+        ApplicationSubmissionContext.newInstance(arrivalTime, arrivalTime + 123940L, applicationId,
+          "applicationName", queueName, null, amContainerSpec, false,
+            true, 1, resource, "applicationType");
     appSubmissionContext.setApplicationId(applicationId);
     appSubmissionContext.setQueue(queueName);
 

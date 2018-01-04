@@ -36,6 +36,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.DataOutputBuffer;
 import org.apache.hadoop.security.Credentials;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.hadoop.util.Time;
 import org.apache.hadoop.yarn.api.protocolrecords.StartContainerRequest;
 import org.apache.hadoop.yarn.api.protocolrecords.StartContainersRequest;
 import org.apache.hadoop.yarn.api.protocolrecords.StartContainersResponse;
@@ -122,10 +123,11 @@ public class TestContainerManagerRecovery {
     ByteBuffer containerTokens = ByteBuffer.wrap(dob.getData(), 0,
         dob.getLength());
     Map<ApplicationAccessType, String> acls =
-        new HashMap<ApplicationAccessType, String>();
+        new HashMap<>();
     acls.put(ApplicationAccessType.MODIFY_APP, modUser);
     acls.put(ApplicationAccessType.VIEW_APP, viewUser);
-    ContainerLaunchContext clc = ContainerLaunchContext.newInstance(
+    long arrivalTime = Time.now();
+    ContainerLaunchContext clc = ContainerLaunchContext.newInstance(arrivalTime, arrivalTime + 123940L,
         localResources, containerEnv, containerCmds, serviceData,
         containerTokens, acls);
     // create the logAggregationContext
