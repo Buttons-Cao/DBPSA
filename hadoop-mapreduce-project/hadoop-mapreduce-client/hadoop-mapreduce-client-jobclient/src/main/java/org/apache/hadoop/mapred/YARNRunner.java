@@ -474,7 +474,7 @@ public class YARNRunner implements ClientProtocol {
 		MRApps.setupDistributedCache(jobConf, localResources);
 
 		Map<ApplicationAccessType, String> acls
-			= new HashMap<ApplicationAccessType, String>(2);
+			= new HashMap<>(2);
 		acls.put(ApplicationAccessType.VIEW_APP, jobConf.get(
 			MRJobConfig.JOB_ACL_VIEW_JOB, MRJobConfig.DEFAULT_JOB_ACL_VIEW_JOB));
 		acls.put(ApplicationAccessType.MODIFY_APP, jobConf.get(
@@ -483,7 +483,7 @@ public class YARNRunner implements ClientProtocol {
 
 		// Setup ContainerLaunchContext for AM container
 		ContainerLaunchContext amContainer =
-			ContainerLaunchContext.newInstance(localResources, environment,
+			ContainerLaunchContext.newInstance(Time.now(), Time.now()+Long.parseLong(MRJobConfig.JOB_DEADLINE), localResources, environment,
 				vargsFinal, null, securityTokens, acls);
 
 		Collection<String> tagsFromConf =

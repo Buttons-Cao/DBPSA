@@ -533,7 +533,7 @@ public class Client {
 
 		long arrivalTime = Time.now();
 		appContext.setArriavalTime(arrivalTime);
-		appContext.setDeadline(deadline);
+		appContext.setDeadline(arrivalTime + deadline);
 
 		// set local resources for the application master
 		// local files or archives as needed
@@ -669,7 +669,7 @@ public class Client {
 		commands.add(command.toString());
 
 		// Set up the container launch context for the application master
-		ContainerLaunchContext amContainer = ContainerLaunchContext.newInstance(arrivalTime, deadline,
+		ContainerLaunchContext amContainer = ContainerLaunchContext.newInstance(arrivalTime, arrivalTime + deadline,
 			localResources, env, commands, null, null, null);
 
 		// Set up resource type requirements
