@@ -225,7 +225,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="hadoop-annotations" />
     <orderEntry type="module-library">
       <library name="tools.jar">
         <CLASSES>
@@ -667,7 +666,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="hadoop-auth" />
     <orderEntry type="module-library">
       <library name="apacheds-kerberos-codec-2.0.0-M15.jar">
         <CLASSES>
@@ -884,8 +882,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="hadoop-auth" scope="PROVIDED" />
-    <orderEntry type="module" module-name="hadoop-annotations" />
     <orderEntry type="library" name="Maven: dom4j:dom4j:1.6" level="project" />
     <orderEntry type="library" name="Maven: xml-apis:xml-apis:1.0.b2" level="project" />
     <orderEntry type="module" module-name="hadoop-yarn-common" />
@@ -957,7 +953,7 @@
     <orderEntry type="module-library">
       <library name="Maven: jdk.tools:jdk.tools:1.8">
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/jdk/tools/jdk.tools/1.8/jdk.tools-1.8.jar!/" />
+          <root url="jar://C:/Program Files/Java/jdk1.7.0_80/lib/tools.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

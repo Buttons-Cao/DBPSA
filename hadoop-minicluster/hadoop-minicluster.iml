@@ -214,7 +214,6 @@
       </library>
     </orderEntry>
     <orderEntry type="inheritedJdk" />
-    <orderEntry type="module" module-name="hadoop-annotations" />
     <orderEntry type="module-library">
       <library name="tools.jar">
         <CLASSES>
@@ -934,13 +933,12 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="hadoop-annotations" />
     <orderEntry type="module" module-name="hadoop-common" production-on-test="" />
     <orderEntry type="module" module-name="hadoop-annotations" />
     <orderEntry type="module-library">
       <library name="Maven: jdk.tools:jdk.tools:1.8">
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/jdk/tools/jdk.tools/1.8/jdk.tools-1.8.jar!/" />
+          <root url="jar://C:/Program Files/Java/jdk1.7.0_80/lib/tools.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
