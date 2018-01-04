@@ -201,16 +201,6 @@
       </library>
     </orderEntry>
     <orderEntry type="inheritedJdk" />
-    <orderEntry type="module" module-name="hadoop-streaming" />
-    <orderEntry type="module" module-name="hadoop-distcp" />
-    <orderEntry type="module" module-name="hadoop-archives" />
-    <orderEntry type="module" module-name="hadoop-rumen" />
-    <orderEntry type="module" module-name="hadoop-datajoin" />
-    <orderEntry type="module" module-name="hadoop-extras" />
-    <orderEntry type="module" module-name="hadoop-gridmix" />
-    <orderEntry type="module" module-name="hadoop-openstack" />
-    <orderEntry type="module" module-name="hadoop-common" />
-    <orderEntry type="module" module-name="hadoop-annotations" />
     <orderEntry type="module-library">
       <library name="tools.jar">
         <CLASSES>
@@ -676,7 +666,6 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="hadoop-auth" />
     <orderEntry type="module-library">
       <library name="apacheds-kerberos-codec-2.0.0-M15.jar">
         <CLASSES>
@@ -831,7 +820,6 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="hadoop-aws" />
     <orderEntry type="module-library">
       <library name="jackson-databind-2.2.3.jar">
         <CLASSES>
@@ -887,7 +875,6 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="hadoop-azure" />
     <orderEntry type="module-library">
       <library name="azure-storage-2.0.0.jar">
         <CLASSES>
@@ -910,7 +897,6 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="hadoop-sls" />
     <orderEntry type="module-library">
       <library name="metrics-core-3.0.1.jar">
         <CLASSES>
@@ -920,7 +906,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="hadoop-ant" />
     <orderEntry type="module" module-name="hadoop-streaming" />
     <orderEntry type="module" module-name="hadoop-distcp" />
     <orderEntry type="module" module-name="hadoop-archives" />
@@ -1009,7 +994,7 @@
     <orderEntry type="module-library">
       <library name="Maven: jdk.tools:jdk.tools:1.8">
         <CLASSES>
-          <root url="jar://C:/Program Files/Java/jdk1.7.0_80/lib/tools.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/jdk/tools/jdk.tools/1.8/jdk.tools-1.8.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

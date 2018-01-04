@@ -4,9 +4,7 @@
     <option name="GROUP_BY_SEVERITY" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dadf9ad0-3e7e-4ace-8045-8e88c6c64459" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="dadf9ad0-3e7e-4ace-8045-8e88c6c64459" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-applicationhistoryservice/target/" />
     <ignored path="$PROJECT_DIR$/hadoop-common-project/hadoop-common/target/" />
     <ignored path="$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-resourcemanager/target/" />
@@ -82,44 +80,12 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Client.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Client.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-applications/hadoop-yarn-applications-distributedshell/src/main/java/org/apache/hadoop/yarn/applications/distributedshell/Client.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="184">
-              <caret line="211" column="39" lean-forward="false" selection-start-line="211" selection-start-column="39" selection-end-line="211" selection-end-column="39" />
-              <folding>
-                <element signature="e#13825#13826#0" expanded="true" />
-                <element signature="e#13877#13878#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TestDistributedShell.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-applications/hadoop-yarn-applications-distributedshell/src/test/java/org/apache/hadoop/yarn/applications/distributedshell/TestDistributedShell.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="203">
-              <caret line="797" column="44" lean-forward="true" selection-start-line="797" selection-start-column="44" selection-end-line="797" selection-end-column="44" />
+            <state relative-caret-position="-12725">
+              <caret line="214" column="17" lean-forward="true" selection-start-line="214" selection-start-column="17" selection-end-line="214" selection-end-column="17" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Configuration.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/conf/Configuration.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="317">
-              <caret line="2522" column="40" lean-forward="false" selection-start-line="2522" selection-start-column="40" selection-end-line="2522" selection-end-column="40" />
-              <folding>
-                <element signature="class#Resource#0;class#Configuration#0" expanded="false" />
-                <element signature="docComment;method#addDeprecation#3;class#Configuration#0" expanded="false" />
-                <element signature="method#isDeprecated#0;class#Configuration#0" expanded="false" />
-                <element signature="docComment;method#setDeprecatedProperties#0;class#Configuration#0" expanded="false" />
-                <element signature="method#setDeprecatedProperties#0;class#Configuration#0" expanded="false" />
-                <element signature="method#handleDeprecation#0;class#Configuration#0" expanded="false" />
-                <element signature="method#handleDeprecation#1;class#Configuration#0" expanded="false" />
-                <element signature="initializer##0;class#Configuration#0" expanded="false" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -127,9 +93,14 @@
       <file leaf-file-name="YarnClient.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-client/src/main/java/org/apache/hadoop/yarn/client/api/YarnClient.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1748">
-              <caret line="329" column="58" lean-forward="true" selection-start-line="329" selection-start-column="58" selection-end-line="329" selection-end-column="58" />
-              <folding />
+            <state relative-caret-position="6700">
+              <caret line="329" column="58" lean-forward="false" selection-start-line="329" selection-start-column="58" selection-end-line="329" selection-end-column="58" />
+              <folding>
+                <element signature="n#!!doc" expanded="false" />
+                <element signature="imports" expanded="false" />
+                <element signature="e#3709#3710#0" expanded="false" />
+                <element signature="e#3730#3731#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -137,9 +108,20 @@
       <file leaf-file-name="YarnClientImpl.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-client/src/main/java/org/apache/hadoop/yarn/client/api/impl/YarnClientImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="152">
+            <state relative-caret-position="200">
               <caret line="116" column="13" lean-forward="false" selection-start-line="116" selection-start-column="13" selection-end-line="116" selection-end-column="13" />
-              <folding />
+              <folding>
+                <element signature="n#!!doc" expanded="false" />
+                <element signature="imports" expanded="false" />
+                <element signature="e#7147#7148#0" expanded="false" />
+                <element signature="e#7194#7195#0" expanded="false" />
+                <element signature="e#16302#16303#0" expanded="false" />
+                <element signature="e#16359#16360#0" expanded="false" />
+                <element signature="e#17661#17662#0" expanded="false" />
+                <element signature="e#17708#17709#0" expanded="false" />
+                <element signature="e#23817#23818#0" expanded="false" />
+                <element signature="e#23851#23852#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -147,9 +129,14 @@
       <file leaf-file-name="ResourceMgrDelegate.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-jobclient/src/main/java/org/apache/hadoop/mapred/ResourceMgrDelegate.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="114">
+            <state relative-caret-position="150">
               <caret line="75" column="13" lean-forward="false" selection-start-line="75" selection-start-column="13" selection-end-line="75" selection-end-column="13" />
-              <folding />
+              <folding>
+                <element signature="n#!!doc" expanded="false" />
+                <element signature="imports" expanded="false" />
+                <element signature="e#9592#9593#0" expanded="false" />
+                <element signature="e#9622#9623#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -157,11 +144,9 @@
       <file leaf-file-name="applicationclient_protocol.proto" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-api/src/main/proto/applicationclient_protocol.proto">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="338">
+            <state relative-caret-position="875">
               <caret line="35" column="26" lean-forward="false" selection-start-line="35" selection-start-column="6" selection-end-line="35" selection-end-column="26" />
-              <folding>
-                <element signature="n#!!doc" expanded="true" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -323,10 +308,10 @@
     <option name="skipTests" value="true" />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1936" />
-    <option name="height" value="1056" />
+    <option name="x" value="-11" />
+    <option name="y" value="-11" />
+    <option name="width" value="1942" />
+    <option name="height" value="1042" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -360,8 +345,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -1190,12 +1173,14 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/pom.xml" />
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
@@ -1457,8 +1442,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
+    <frame x="-11" y="-11" width="1942" height="1042" extended-state="6" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1474,9 +1458,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27395833" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Inspection Results" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32905984" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32698414" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27239582" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1487,7 +1469,9 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection Results" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32905984" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32698414" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1560,13 +1544,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="302">
           <caret line="239" column="38" lean-forward="true" selection-start-line="239" selection-start-column="38" selection-end-line="239" selection-end-column="38" />
-          <folding>
-            <element signature="method#JobSubmitter#0;class#JobSubmitter#0" expanded="false" />
-            <element signature="method#copyAndConfigureFiles#0;class#JobSubmitter#0" expanded="false" />
-            <element signature="method#checkSpecs#0;class#JobSubmitter#0" expanded="false" />
-            <element signature="method#writeConf#0;class#JobSubmitter#0" expanded="false" />
-            <element signature="method#printTokens#0;class#JobSubmitter#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1574,7 +1551,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-19">
           <caret line="75" column="5" lean-forward="true" selection-start-line="75" selection-start-column="5" selection-end-line="75" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1582,7 +1558,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="9025">
           <caret line="570" column="20" lean-forward="true" selection-start-line="570" selection-start-column="20" selection-end-line="570" selection-end-column="20" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1590,7 +1565,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-758">
           <caret line="153" column="44" lean-forward="true" selection-start-line="153" selection-start-column="44" selection-end-line="153" selection-end-column="44" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1598,7 +1572,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="171">
           <caret line="26" column="15" lean-forward="false" selection-start-line="26" selection-start-column="15" selection-end-line="26" selection-end-column="15" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1606,7 +1579,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="95">
           <caret line="49" column="15" lean-forward="false" selection-start-line="49" selection-start-column="15" selection-end-line="49" selection-end-column="15" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1633,7 +1605,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="767">
           <caret line="68" column="9" lean-forward="true" selection-start-line="68" selection-start-column="9" selection-end-line="68" selection-end-column="9" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1641,7 +1612,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-133">
           <caret line="80" column="34" lean-forward="true" selection-start-line="80" selection-start-column="34" selection-end-line="80" selection-end-column="34" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1665,10 +1635,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="203">
           <caret line="35" column="21" lean-forward="false" selection-start-line="35" selection-start-column="21" selection-end-line="35" selection-end-column="21" />
-          <folding>
-            <element signature="e#1390#1391#0" expanded="false" />
-            <element signature="e#1433#1434#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1676,7 +1642,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="441">
           <caret line="72" column="0" lean-forward="true" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1692,7 +1657,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="430">
           <caret line="368" column="0" lean-forward="false" selection-start-line="368" selection-start-column="0" selection-end-line="368" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1710,7 +1674,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="203">
           <caret line="29" column="49" lean-forward="false" selection-start-line="29" selection-start-column="49" selection-end-line="29" selection-end-column="49" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1718,7 +1681,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="184">
           <caret line="108" column="15" lean-forward="false" selection-start-line="108" selection-start-column="9" selection-end-line="108" selection-end-column="15" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1726,16 +1688,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="194">
           <caret line="105" column="16" lean-forward="false" selection-start-line="105" selection-start-column="16" selection-end-line="105" selection-end-column="16" />
-          <folding>
-            <element signature="e#3401#3402#0" expanded="true" />
-            <element signature="e#3423#3424#0" expanded="true" />
-            <element signature="e#3466#3467#0" expanded="true" />
-            <element signature="e#3491#3492#0" expanded="true" />
-            <element signature="e#3534#3535#0" expanded="true" />
-            <element signature="e#3565#3566#0" expanded="true" />
-            <element signature="e#3614#3615#0" expanded="true" />
-            <element signature="e#3651#3652#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1743,7 +1695,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="232">
           <caret line="131" column="44" lean-forward="false" selection-start-line="131" selection-start-column="44" selection-end-line="131" selection-end-column="44" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1751,7 +1702,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="355">
           <caret line="120" column="118" lean-forward="false" selection-start-line="120" selection-start-column="118" selection-end-line="120" selection-end-column="118" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1759,7 +1709,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="222">
           <caret line="113" column="81" lean-forward="true" selection-start-line="113" selection-start-column="81" selection-end-line="113" selection-end-column="81" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1767,7 +1716,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="488">
           <caret line="120" column="94" lean-forward="false" selection-start-line="120" selection-start-column="94" selection-end-line="120" selection-end-column="94" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1783,7 +1731,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1311">
           <caret line="59" column="13" lean-forward="false" selection-start-line="59" selection-start-column="13" selection-end-line="59" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1791,7 +1738,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="203">
           <caret line="37" column="17" lean-forward="false" selection-start-line="37" selection-start-column="17" selection-end-line="37" selection-end-column="17" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1799,10 +1745,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="194">
           <caret line="1260" column="0" lean-forward="false" selection-start-line="1260" selection-start-column="0" selection-end-line="1260" selection-end-column="0" />
-          <folding>
-            <element signature="e#35909#35910#0" expanded="true" />
-            <element signature="e#35990#35991#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1810,7 +1752,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="247">
           <caret line="30" column="9" lean-forward="true" selection-start-line="30" selection-start-column="9" selection-end-line="30" selection-end-column="9" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1818,7 +1759,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="228">
           <caret line="29" column="15" lean-forward="false" selection-start-line="29" selection-start-column="15" selection-end-line="29" selection-end-column="15" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1826,7 +1766,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="203">
           <caret line="445" column="30" lean-forward="false" selection-start-line="445" selection-start-column="30" selection-end-line="445" selection-end-column="30" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1834,13 +1773,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="194">
           <caret line="1407" column="37" lean-forward="false" selection-start-line="1407" selection-start-column="37" selection-end-line="1407" selection-end-column="37" />
-          <folding>
-            <element signature="e#9125#9154#0" expanded="false" />
-            <element signature="method#makeUberDecision#0;class#JobImpl#0" expanded="false" />
-            <element signature="method#isChainJob#0;class#JobImpl#0" expanded="false" />
-            <element signature="method#getWorkflowAdjacencies#0;class#JobImpl#0" expanded="false" />
-            <element signature="method#escapeString#0;class#JobImpl#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1848,7 +1780,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="203">
           <caret line="38" column="68" lean-forward="false" selection-start-line="38" selection-start-column="68" selection-end-line="38" selection-end-column="68" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1856,7 +1787,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="361">
           <caret line="39" column="58" lean-forward="false" selection-start-line="39" selection-start-column="58" selection-end-line="39" selection-end-column="58" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1864,7 +1794,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="456">
           <caret line="49" column="54" lean-forward="false" selection-start-line="49" selection-start-column="54" selection-end-line="49" selection-end-column="54" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1872,7 +1801,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2018">
           <caret line="172" column="91" lean-forward="false" selection-start-line="172" selection-start-column="91" selection-end-line="172" selection-end-column="91" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1880,7 +1808,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="403">
           <caret line="153" column="3" lean-forward="true" selection-start-line="153" selection-start-column="3" selection-end-line="153" selection-end-column="3" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1888,7 +1815,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="458">
           <caret line="545" column="42" lean-forward="true" selection-start-line="545" selection-start-column="42" selection-end-line="545" selection-end-column="42" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1896,13 +1822,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="231">
           <caret line="334" column="106" lean-forward="true" selection-start-line="334" selection-start-column="106" selection-end-line="334" selection-end-column="106" />
-          <folding>
-            <element signature="class#Token#0;class#Parser#0" expanded="false" />
-            <element signature="class#NumToken#0;class#Parser#0" expanded="false" />
-            <element signature="class#NodeToken#0;class#Parser#0" expanded="false" />
-            <element signature="class#StrToken#0;class#Parser#0" expanded="false" />
-            <element signature="class#Lexer#0;class#Parser#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1910,72 +1829,166 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
           <caret line="31" column="2" lean-forward="false" selection-start-line="31" selection-start-column="2" selection-end-line="31" selection-end-column="2" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-api/src/main/proto/applicationclient_protocol.proto">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="338">
+        <state relative-caret-position="875">
           <caret line="35" column="26" lean-forward="false" selection-start-line="35" selection-start-column="6" selection-end-line="35" selection-end-column="26" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-jobclient/src/main/java/org/apache/hadoop/mapred/ResourceMgrDelegate.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="114">
+        <state relative-caret-position="150">
           <caret line="75" column="13" lean-forward="false" selection-start-line="75" selection-start-column="13" selection-end-line="75" selection-end-column="13" />
-          <folding />
+          <folding>
+            <element signature="n#!!doc" expanded="false" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#9592#9593#0" expanded="false" />
+            <element signature="e#9622#9623#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-client/src/main/java/org/apache/hadoop/yarn/client/api/impl/YarnClientImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
+        <state relative-caret-position="200">
           <caret line="116" column="13" lean-forward="false" selection-start-line="116" selection-start-column="13" selection-end-line="116" selection-end-column="13" />
-          <folding />
+          <folding>
+            <element signature="n#!!doc" expanded="false" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#7147#7148#0" expanded="false" />
+            <element signature="e#7194#7195#0" expanded="false" />
+            <element signature="e#16302#16303#0" expanded="false" />
+            <element signature="e#16359#16360#0" expanded="false" />
+            <element signature="e#17661#17662#0" expanded="false" />
+            <element signature="e#17708#17709#0" expanded="false" />
+            <element signature="e#23817#23818#0" expanded="false" />
+            <element signature="e#23851#23852#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-client/src/main/java/org/apache/hadoop/yarn/client/api/YarnClient.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1748">
-          <caret line="329" column="58" lean-forward="true" selection-start-line="329" selection-start-column="58" selection-end-line="329" selection-end-column="58" />
-          <folding />
+        <state relative-caret-position="6700">
+          <caret line="329" column="58" lean-forward="false" selection-start-line="329" selection-start-column="58" selection-end-line="329" selection-end-column="58" />
+          <folding>
+            <element signature="n#!!doc" expanded="false" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#3709#3710#0" expanded="false" />
+            <element signature="e#3730#3731#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/conf/Configuration.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="317">
+        <state relative-caret-position="56125">
           <caret line="2522" column="40" lean-forward="false" selection-start-line="2522" selection-start-column="40" selection-end-line="2522" selection-end-column="40" />
           <folding>
+            <element signature="n#!!doc" expanded="false" />
+            <element signature="imports" expanded="false" />
             <element signature="class#Resource#0;class#Configuration#0" expanded="false" />
+            <element signature="e#7398#7399#0" expanded="false" />
+            <element signature="e#7447#7448#0" expanded="false" />
+            <element signature="e#7600#7601#0" expanded="false" />
+            <element signature="e#7625#7626#0" expanded="false" />
+            <element signature="e#7664#7665#0" expanded="false" />
+            <element signature="e#7693#7694#0" expanded="false" />
+            <element signature="e#7743#7744#0" expanded="false" />
+            <element signature="e#7768#7769#0" expanded="false" />
+            <element signature="e#10986#10987#0" expanded="false" />
+            <element signature="e#11031#11032#0" expanded="false" />
+            <element signature="e#11066#11067#0" expanded="false" />
+            <element signature="e#11099#11100#0" expanded="false" />
+            <element signature="e#11841#11842#0" expanded="false" />
+            <element signature="e#11895#11896#0" expanded="false" />
+            <element signature="e#11925#11926#0" expanded="false" />
+            <element signature="e#11949#11950#0" expanded="false" />
+            <element signature="e#11985#11986#0" expanded="false" />
+            <element signature="e#12013#12014#0" expanded="false" />
+            <element signature="e#12053#12054#0" expanded="false" />
+            <element signature="e#12087#12088#0" expanded="false" />
+            <element signature="e#14324#14325#0" expanded="false" />
+            <element signature="e#14361#14362#0" expanded="false" />
+            <element signature="e#14417#14418#0" expanded="false" />
+            <element signature="e#14461#14462#0" expanded="false" />
+            <element signature="e#19408#19409#0" expanded="false" />
+            <element signature="e#19452#19453#0" expanded="false" />
             <element signature="docComment;method#addDeprecation#3;class#Configuration#0" expanded="false" />
+            <element signature="e#20174#20175#0" expanded="false" />
+            <element signature="e#20232#20233#0" expanded="false" />
             <element signature="method#isDeprecated#0;class#Configuration#0" expanded="false" />
             <element signature="docComment;method#setDeprecatedProperties#0;class#Configuration#0" expanded="false" />
             <element signature="method#setDeprecatedProperties#0;class#Configuration#0" expanded="false" />
             <element signature="method#handleDeprecation#0;class#Configuration#0" expanded="false" />
             <element signature="method#handleDeprecation#1;class#Configuration#0" expanded="false" />
             <element signature="initializer##0;class#Configuration#0" expanded="false" />
+            <element signature="e#24546#24547#0" expanded="false" />
+            <element signature="e#24566#24567#0" expanded="false" />
+            <element signature="e#26972#26973#0" expanded="false" />
+            <element signature="e#27019#27020#0" expanded="false" />
+            <element signature="e#27452#27453#0" expanded="false" />
+            <element signature="e#27498#27499#0" expanded="false" />
+            <element signature="e#27937#27938#0" expanded="false" />
+            <element signature="e#27984#27985#0" expanded="false" />
+            <element signature="e#28572#28573#0" expanded="false" />
+            <element signature="e#28617#28618#0" expanded="false" />
+            <element signature="e#29060#29061#0" expanded="false" />
+            <element signature="e#29111#29112#0" expanded="false" />
+            <element signature="e#29437#29438#0" expanded="false" />
+            <element signature="e#29495#29496#0" expanded="false" />
+            <element signature="e#35480#35481#0" expanded="false" />
+            <element signature="e#35525#35526#0" expanded="false" />
+            <element signature="e#39555#39556#0" expanded="false" />
+            <element signature="e#39587#39588#0" expanded="false" />
+            <element signature="e#45038#45039#0" expanded="false" />
+            <element signature="e#45082#45083#0" expanded="false" />
+            <element signature="e#47474#47475#0" expanded="false" />
+            <element signature="e#47515#47516#0" expanded="false" />
+            <element signature="e#48432#48433#0" expanded="false" />
+            <element signature="e#48473#48474#0" expanded="false" />
+            <element signature="e#49401#49402#0" expanded="false" />
+            <element signature="e#49443#49444#0" expanded="false" />
+            <element signature="e#50513#50514#0" expanded="false" />
+            <element signature="e#50557#50558#0" expanded="false" />
+            <element signature="e#50746#50747#0" expanded="false" />
+            <element signature="e#50797#50798#0" expanded="false" />
+            <element signature="e#51084#51085#0" expanded="false" />
+            <element signature="e#51121#51122#0" expanded="false" />
+            <element signature="e#58743#58744#0" expanded="false" />
+            <element signature="e#58802#58803#0" expanded="false" />
+            <element signature="e#60693#60694#0" expanded="false" />
+            <element signature="e#60748#60749#0" expanded="false" />
+            <element signature="e#61201#61202#0" expanded="false" />
+            <element signature="e#61253#61254#0" expanded="false" />
+            <element signature="e#61556#61557#0" expanded="false" />
+            <element signature="e#61615#61616#0" expanded="false" />
+            <element signature="e#65415#65416#0" expanded="false" />
+            <element signature="e#65469#65470#0" expanded="false" />
+            <element signature="e#69307#69308#0" expanded="false" />
+            <element signature="e#69360#69361#0" expanded="false" />
+            <element signature="e#80275#80276#0" expanded="false" />
+            <element signature="e#80321#80322#0" expanded="false" />
+            <element signature="e#82638#82639#0" expanded="false" />
+            <element signature="e#82672#82673#0" expanded="false" />
+            <element signature="e#96435#96436#0" expanded="false" />
+            <element signature="e#96463#96464#0" expanded="false" />
+            <element signature="e#96659#96660#0" expanded="false" />
+            <element signature="e#96699#96700#0" expanded="false" />
+            <element signature="e#97569#97570#0" expanded="false" />
+            <element signature="e#97605#97606#0" expanded="false" />
+            <element signature="e#97646#97647#0" expanded="false" />
+            <element signature="e#97677#97678#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/commons-cli/commons-cli/1.2/commons-cli-1.2.jar!/org/apache/commons/cli/CommandLine.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="266">
-          <caret line="23" column="19" lean-forward="false" selection-start-line="23" selection-start-column="19" selection-end-line="23" selection-end-column="19" />
-          <folding>
-            <element signature="e#593#594#0" expanded="true" />
-            <element signature="e#662#663#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/commons-cli/commons-cli/1.2/commons-cli-1.2.jar!/org/apache/commons/cli/CommandLine.class" />
     <entry file="file://$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-applications/hadoop-yarn-applications-distributedshell/src/main/java/org/apache/hadoop/yarn/applications/distributedshell/Log4jPropertyHelper.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="171">
@@ -1984,29 +1997,19 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/commons-cli/commons-cli/1.2/commons-cli-1.2.jar!/org/apache/commons/cli/HelpFormatter.class">
+    <entry file="jar://$MAVEN_REPOSITORY$/commons-cli/commons-cli/1.2/commons-cli-1.2.jar!/org/apache/commons/cli/HelpFormatter.class" />
+    <entry file="file://$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-applications/hadoop-yarn-applications-distributedshell/src/test/java/org/apache/hadoop/yarn/applications/distributedshell/TestDistributedShell.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="41" column="11" lean-forward="false" selection-start-line="41" selection-start-column="11" selection-end-line="41" selection-end-column="11" />
+        <state relative-caret-position="228">
+          <caret line="810" column="16" lean-forward="false" selection-start-line="797" selection-start-column="44" selection-end-line="810" selection-end-column="16" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-applications/hadoop-yarn-applications-distributedshell/src/main/java/org/apache/hadoop/yarn/applications/distributedshell/Client.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="184">
-          <caret line="211" column="39" lean-forward="false" selection-start-line="211" selection-start-column="39" selection-end-line="211" selection-end-column="39" />
-          <folding>
-            <element signature="e#13825#13826#0" expanded="true" />
-            <element signature="e#13877#13878#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-applications/hadoop-yarn-applications-distributedshell/src/test/java/org/apache/hadoop/yarn/applications/distributedshell/TestDistributedShell.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="203">
-          <caret line="797" column="44" lean-forward="true" selection-start-line="797" selection-start-column="44" selection-end-line="797" selection-end-column="44" />
+        <state relative-caret-position="-12725">
+          <caret line="214" column="17" lean-forward="true" selection-start-line="214" selection-start-column="17" selection-end-line="214" selection-end-column="17" />
           <folding />
         </state>
       </provider>

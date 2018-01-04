@@ -246,7 +246,6 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="hadoop-annotations" />
     <orderEntry type="module-library">
       <library name="tools.jar">
         <CLASSES>
@@ -256,8 +255,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="hadoop-mapreduce-client-hs" />
-    <orderEntry type="module" module-name="hadoop-hdfs" />
     <orderEntry type="module-library">
       <library name="guava-11.0.2.jar">
         <CLASSES>
@@ -505,9 +502,6 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="hadoop-mapreduce-client-common" />
-    <orderEntry type="module" module-name="hadoop-yarn-common" />
-    <orderEntry type="module" module-name="hadoop-yarn-api" />
     <orderEntry type="module-library">
       <library name="commons-compress-1.4.1.jar">
         <CLASSES>
@@ -651,8 +645,6 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="hadoop-yarn-client" />
-    <orderEntry type="module" module-name="hadoop-mapreduce-client-core" />
     <orderEntry type="module-library">
       <library name="dom4j-1.6.jar">
         <CLASSES>
@@ -717,7 +709,6 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="hadoop-yarn-server-common" />
     <orderEntry type="module-library">
       <library name="zookeeper-3.4.6.jar">
         <CLASSES>
@@ -729,12 +720,6 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="hadoop-mapreduce-client-app" />
-    <orderEntry type="module" module-name="hadoop-yarn-server-web-proxy" />
-    <orderEntry type="module" module-name="hadoop-mapreduce-client-shuffle" />
-    <orderEntry type="module" module-name="hadoop-yarn-server-nodemanager" />
-    <orderEntry type="module" module-name="hadoop-mapreduce-client-jobclient" />
-    <orderEntry type="module" module-name="hadoop-common" />
     <orderEntry type="module-library">
       <library name="commons-math3-3.1.1.jar">
         <CLASSES>
@@ -876,7 +861,6 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="hadoop-auth" />
     <orderEntry type="module-library">
       <library name="apacheds-kerberos-codec-2.0.0-M15.jar">
         <CLASSES>
@@ -965,8 +949,6 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="hadoop-yarn-server-tests" />
-    <orderEntry type="module" module-name="hadoop-yarn-server-resourcemanager" />
     <orderEntry type="module-library">
       <library name="serpent-1.11.jar">
         <CLASSES>
@@ -976,7 +958,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="hadoop-yarn-server-applicationhistoryservice" />
     <orderEntry type="module-library">
       <library name="zookeeper-3.4.6-tests.jar">
         <CLASSES>
@@ -992,7 +973,7 @@
     <orderEntry type="module-library">
       <library name="Maven: jdk.tools:jdk.tools:1.8">
         <CLASSES>
-          <root url="jar://C:/Program Files/Java/jdk1.7.0_80/lib/tools.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/jdk/tools/jdk.tools/1.8/jdk.tools-1.8.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

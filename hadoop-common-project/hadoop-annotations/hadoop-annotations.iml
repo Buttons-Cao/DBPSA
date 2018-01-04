@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
-  <component name="EclipseModuleManager">
-    <libelement value="file:///home/cwei/tool/jdk1.8.0_101/lib/tools.jar" />
-    <varelement var="file://$M2_REPO$/jdiff/jdiff/1.0.9/jdiff-1.0.9.jar" value="M2_REPO/jdiff/jdiff/1.0.9/jdiff-1.0.9.jar" />
-    <src_description expected_position="0">
-      <src_folder value="file://$MODULE_DIR$/src/main/java" expected_position="0" />
-    </src_description>
-  </component>
+<module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" version="4">
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
@@ -14,31 +7,13 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
-    <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="inheritedJdk" />
-    <orderEntry type="module-library">
-      <library name="jdiff-1.0.9.jar">
-        <CLASSES>
-          <root url="file://$M2_REPO$/jdiff/jdiff/1.0.9/jdiff-1.0.9.jar" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="tools.jar">
-        <CLASSES>
-          <root url="file:///home/cwei/tool/jdk1.8.0_101/lib/tools.jar" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
+    <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: jdiff:jdiff:1.0.9" level="project" />
     <orderEntry type="module-library">
-      <library name="Maven: jdk.tools:jdk.tools:1.8">
+      <library name="Maven: jdk.tools:jdk.tools:1.7">
         <CLASSES>
-          <root url="jar://C:/Program Files/Java/jdk1.7.0_80/lib/tools.jar!/" />
+          <root url="jar://$APPLICATION_HOME_DIR$/jre64/../lib/tools.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
