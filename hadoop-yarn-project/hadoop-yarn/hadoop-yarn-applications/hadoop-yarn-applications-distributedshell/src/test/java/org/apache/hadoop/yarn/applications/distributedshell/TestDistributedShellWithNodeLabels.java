@@ -106,7 +106,9 @@ public class TestDistributedShellWithNodeLabels {
         "--container_vcores",
         "1",
         "--node_label_expression",
-        "x"
+        "x",
+        "--deadline",
+        "123940",
     };
 
     LOG.info("Initializing DS Client");

@@ -117,6 +117,7 @@ import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.authorize.AccessControlList;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.util.StringUtils;
+import org.apache.hadoop.util.Time;
 import org.apache.hadoop.yarn.api.records.ApplicationAttemptId;
 import org.apache.hadoop.yarn.api.records.NodeId;
 import org.apache.hadoop.yarn.api.records.NodeReport;
@@ -1408,8 +1409,9 @@ public class JobImpl implements org.apache.hadoop.mapreduce.v2.app.job.Job,
 				job.jobContext = new JobContextImpl(job.conf,
 					job.oldJobId, job.appSubmitTime, job.deadline);
 			} else {
+				long arrivalTime = Time.now();
 				job.jobContext = new org.apache.hadoop.mapred.JobContextImpl(
-					job.conf, job.oldJobId);
+					job.conf, job.oldJobId, arrivalTime, arrivalTime + Long.parseLong(MRJobConfig.JOB_DEADLINE));
 			}
 
 			try {
