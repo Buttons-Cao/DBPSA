@@ -774,8 +774,8 @@ public abstract class TaskAttemptImpl implements
 		// container separately.
 		long arrivalTime = Time.now();
 		ContainerLaunchContext container =
-			ContainerLaunchContext.newInstance(arrivalTime, arrivalTime + Long.parseLong(MRJobConfig.JOB_DEADLINE),
-				 {, localResources, environment, null, serviceData, taskCredentialsBuffer, applicationACLs);
+			ContainerLaunchContext.newInstance(localResources, environment, null, serviceData,
+				taskCredentialsBuffer, applicationACLs);
 
 		return container;
 	}
@@ -823,8 +823,7 @@ public abstract class TaskAttemptImpl implements
 
 		// Construct the actual Container
 		long arrivalTime = Time.now();
-		ContainerLaunchContext container = ContainerLaunchContext.newInstance(arrivalTime,
-			arrivalTime + Long.parseLong(MRJobConfig.JOB_DEADLINE), commonContainerSpec.getLocalResources(),
+		ContainerLaunchContext container = ContainerLaunchContext.newInstance( commonContainerSpec.getLocalResources(),
 			myEnv, commands, myServiceData, commonContainerSpec.getTokens().duplicate(), applicationACLs);
 
 		return container;

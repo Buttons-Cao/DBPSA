@@ -60,6 +60,7 @@ import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.util.ExitUtil;
 import org.apache.hadoop.util.Shell;
+import org.apache.hadoop.util.Time;
 import org.apache.hadoop.yarn.api.ApplicationConstants;
 import org.apache.hadoop.yarn.api.ApplicationConstants.Environment;
 import org.apache.hadoop.yarn.api.ApplicationMasterProtocol;
@@ -936,7 +937,7 @@ public class ApplicationMaster {
 				+ container.getId());
 
 			// Set the local resources
-			Map<String, LocalResource> localResources = new HashMap<String, LocalResource>();
+			Map<String, LocalResource> localResources = new HashMap<>();
 
 			// The container for the eventual shell commands needs its own local
 			// resources too.
@@ -988,7 +989,7 @@ public class ApplicationMaster {
 			}
 
 			// Set the necessary command to execute on the allocated container
-			Vector<CharSequence> vargs = new Vector<CharSequence>(5);
+			Vector<CharSequence> vargs = new Vector<CharSequence>(6);
 
 			// Set executable command
 			vargs.add(shellCommand);
@@ -1022,6 +1023,7 @@ public class ApplicationMaster {
 			// download anyfiles in the distributed file-system. The tokens are
 			// otherwise also useful in cases, for e.g., when one is running a
 			// "hadoop dfs" command inside the distributed shell.
+			long arrivalTime = Time.now();
 			ContainerLaunchContext ctx = ContainerLaunchContext.newInstance(
 				localResources, shellEnv, commands, null, allTokens.duplicate(), null);
 			containerListener.addContainer(container.getId(), container);

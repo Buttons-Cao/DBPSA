@@ -1075,7 +1075,7 @@ public class TestYarnClient {
         credentials.writeTokenStorageToStream(dob);
         ByteBuffer tokens = ByteBuffer.wrap(dob.getData(), 0, dob.getLength());
         long arrivalTime = Time.now();
-        ContainerLaunchContext clc = ContainerLaunchContext.newInstance(arrivalTime, arrivalTime + 123940L,
+        ContainerLaunchContext clc = ContainerLaunchContext.newInstance(
 	        null, null, null, null, tokens, null);
         when(context.getAMContainerSpec()).thenReturn(clc);
         client.submitApplication(context);

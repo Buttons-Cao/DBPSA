@@ -218,8 +218,7 @@ public abstract class QueueACLsTestBase {
     Map<ApplicationAccessType, String> acls = createACLs(submitter, setupACLs);
     long arrivalTime = Time.now();
     ContainerLaunchContext amContainerSpec =
-        ContainerLaunchContext.newInstance(arrivalTime, arrivalTime + 123940L,
-            null, null, null, null, null, acls);
+        ContainerLaunchContext.newInstance(null, null, null, null, null, acls);
 
     ApplicationSubmissionContext appSubmissionContext =
         ApplicationSubmissionContext.newInstance(arrivalTime, arrivalTime + 123940L, applicationId,

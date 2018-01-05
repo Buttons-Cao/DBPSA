@@ -483,7 +483,7 @@ public class YARNRunner implements ClientProtocol {
 
 		// Setup ContainerLaunchContext for AM container
 		ContainerLaunchContext amContainer =
-			ContainerLaunchContext.newInstance(Time.now(), Time.now()+Long.parseLong(MRJobConfig.JOB_DEADLINE), localResources, environment,
+			ContainerLaunchContext.newInstance(localResources, environment,
 				vargsFinal, null, securityTokens, acls);
 
 		Collection<String> tagsFromConf =

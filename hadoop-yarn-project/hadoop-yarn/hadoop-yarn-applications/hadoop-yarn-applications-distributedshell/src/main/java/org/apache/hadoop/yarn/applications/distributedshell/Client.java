@@ -669,7 +669,7 @@ public class Client {
 		commands.add(command.toString());
 
 		// Set up the container launch context for the application master
-		ContainerLaunchContext amContainer = ContainerLaunchContext.newInstance(arrivalTime, arrivalTime + deadline,
+		ContainerLaunchContext amContainer = ContainerLaunchContext.newInstance(
 			localResources, env, commands, null, null, null);
 
 		// Set up resource type requirements

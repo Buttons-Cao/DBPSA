@@ -127,8 +127,7 @@ public class TestContainerManagerRecovery {
     acls.put(ApplicationAccessType.MODIFY_APP, modUser);
     acls.put(ApplicationAccessType.VIEW_APP, viewUser);
     long arrivalTime = Time.now();
-    ContainerLaunchContext clc = ContainerLaunchContext.newInstance(arrivalTime, arrivalTime + 123940L,
-        localResources, containerEnv, containerCmds, serviceData,
+    ContainerLaunchContext clc = ContainerLaunchContext.newInstance(localResources, containerEnv, containerCmds, serviceData,
         containerTokens, acls);
     // create the logAggregationContext
     LogAggregationContext logAggregationContext =

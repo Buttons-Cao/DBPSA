@@ -838,7 +838,7 @@ public class TestDelegationTokenRenewer {
     ByteBuffer tokens = ByteBuffer.wrap("BOGUS".getBytes());
     long arrivalTime = Time.now();
     ContainerLaunchContext amContainer =
-        ContainerLaunchContext.newInstance(arrivalTime, arrivalTime + 123940L, new HashMap<String, LocalResource>(),
+        ContainerLaunchContext.newInstance(new HashMap<String, LocalResource>(),
             new HashMap<String, String>(), new ArrayList<String>(), new HashMap<String, ByteBuffer>(), tokens,
             new HashMap<ApplicationAccessType, String>());
     ApplicationSubmissionContext appSubContext =

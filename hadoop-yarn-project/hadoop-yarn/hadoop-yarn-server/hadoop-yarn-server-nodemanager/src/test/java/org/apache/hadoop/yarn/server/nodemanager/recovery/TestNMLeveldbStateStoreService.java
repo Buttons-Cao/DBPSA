@@ -252,8 +252,7 @@ public class TestNMLeveldbStateStoreService {
     acls.put(ApplicationAccessType.VIEW_APP, "viewuser");
     acls.put(ApplicationAccessType.MODIFY_APP, "moduser");
     long arrivalTime = Time.now();
-    ContainerLaunchContext clc = ContainerLaunchContext.newInstance(arrivalTime, arrivalTime+123940,
-        localResources, env, containerCmds, serviceData, containerTokens,
+    ContainerLaunchContext clc = ContainerLaunchContext.newInstance(localResources, env, containerCmds, serviceData, containerTokens,
         acls);
     Resource containerRsrc = Resource.newInstance(1357, 3);
     ContainerTokenIdentifier containerTokenId =
