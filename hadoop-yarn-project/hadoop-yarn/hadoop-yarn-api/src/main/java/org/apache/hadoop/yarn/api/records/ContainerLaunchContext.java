@@ -57,8 +57,6 @@ public abstract class ContainerLaunchContext {
 	@Public
 	@Stable
 	public static ContainerLaunchContext newInstance(
-		long arrvalTime,
-		long deadline,
 		Map<String, LocalResource> localResources,
 		Map<String, String> environment, List<String> commands,
 		Map<String, ByteBuffer> serviceData, ByteBuffer tokens,
@@ -71,8 +69,6 @@ public abstract class ContainerLaunchContext {
 		container.setServiceData(serviceData);
 		container.setTokens(tokens);
 		container.setApplicationACLs(acls);
-		container.setArrivalTime(arrvalTime);
-		container.setDeadline(deadline);
 		return container;
 	}
 

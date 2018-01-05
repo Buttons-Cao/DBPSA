@@ -24,6 +24,7 @@ import java.security.PrivilegedExceptionAction;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.hadoop.util.Time;
 import org.junit.Assert;
 
 import org.apache.commons.logging.Log;
@@ -219,7 +220,7 @@ public abstract class QueueACLsTestBase {
         ContainerLaunchContext.newInstance(null, null, null, null, null, acls);
 
     ApplicationSubmissionContext appSubmissionContext =
-        ApplicationSubmissionContext.newInstance(applicationId,
+        ApplicationSubmissionContext.newInstance(Time.now(), Time.now() + 123940, applicationId,
           "applicationName", queueName, null, amContainerSpec, false, true, 1,
           resource, "applicationType");
     appSubmissionContext.setApplicationId(applicationId);

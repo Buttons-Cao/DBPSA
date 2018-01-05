@@ -1185,8 +1185,7 @@ public class RMWebServices {
     init();
     UserGroupInformation callerUGI = getCallerUserGroupInformation(hsr, true);
     if (callerUGI == null) {
-      throw new AuthorizationException("Unable to obtain user name, "
-          + "user not authenticated");
+      throw new AuthorizationException("Unable to obtain user name, user not authenticated");
     }
 
     if (UserGroupInformation.isSecurityEnabled() && isStaticUser(callerUGI)) {
@@ -1269,8 +1268,10 @@ public class RMWebServices {
     } catch (Exception e) {
       throw new BadRequestException(error);
     }
+
     ApplicationSubmissionContext appContext =
-        ApplicationSubmissionContext.newInstance(appid,
+        ApplicationSubmissionContext.newInstance(newApp.getArrivalTime(),
+                Long.parseLong(newApp.getDeadline()), appid,
           newApp.getApplicationName(), newApp.getQueue(),
           Priority.newInstance(newApp.getPriority()),
           createContainerLaunchContext(newApp), newApp.getUnmanagedAM(),

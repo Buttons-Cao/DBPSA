@@ -538,7 +538,7 @@ public class Client {
 		// set local resources for the application master
 		// local files or archives as needed
 		// In this scenario, the jar file for the application master is part of the local resources
-		Map<String, LocalResource> localResources = new HashMap<String, LocalResource>();
+		Map<String, LocalResource> localResources = new HashMap<>();
 
 		LOG.info("Copy App Master jar from local filesystem and add to local environment");
 		// Copy the application master jar to the filesystem
@@ -669,8 +669,7 @@ public class Client {
 		commands.add(command.toString());
 
 		// Set up the container launch context for the application master
-		ContainerLaunchContext amContainer = ContainerLaunchContext.newInstance(arrivalTime, arrivalTime + deadline,
-			localResources, env, commands, null, null, null);
+		ContainerLaunchContext amContainer = ContainerLaunchContext.newInstance(localResources, env, commands, null, null, null);
 
 		// Set up resource type requirements
 		// For now, both memory and vcores are supported, so we set memory and

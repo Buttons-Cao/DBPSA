@@ -65,6 +65,7 @@ import org.apache.hadoop.security.token.TokenRenewer;
 import org.apache.hadoop.security.token.delegation.DelegationKey;
 import org.apache.hadoop.test.GenericTestUtils;
 import org.apache.hadoop.util.StringUtils;
+import org.apache.hadoop.util.Time;
 import org.apache.hadoop.yarn.api.protocolrecords.SubmitApplicationRequest;
 import org.apache.hadoop.yarn.api.records.ApplicationAccessType;
 import org.apache.hadoop.yarn.api.records.ApplicationId;
@@ -841,7 +842,7 @@ public class TestDelegationTokenRenewer {
             new ArrayList<String>(), new HashMap<String, ByteBuffer>(), tokens,
             new HashMap<ApplicationAccessType, String>());
     ApplicationSubmissionContext appSubContext =
-        ApplicationSubmissionContext.newInstance(
+        ApplicationSubmissionContext.newInstance(Time.now(), Time.now()+123940,
             ApplicationId.newInstance(1234121, 0),
             "BOGUS", "default", Priority.UNDEFINED, amContainer, false,
             true, 1, Resource.newInstance(1024, 1), "BOGUS");
