@@ -27,9 +27,7 @@ import java.util.Map;
 
 import org.apache.hadoop.classification.InterfaceAudience.Private;
 import org.apache.hadoop.classification.InterfaceStability.Unstable;
-import org.apache.hadoop.yarn.api.records.ApplicationAccessType;
-import org.apache.hadoop.yarn.api.records.ContainerLaunchContext;
-import org.apache.hadoop.yarn.api.records.LocalResource;
+import org.apache.hadoop.yarn.api.records.*;
 import org.apache.hadoop.yarn.proto.YarnProtos.ApplicationACLMapProto;
 import org.apache.hadoop.yarn.proto.YarnProtos.ContainerLaunchContextProto;
 import org.apache.hadoop.yarn.proto.YarnProtos.ContainerLaunchContextProtoOrBuilder;
@@ -57,6 +55,8 @@ public class ContainerLaunchContextPBImpl extends ContainerLaunchContext {
 	private Map<ApplicationAccessType, String> applicationACLS = null;
 	private long arrivalTime;
 	private long deadline;
+	private int numOfBeingPreempted;
+	private Priority preemptionPriority;
 
 	public ContainerLaunchContextPBImpl() {
 		builder = ContainerLaunchContextProto.newBuilder();
@@ -150,7 +150,7 @@ public class ContainerLaunchContextPBImpl extends ContainerLaunchContext {
 		}
 		ContainerLaunchContextProtoOrBuilder p = viaProto ? proto : builder;
 		List<String> list = p.getCommandList();
-		this.commands = new ArrayList<String>();
+		this.commands = new ArrayList<>();
 
 		for (String c : list) {
 			this.commands.add(c);
@@ -336,7 +336,7 @@ public class ContainerLaunchContextPBImpl extends ContainerLaunchContext {
 		}
 		ContainerLaunchContextProtoOrBuilder p = viaProto ? proto : builder;
 		List<StringStringMapProto> list = p.getEnvironmentList();
-		this.environment = new HashMap<String, String>();
+		this.environment = new HashMap<>();
 
 		for (StringStringMapProto c : list) {
 			this.environment.put(c.getKey(), c.getValue());
@@ -475,4 +475,33 @@ public class ContainerLaunchContextPBImpl extends ContainerLaunchContext {
 		return ((LocalResourcePBImpl) t).getProto();
 	}
 
+	@Override
+	public void setNumOfBeingPreempted(int numOfBeingPreempted){
+		this.numOfBeingPreempted = numOfBeingPreempted;
+	}
+
+	@Override
+	public void setPreemptionPriority(Priority preemptionPriority){
+		maybeInitBuilder();
+		if (preemptionPriority == null) {
+			builder.clearPreemptionPriority();
+		}
+		this.preemptionPriority = preemptionPriority;
+	}
+
+	public long getArrivalTime() {
+		return arrivalTime;
+	}
+
+	public long getDeadline() {
+		return deadline;
+	}
+
+	public int getNumOfBeingPreempted() {
+		return numOfBeingPreempted;
+	}
+
+	public Priority getPreemptionPriority() {
+		return preemptionPriority;
+	}
 }

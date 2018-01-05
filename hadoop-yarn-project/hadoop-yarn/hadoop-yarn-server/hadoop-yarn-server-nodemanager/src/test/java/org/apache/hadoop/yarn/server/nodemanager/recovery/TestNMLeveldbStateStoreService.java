@@ -36,6 +36,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.service.ServiceStateException;
+import org.apache.hadoop.util.Time;
 import org.apache.hadoop.yarn.api.protocolrecords.StartContainerRequest;
 import org.apache.hadoop.yarn.api.records.ApplicationAccessType;
 import org.apache.hadoop.yarn.api.records.ApplicationAttemptId;
@@ -247,10 +248,11 @@ public class TestNMLeveldbStateStoreService {
     ByteBuffer containerTokens =
         ByteBuffer.wrap(new byte[] { 0x7, 0x8, 0x9, 0xa });
     Map<ApplicationAccessType, String> acls =
-        new HashMap<ApplicationAccessType, String>();
+        new HashMap<>();
     acls.put(ApplicationAccessType.VIEW_APP, "viewuser");
     acls.put(ApplicationAccessType.MODIFY_APP, "moduser");
-    ContainerLaunchContext clc = ContainerLaunchContext.newInstance(
+    long arrivalTime = Time.now();
+    ContainerLaunchContext clc = ContainerLaunchContext.newInstance(arrivalTime, arrivalTime+123940,
         localResources, env, containerCmds, serviceData, containerTokens,
         acls);
     Resource containerRsrc = Resource.newInstance(1357, 3);

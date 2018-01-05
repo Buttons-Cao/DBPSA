@@ -113,16 +113,7 @@ import org.apache.hadoop.util.StringInterner;
 import org.apache.hadoop.util.StringUtils;
 import org.apache.hadoop.util.Time;
 import org.apache.hadoop.yarn.api.ApplicationConstants.Environment;
-import org.apache.hadoop.yarn.api.records.ApplicationAccessType;
-import org.apache.hadoop.yarn.api.records.Container;
-import org.apache.hadoop.yarn.api.records.ContainerId;
-import org.apache.hadoop.yarn.api.records.ContainerLaunchContext;
-import org.apache.hadoop.yarn.api.records.LocalResource;
-import org.apache.hadoop.yarn.api.records.LocalResourceType;
-import org.apache.hadoop.yarn.api.records.LocalResourceVisibility;
-import org.apache.hadoop.yarn.api.records.NodeId;
-import org.apache.hadoop.yarn.api.records.Resource;
-import org.apache.hadoop.yarn.api.records.URL;
+import org.apache.hadoop.yarn.api.records.*;
 import org.apache.hadoop.yarn.conf.YarnConfiguration;
 import org.apache.hadoop.yarn.event.EventHandler;
 import org.apache.hadoop.yarn.exceptions.YarnRuntimeException;
@@ -784,7 +775,7 @@ public abstract class TaskAttemptImpl implements
 		long arrivalTime = Time.now();
 		ContainerLaunchContext container =
 			ContainerLaunchContext.newInstance(arrivalTime, arrivalTime + Long.parseLong(MRJobConfig.JOB_DEADLINE),
-				localResources, environment, null,	serviceData, taskCredentialsBuffer, applicationACLs);
+				 {, localResources, environment, null, serviceData, taskCredentialsBuffer, applicationACLs);
 
 		return container;
 	}

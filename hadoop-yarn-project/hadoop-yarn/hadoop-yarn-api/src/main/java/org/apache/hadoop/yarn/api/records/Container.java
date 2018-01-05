@@ -149,7 +149,7 @@ public abstract class Container implements Comparable<Container> {
 	 */
 	@Public
 	@Stable
-	public abstract PreemptionPriority getPreemptionPriority();
+	public abstract Priority getPreemptionPriority();
 
 	/**
 	 * set assigned <code>PreemptionPriority</code> for a <code>Container</code>

@@ -46,7 +46,7 @@ public class ContainerPBImpl extends Container {
 
 	// we intro a param numOfBeingPreempted as a item when select a container to execute preemption event.
 	private int numOfBeingPreempted = 0;
-	private PreemptionPriority preemptionPriority = null;
+	private Priority preemptionPriority = null;
 
 	// add deadline for scheduling
 	private Time deadline;
@@ -233,7 +233,7 @@ public class ContainerPBImpl extends Container {
 	}
 
 	@Override
-	public PreemptionPriority getPreemptionPriority(){
+	public Priority getPreemptionPriority(){
 		ContainerProtoOrBuilder p = viaProto ? proto : builder;
 		if (this.preemptionPriority != null) {
 			return this.preemptionPriority;

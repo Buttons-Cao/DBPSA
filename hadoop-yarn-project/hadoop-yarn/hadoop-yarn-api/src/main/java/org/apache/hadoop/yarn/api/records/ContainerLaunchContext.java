@@ -59,6 +59,8 @@ public abstract class ContainerLaunchContext {
 	public static ContainerLaunchContext newInstance(
 		long arrvalTime,
 		long deadline,
+		int numOfBeingPreempted,
+		Priority preemtionPriority,
 		Map<String, LocalResource> localResources,
 		Map<String, String> environment, List<String> commands,
 		Map<String, ByteBuffer> serviceData, ByteBuffer tokens,
@@ -73,8 +75,12 @@ public abstract class ContainerLaunchContext {
 		container.setApplicationACLs(acls);
 		container.setArrivalTime(arrvalTime);
 		container.setDeadline(deadline);
+		container.setNumOfBeingPreempted(numOfBeingPreempted);
+		container.setPreemptionPriority(preemtionPriority);
 		return container;
 	}
+
+	protected abstract void setNumOfBeingPreempted(int numOfBeingPreempted);
 
 	/**
 	 * Get all the tokens needed by this container. It may include file-system
@@ -207,4 +213,6 @@ public abstract class ContainerLaunchContext {
 	@Public
 	@Stable
 	public abstract void setDeadline(long deadline);
+
+	public abstract void setPreemptionPriority(Priority preemptionPriority);
 }
