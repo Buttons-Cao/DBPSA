@@ -20,6 +20,7 @@ package org.apache.hadoop.yarn.applications.distributedshell;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.hadoop.util.Time;
 import org.apache.hadoop.yarn.client.api.impl.TimelineClientImpl;
 import org.apache.hadoop.yarn.conf.YarnConfiguration;
 import org.junit.Assert;
@@ -29,7 +30,7 @@ public class TestDSAppMaster {
 
   @Test
   public void testTimelineClientInDSAppMaster() throws Exception {
-    ApplicationMaster appMaster = new ApplicationMaster();
+    ApplicationMaster appMaster = new ApplicationMaster(Time.now(), 123940L);
     appMaster.appSubmitterUgi =
         UserGroupInformation.createUserForTesting("foo", new String[]{"bar"});
     Configuration conf = new YarnConfiguration();

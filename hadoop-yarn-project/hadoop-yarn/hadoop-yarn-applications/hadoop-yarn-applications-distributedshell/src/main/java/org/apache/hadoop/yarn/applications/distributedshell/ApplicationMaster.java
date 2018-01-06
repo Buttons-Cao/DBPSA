@@ -278,13 +278,22 @@ public class ApplicationMaster {
 	private final String linux_bash_command = "bash";
 	private final String windows_command = "cmd /c";
 
+	private long arrivalTime;
+	private long deadline;
+
 	/**
 	 * @param args Command line args
 	 */
 	public static void main(String[] args) {
 		boolean result = false;
 		try {
-			ApplicationMaster appMaster = new ApplicationMaster();
+			long deadline = 123940;
+			for (int i=0; i<args.length; i++) {
+				if ("-deadline".equals(args[i])){
+					deadline = Long.parseLong(args[i+1]);
+				}
+			}
+			ApplicationMaster appMaster = new ApplicationMaster(Time.now(), deadline);
 			LOG.info("Initializing ApplicationMaster");
 			boolean doRun = appMaster.init(args);
 			if (!doRun) {
@@ -336,7 +345,7 @@ public class ApplicationMaster {
 		}
 	}
 
-	public ApplicationMaster() {
+	public ApplicationMaster(long arrivalTime, long deadline) {
 		// Set up the configuration
 		conf = new YarnConfiguration();
 	}
@@ -1153,5 +1162,13 @@ public class ApplicationMaster {
 				+ " event could not be published for "
 				+ appAttemptId.toString(), e);
 		}
+	}
+
+	public long getArrivalTime() {
+		return arrivalTime;
+	}
+
+	public long getDeadline() {
+		return deadline;
 	}
 }
