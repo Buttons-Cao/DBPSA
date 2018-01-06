@@ -538,7 +538,7 @@ public class Client {
 		// set local resources for the application master
 		// local files or archives as needed
 		// In this scenario, the jar file for the application master is part of the local resources
-		Map<String, LocalResource> localResources = new HashMap<String, LocalResource>();
+		Map<String, LocalResource> localResources = new HashMap<>();
 
 		LOG.info("Copy App Master jar from local filesystem and add to local environment");
 		// Copy the application master jar to the filesystem

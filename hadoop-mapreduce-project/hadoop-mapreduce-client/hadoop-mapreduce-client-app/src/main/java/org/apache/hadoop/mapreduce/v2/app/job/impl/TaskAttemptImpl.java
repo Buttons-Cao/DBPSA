@@ -776,7 +776,6 @@ public abstract class TaskAttemptImpl implements
 		ContainerLaunchContext container =
 			ContainerLaunchContext.newInstance(localResources, environment, null, serviceData,
 				taskCredentialsBuffer, applicationACLs);
-
 		return container;
 	}
 

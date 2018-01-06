@@ -57,7 +57,6 @@ public abstract class ContainerLaunchContext {
 	@Public
 	@Stable
 	public static ContainerLaunchContext newInstance(
-
 		Map<String, LocalResource> localResources,
 		Map<String, String> environment, List<String> commands,
 		Map<String, ByteBuffer> serviceData, ByteBuffer tokens,

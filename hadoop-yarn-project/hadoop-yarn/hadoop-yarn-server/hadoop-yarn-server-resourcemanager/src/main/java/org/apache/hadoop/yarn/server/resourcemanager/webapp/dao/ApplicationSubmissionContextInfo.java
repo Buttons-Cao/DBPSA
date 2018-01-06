@@ -27,6 +27,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.hadoop.util.Time;
 import org.apache.hadoop.yarn.api.records.Priority;
 
 /**
@@ -78,6 +79,10 @@ public class ApplicationSubmissionContextInfo {
   @XmlElement(name = "am-container-node-label-expression")
   String amContainerNodeLabelExpression;
 
+  @XmlElement(name = "deadline")
+  String deadline;
+
+  long arrivalTime;
   public ApplicationSubmissionContextInfo() {
     applicationId = "";
     applicationName = "";
@@ -88,9 +93,11 @@ public class ApplicationSubmissionContextInfo {
     cancelTokensWhenComplete = true;
     keepContainers = false;
     applicationType = "";
-    tags = new HashSet<String>();
+    tags = new HashSet<>();
     appNodeLabelExpression = "";
     amContainerNodeLabelExpression = "";
+    deadline = "";
+    arrivalTime = Time.now();
   }
 
   public String getApplicationId() {
@@ -205,5 +212,13 @@ public class ApplicationSubmissionContextInfo {
 
   public void setAMContainerNodeLabelExpression(String nodeLabelExpression) {
     this.amContainerNodeLabelExpression = nodeLabelExpression;
+  }
+
+  public String getDeadline() {
+    return deadline;
+  }
+
+  public long getArrivalTime() {
+    return arrivalTime;
   }
 }
