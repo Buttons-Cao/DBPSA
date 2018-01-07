@@ -636,7 +636,7 @@ public class MRAppMaster extends CompositeService {
 				completedTasksFromPreviousRun, metrics,
 				committer, newApiCommitter,
 				currentUser.getUserName(), appSubmitTime, amInfos, context,
-				forcedState, diagnostic);
+				forcedState, diagnostic, deadline);
 		((RunningAppContext) context).jobs.put(newJob.getID(), newJob);
 
 		dispatcher.register(JobFinishEvent.Type.class,
@@ -1056,7 +1056,7 @@ public class MRAppMaster extends CompositeService {
 				new JobHistoryEvent(job.getID(), new AMStartedEvent(info
 					.getAppAttemptId(), info.getStartTime(), info.getContainerId(),
 					info.getNodeManagerHost(), info.getNodeManagerPort(), info
-					.getNodeManagerHttpPort(), appSubmitTime)));
+					.getNodeManagerHttpPort(), appSubmitTime, deadline)));
 		}
 
 		// Send out an MR AM inited event for this AM.
@@ -1065,7 +1065,7 @@ public class MRAppMaster extends CompositeService {
 				.getAppAttemptId(), amInfo.getStartTime(), amInfo.getContainerId(),
 				amInfo.getNodeManagerHost(), amInfo.getNodeManagerPort(), amInfo
 				.getNodeManagerHttpPort(), this.forcedState == null ? null
-				: this.forcedState.toString(), appSubmitTime)));
+				: this.forcedState.toString(), appSubmitTime, deadline)));
 		amInfos.add(amInfo);
 
 		// metrics system init is really init & start.
@@ -1140,7 +1140,7 @@ public class MRAppMaster extends CompositeService {
 					deadline);
 			} else {
 				_jobContext = new org.apache.hadoop.mapred.JobContextImpl(
-					new JobConf(conf), TypeConverter.fromYarn(getJobId()));
+					new JobConf(conf), TypeConverter.fromYarn(getJobId()), appSubmitTime, deadline);
 			}
 			isSupported = callWithJobClassLoader(conf,
 				new ExceptionAction<Boolean>() {
@@ -1421,6 +1421,7 @@ public class MRAppMaster extends CompositeService {
 				System.getenv(Environment.NM_HTTP_PORT.name());
 			String appSubmitTimeStr =
 				System.getenv(ApplicationConstants.APP_SUBMIT_TIME_ENV);
+			String appDeadlineStr = System.getenv(ApplicationConstants.APP_DEADLINE);
 
 			validateInputParam(containerIdStr,
 				Environment.CONTAINER_ID.name());
@@ -1430,17 +1431,19 @@ public class MRAppMaster extends CompositeService {
 				Environment.NM_HTTP_PORT.name());
 			validateInputParam(appSubmitTimeStr,
 				ApplicationConstants.APP_SUBMIT_TIME_ENV);
+			validateInputParam(appDeadlineStr, ApplicationConstants.APP_DEADLINE);
 
 			ContainerId containerId = ConverterUtils.toContainerId(containerIdStr);
 			ApplicationAttemptId applicationAttemptId =
 				containerId.getApplicationAttemptId();
 			long appSubmitTime = Long.parseLong(appSubmitTimeStr);
+			long deadline = Long.parseLong(appDeadlineStr);
 
 
 			MRAppMaster appMaster =
 				new MRAppMaster(applicationAttemptId, containerId, nodeHostString,
 					Integer.parseInt(nodePortString),
-					Integer.parseInt(nodeHttpPortString), appSubmitTime);
+					Integer.parseInt(nodeHttpPortString), appSubmitTime, deadline);
 			ShutdownHookManager.get().addShutdownHook(
 				new MRAppMasterShutdownHook(appMaster), SHUTDOWN_HOOK_PRIORITY);
 			JobConf conf = new JobConf(new YarnConfiguration());

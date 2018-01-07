@@ -30,7 +30,6 @@ import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.classification.InterfaceAudience.Private;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileContext;
@@ -527,8 +526,9 @@ public class YARNRunner implements ClientProtocol {
 				MRJobConfig.DEFAULT_MR_AM_MAX_ATTEMPTS));
 		appContext.setResource(capability);
 		appContext.setApplicationType(MRJobConfig.MR_APPLICATION_TYPE);
-		appContext.setDeadline(Time.now() + conf.getLong(JobContext.JOB_DEADLINE, 180000L));
-		appContext.setArriavalTime(Time.now());
+		long arrivalTime = Time.now();
+		appContext.setDeadline(arrivalTime + conf.getLong(JobContext.JOB_DEADLINE, 180000L));
+		appContext.setArriavalTime(arrivalTime);
 		if (tagsFromConf != null && !tagsFromConf.isEmpty()) {
 			appContext.setApplicationTags(new HashSet<>(tagsFromConf));
 		}

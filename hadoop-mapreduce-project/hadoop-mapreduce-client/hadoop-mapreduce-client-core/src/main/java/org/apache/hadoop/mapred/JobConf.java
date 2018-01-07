@@ -2019,7 +2019,14 @@ public class JobConf extends Configuration {
       LOG.warn(JobConf.deprecatedString(JobConf.MAPRED_REDUCE_TASK_ULIMIT));
     }
   }
-  
+
+  public long getDeadline(){
+      return getLong(MRJobConfig.JOB_DEADLINE, 123940);
+  }
+
+  public void setDeadline(long deadline){
+      setStrings(MRJobConfig.JOB_DEADLINE, String.valueOf(deadline));
+  }
 
 }
 

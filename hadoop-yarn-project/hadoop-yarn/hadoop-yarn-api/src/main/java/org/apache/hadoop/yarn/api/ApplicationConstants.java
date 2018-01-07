@@ -41,6 +41,8 @@ public interface ApplicationConstants {
    */
   public static final String APP_SUBMIT_TIME_ENV = "APP_SUBMIT_TIME_ENV";
 
+  String APP_DEADLINE = "APP_DEADLINE";
+
   /**
    * The cache file into which container token is written
    */

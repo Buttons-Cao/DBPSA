@@ -1411,7 +1411,7 @@ public class JobImpl implements org.apache.hadoop.mapreduce.v2.app.job.Job,
 			} else {
 				long arrivalTime = Time.now();
 				job.jobContext = new org.apache.hadoop.mapred.JobContextImpl(
-					job.conf, job.oldJobId, arrivalTime, arrivalTime + Long.parseLong(MRJobConfig.JOB_DEADLINE));
+					job.conf, job.oldJobId, arrivalTime, arrivalTime + Long.parseLong(MRJobConfig.DEFAULT_JOB_DEADLINE));
 			}
 
 			try {

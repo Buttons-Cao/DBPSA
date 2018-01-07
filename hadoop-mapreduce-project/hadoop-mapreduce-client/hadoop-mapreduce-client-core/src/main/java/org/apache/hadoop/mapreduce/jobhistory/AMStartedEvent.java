@@ -33,7 +33,8 @@ import org.apache.avro.util.Utf8;
 @InterfaceAudience.Private
 @InterfaceStability.Unstable
 public class AMStartedEvent implements HistoryEvent {
-  private AMStarted datum = new AMStarted();
+    private long deadline;
+    private AMStarted datum = new AMStarted();
   private String forcedJobStateOnShutDown;
   private long submitTime;
 
@@ -55,9 +56,9 @@ public class AMStartedEvent implements HistoryEvent {
    */
   public AMStartedEvent(ApplicationAttemptId appAttemptId, long startTime,
       ContainerId containerId, String nodeManagerHost, int nodeManagerPort,
-      int nodeManagerHttpPort, long submitTime) {
+      int nodeManagerHttpPort, long submitTime, long deadline) {
     this(appAttemptId, startTime, containerId, nodeManagerHost,
-        nodeManagerPort, nodeManagerHttpPort, null, submitTime);
+        nodeManagerPort, nodeManagerHttpPort, null, submitTime, deadline);
   }
 
   /**
@@ -81,7 +82,7 @@ public class AMStartedEvent implements HistoryEvent {
   public AMStartedEvent(ApplicationAttemptId appAttemptId, long startTime,
       ContainerId containerId, String nodeManagerHost, int nodeManagerPort,
       int nodeManagerHttpPort, String forcedJobStateOnShutDown,
-      long submitTime) {
+      long submitTime, long deadline) {
     datum.applicationAttemptId = new Utf8(appAttemptId.toString());
     datum.startTime = startTime;
     datum.containerId = new Utf8(containerId.toString());
@@ -90,6 +91,7 @@ public class AMStartedEvent implements HistoryEvent {
     datum.nodeManagerHttpPort = nodeManagerHttpPort;
     this.forcedJobStateOnShutDown = forcedJobStateOnShutDown;
     this.submitTime = submitTime;
+    this.deadline = deadline;
   }
 
   AMStartedEvent() {

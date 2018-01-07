@@ -36,7 +36,7 @@ public class TestContextFactory {
   public void setUp() throws Exception {
     conf = new Configuration();
     jobId = new JobID("test", 1);
-    jobContext = new JobContextImpl(conf, jobId, Time.now(), 123940L);
+    jobContext = new JobContextImpl(conf, jobId, jobContext.getArrivalTime(), jobContext.getDeadline());
   }
   
   @Test

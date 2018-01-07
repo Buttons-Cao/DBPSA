@@ -36,6 +36,7 @@ import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.TaskAttemptID;
 import org.apache.hadoop.mapreduce.task.JobContextImpl;
 import org.apache.hadoop.mapreduce.task.TaskAttemptContextImpl;
+import org.apache.hadoop.util.Time;
 
 
 public class TestMRCJCFileOutputCommitter extends TestCase {
@@ -92,7 +93,8 @@ public class TestMRCJCFileOutputCommitter extends TestCase {
     FileOutputFormat.setOutputPath(job, outDir);
     Configuration conf = job.getConfiguration();
     conf.set(MRJobConfig.TASK_ATTEMPT_ID, attempt);
-    JobContext jContext = new JobContextImpl(conf, taskID.getJobID());
+    JobContext jContext = new JobContextImpl(conf, taskID.getJobID(),Time.now(),
+            Long.parseLong(MRJobConfig.DEFAULT_JOB_DEADLINE));
     TaskAttemptContext tContext = new TaskAttemptContextImpl(conf, taskID);
     FileOutputCommitter committer = new FileOutputCommitter(outDir, tContext);
 
@@ -128,7 +130,8 @@ public class TestMRCJCFileOutputCommitter extends TestCase {
     FileOutputFormat.setOutputPath(job, outDir);
     Configuration conf = job.getConfiguration();
     conf.set(MRJobConfig.TASK_ATTEMPT_ID, attempt);
-    JobContext jContext = new JobContextImpl(conf, taskID.getJobID());
+    JobContext jContext = new JobContextImpl(conf, taskID.getJobID(),Time.now(),
+            Long.parseLong(MRJobConfig.DEFAULT_JOB_DEADLINE));
     TaskAttemptContext tContext = new TaskAttemptContextImpl(conf, taskID);
     FileOutputCommitter committer = new FileOutputCommitter(outDir, tContext);
 
@@ -151,7 +154,7 @@ public class TestMRCJCFileOutputCommitter extends TestCase {
     FileOutputFormat.setOutputPath(job, outDir);
     Configuration conf = job.getConfiguration();
     conf.set(MRJobConfig.TASK_ATTEMPT_ID, attempt);
-    JobContext jContext = new JobContextImpl(conf, taskID.getJobID());
+    JobContext jContext = new JobContextImpl(conf, taskID.getJobID(), Time.now(), 123940);
     TaskAttemptContext tContext = new TaskAttemptContextImpl(conf, taskID);
     FileOutputCommitter committer = new FileOutputCommitter(outDir, tContext);
 
@@ -202,7 +205,8 @@ public class TestMRCJCFileOutputCommitter extends TestCase {
     conf.setClass("fs.faildel.impl", FakeFileSystem.class, FileSystem.class);
     conf.set(MRJobConfig.TASK_ATTEMPT_ID, attempt);
     FileOutputFormat.setOutputPath(job, outDir);
-    JobContext jContext = new JobContextImpl(conf, taskID.getJobID());
+    JobContext jContext = new JobContextImpl(conf, taskID.getJobID(), Time.now(),
+            Long.parseLong(MRJobConfig.DEFAULT_JOB_DEADLINE));
     TaskAttemptContext tContext = new TaskAttemptContextImpl(conf, taskID);
     FileOutputCommitter committer = new FileOutputCommitter(outDir, tContext);
 
