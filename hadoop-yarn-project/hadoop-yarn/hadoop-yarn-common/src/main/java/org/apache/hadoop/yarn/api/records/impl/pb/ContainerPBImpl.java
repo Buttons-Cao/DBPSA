@@ -62,7 +62,7 @@ public class ContainerPBImpl extends Container {
 		this.proto = proto;
 		viaProto = true;
 		this.deadline = proto.getDeadline();
-		this.ApparrivalTime = proto.getArrivalTime();
+		this.ApparrivalTime = proto.getAppArrivalTime();
 	}
 
 	public ContainerProto getProto() {
