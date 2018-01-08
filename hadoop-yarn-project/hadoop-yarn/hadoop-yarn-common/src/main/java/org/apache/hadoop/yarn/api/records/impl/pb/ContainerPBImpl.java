@@ -50,7 +50,7 @@ public class ContainerPBImpl extends Container {
 	// add deadline for scheduling
 	private long deadline;
 
-	private long ApparrivalTime
+	private long ApparrivalTime;
 
 	public ContainerPBImpl(long AppArrivalTime, long deadline) {
 		builder = ContainerProto.newBuilder();

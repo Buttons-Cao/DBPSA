@@ -29,7 +29,6 @@ option java_generate_equals_and_hash = true;
 package hadoop.yarn;
 
 import "Security.proto";
-import "org.apache.hadoop.util.Time";
 
 message SerializedExceptionProto {
     optional string message = 1;
