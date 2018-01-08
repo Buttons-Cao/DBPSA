@@ -587,10 +587,6 @@ public class ApplicationSubmissionContextPBImpl extends ApplicationSubmissionCon
 		return new ReservationIdPBImpl(p);
 	}
 
-	private long convertFromProtoFormat(long time) {
-		return time;
-	}
-
 	private ReservationIdProto convertToProtoFormat(ReservationId t) {
 		return ((ReservationIdPBImpl) t).getProto();
 	}

@@ -91,7 +91,7 @@ message ContainerProto {
     optional float preemptionPriority = 6;
     optional hadoop.common.TokenProto container_token = 7;
     optional int64 deadline = 8;
-    optional int64 arrivalTime = 9;
+    optional int64 AppArrivalTime = 9;
     optional int32 numOfBeingPreempted = 10;
 }
 
