@@ -208,5 +208,5 @@ public abstract class ContainerLaunchContext {
 	@Stable
 	public abstract void setDeadline(long deadline);
 
-	public abstract void setPreemptionPriority(Priority preemptionPriority);
+	public abstract void setPreemptionPriority(float preemptionPriority);
 }

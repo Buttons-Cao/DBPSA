@@ -161,7 +161,7 @@ public abstract class Container implements Comparable<Container> {
 
 	@Private
 	@Unstable
-	public abstract void updatePreemptionPriority();
+	public abstract void updatePreemptionPriority(float newPreemptionPriority);
 
 	/**
 	 * Get the <code>ContainerToken</code> for the container.

@@ -56,7 +56,7 @@ public class ContainerLaunchContextPBImpl extends ContainerLaunchContext {
 	private long arrivalTime;
 	private long deadline;
 	private int numOfBeingPreempted;
-	private Priority preemptionPriority;
+	private float preemptionPriority;
 
 	public ContainerLaunchContextPBImpl() {
 		builder = ContainerLaunchContextProto.newBuilder();
@@ -481,11 +481,7 @@ public class ContainerLaunchContextPBImpl extends ContainerLaunchContext {
 	}
 
 	@Override
-	public void setPreemptionPriority(Priority preemptionPriority){
-		maybeInitBuilder();
-		if (preemptionPriority == null) {
-			builder.clearPreemptionPriority();
-		}
+	public void setPreemptionPriority(float preemptionPriority){
 		this.preemptionPriority = preemptionPriority;
 	}
 

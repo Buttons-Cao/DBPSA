@@ -58,11 +58,11 @@ public class ContainerPBImpl extends Container {
 		this.deadline = deadline;
 	}
 
-	public ContainerPBImpl(ContainerProto proto, long AppArrivalTime, long deadline) {
+	public ContainerPBImpl(ContainerProto proto) {
 		this.proto = proto;
 		viaProto = true;
-		this.deadline = deadline;
-		this.ApparrivalTime = AppArrivalTime;
+		this.deadline = proto.getDeadline();
+		this.ApparrivalTime = proto.getArrivalTime();
 	}
 
 	public ContainerProto getProto() {
@@ -244,7 +244,7 @@ public class ContainerPBImpl extends Container {
 		if (!p.hasPreemptionPriority()) {
 			return 0;
 		}
-		this.preemptionPriority = convertFromProtoFormat(p.getPreemptionPriority());
+		this.preemptionPriority = p.getPreemptionPriority();
 		return this.preemptionPriority;
 	}
 
@@ -252,6 +252,11 @@ public class ContainerPBImpl extends Container {
 	public void setPreemptionPriority(float p){
 		maybeInitBuilder();
 		preemptionPriority = p;
+	}
+
+	@Override
+	public void updatePreemptionPriority(float newPreemptionPriority) {
+		preemptionPriority = newPreemptionPriority;
 	}
 
 	@Override
@@ -355,7 +360,8 @@ public class ContainerPBImpl extends Container {
 		return new PriorityPBImpl(p);
 	}
 
-	private PriorityProto convertToProtoFormat(float p) {
+
+	private PriorityProto convertToProtoFormat(Priority p) {
 		return ((PriorityPBImpl) p).getProto();
 	}
 
