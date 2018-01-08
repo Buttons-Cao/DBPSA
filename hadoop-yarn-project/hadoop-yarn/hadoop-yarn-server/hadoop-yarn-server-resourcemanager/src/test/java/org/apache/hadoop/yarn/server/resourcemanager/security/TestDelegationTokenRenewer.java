@@ -840,7 +840,7 @@ public class TestDelegationTokenRenewer {
     ContainerLaunchContext amContainer =
         ContainerLaunchContext.newInstance(new HashMap<String, LocalResource>(),
             new HashMap<String, String>(), new ArrayList<String>(), new HashMap<String, ByteBuffer>(), tokens,
-            new HashMap<ApplicationAccessType, String>());
+            new HashMap<ApplicationAccessType, String>(), arrivalTime, arrivalTime+1234654);
     ApplicationSubmissionContext appSubContext =
         ApplicationSubmissionContext.newInstance(Time.now(), Time.now()+123940,
             ApplicationId.newInstance(1234121, 0),

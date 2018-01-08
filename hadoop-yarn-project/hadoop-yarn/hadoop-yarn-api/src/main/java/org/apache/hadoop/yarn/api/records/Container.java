@@ -149,11 +149,11 @@ public abstract class Container implements Comparable<Container> {
 	 */
 	@Public
 	@Stable
-	public abstract Priority getPreemptionPriority();
+	public abstract float getPreemptionPriority();
 
 	/**
 	 * set assigned <code>PreemptionPriority</code> for a <code>Container</code>
-	 * @param preemptionPriority assigned <code>PreemptionPriority</code>
+	 * @param p assigned <code>PreemptionPriority</code>
 	 */
 	@Private
 	@Unstable
@@ -191,7 +191,7 @@ public abstract class Container implements Comparable<Container> {
 
 	@Private
 	@Unstable
-	public abstract Time getDeadline();
+	public abstract long getDeadline();
 
 	@Private
 	@Unstable
@@ -200,4 +200,9 @@ public abstract class Container implements Comparable<Container> {
 	@Private
 	@Unstable
 	public abstract void updateNumOfBeingPreempted();
+
+	@Private
+	@Unstable
+	public abstract long getAppArrivalTime();
+
 }

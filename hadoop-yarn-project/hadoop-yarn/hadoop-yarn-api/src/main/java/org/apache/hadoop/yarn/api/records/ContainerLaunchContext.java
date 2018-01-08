@@ -60,7 +60,7 @@ public abstract class ContainerLaunchContext {
 		Map<String, LocalResource> localResources,
 		Map<String, String> environment, List<String> commands,
 		Map<String, ByteBuffer> serviceData, ByteBuffer tokens,
-		Map<ApplicationAccessType, String> acls) {
+		Map<ApplicationAccessType, String> acls, long arrivalTime, long deadline) {
 		ContainerLaunchContext container =
 			Records.newRecord(ContainerLaunchContext.class);
 		container.setLocalResources(localResources);
@@ -69,6 +69,8 @@ public abstract class ContainerLaunchContext {
 		container.setServiceData(serviceData);
 		container.setTokens(tokens);
 		container.setApplicationACLs(acls);
+		container.setArrivalTime(arrivalTime);
+		container.setDeadline(deadline);
 		return container;
 	}
 

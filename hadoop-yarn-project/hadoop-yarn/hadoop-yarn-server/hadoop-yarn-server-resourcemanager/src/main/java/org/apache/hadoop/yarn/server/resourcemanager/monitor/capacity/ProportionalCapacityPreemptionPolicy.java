@@ -850,7 +850,7 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 	                                                                     Resource clusterResource, Resource rsrcPreempt,
 	                                                                     List<RMContainer> skippedAMContainerlist, Resource skippedAMSize) {
 
-		return preemptFromApp(app, clusterResource, rsrcPreempt, skippedAMContainerlist, skippedAMSize, "resource")
+		return preemptFromApp(app, clusterResource, rsrcPreempt, skippedAMContainerlist, skippedAMSize, "resource");
 	}
 
 	/**
@@ -1011,8 +1011,7 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 		Collections.sort(containers, new Comparator<RMContainer>() {
 			@Override
 			public int compare(RMContainer a, RMContainer b) {
-
-				return b.getContainer().getPreemptionPriority().compareTo(a.getContainer().getPreemptionPriority());
+				return Float.compare(b.getContainer().getPreemptionPriority(), a.getContainer().getPreemptionPriority());
 			}
 		});
 	}

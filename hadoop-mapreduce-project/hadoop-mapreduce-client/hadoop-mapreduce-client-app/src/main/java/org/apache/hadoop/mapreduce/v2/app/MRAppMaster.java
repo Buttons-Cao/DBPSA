@@ -937,7 +937,7 @@ public class MRAppMaster extends CompositeService {
 
 	public class RunningAppContext implements AppContext {
 
-		private final Map<JobId, Job> jobs = new ConcurrentHashMap<JobId, Job>();
+		private final Map<JobId, Job> jobs = new ConcurrentHashMap<>();
 		private final Configuration conf;
 		private final ClusterInfo clusterInfo = new ClusterInfo();
 		private final ClientToAMTokenSecretManager clientToAMTokenSecretManager;

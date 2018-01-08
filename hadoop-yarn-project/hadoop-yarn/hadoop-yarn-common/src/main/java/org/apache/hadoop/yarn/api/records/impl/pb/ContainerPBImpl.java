@@ -21,7 +21,6 @@ package org.apache.hadoop.yarn.api.records.impl.pb;
 import org.apache.hadoop.classification.InterfaceAudience.Private;
 import org.apache.hadoop.classification.InterfaceStability.Unstable;
 import org.apache.hadoop.security.proto.SecurityProtos.TokenProto;
-import org.apache.hadoop.util.Time;
 import org.apache.hadoop.yarn.api.records.*;
 import org.apache.hadoop.yarn.proto.YarnProtos.ContainerIdProto;
 import org.apache.hadoop.yarn.proto.YarnProtos.ContainerProto;
@@ -46,20 +45,24 @@ public class ContainerPBImpl extends Container {
 
 	// we intro a param numOfBeingPreempted as a item when select a container to execute preemption event.
 	private int numOfBeingPreempted = 0;
-	private Priority preemptionPriority = null;
+	private float preemptionPriority = 0;
 
 	// add deadline for scheduling
-	private Time deadline;
+	private long deadline;
 
-	public ContainerPBImpl(Time deadline) {
+	private long ApparrivalTime
+
+	public ContainerPBImpl(long AppArrivalTime, long deadline) {
 		builder = ContainerProto.newBuilder();
+		this.ApparrivalTime = AppArrivalTime;
 		this.deadline = deadline;
 	}
 
-	public ContainerPBImpl(ContainerProto proto, Time deadline) {
+	public ContainerPBImpl(ContainerProto proto, long AppArrivalTime, long deadline) {
 		this.proto = proto;
 		viaProto = true;
 		this.deadline = deadline;
+		this.ApparrivalTime = AppArrivalTime;
 	}
 
 	public ContainerProto getProto() {
@@ -233,13 +236,13 @@ public class ContainerPBImpl extends Container {
 	}
 
 	@Override
-	public Priority getPreemptionPriority(){
+	public float getPreemptionPriority(){
 		ContainerProtoOrBuilder p = viaProto ? proto : builder;
-		if (this.preemptionPriority != null) {
+		if (this.preemptionPriority >= 0) {
 			return this.preemptionPriority;
 		}
 		if (!p.hasPreemptionPriority()) {
-			return null;
+			return 0;
 		}
 		this.preemptionPriority = convertFromProtoFormat(p.getPreemptionPriority());
 		return this.preemptionPriority;
@@ -248,7 +251,7 @@ public class ContainerPBImpl extends Container {
 	@Override
 	public void setPreemptionPriority(float p){
 		maybeInitBuilder();
-		preemptionPriority.setPreemptionPriority(p);
+		preemptionPriority = p;
 	}
 
 	@Override
@@ -267,11 +270,11 @@ public class ContainerPBImpl extends Container {
 	@Override
 	public void updateNumOfBeingPreempted(){
 		if (this.numOfBeingPreempted >= 0) {
-			return this.numOfBeingPreempted;
+			numOfBeingPreempted++;
 		}
 		ContainerProtoOrBuilder p = viaProto ? proto : builder;
 		if (!p.hasNumOfBeingPreempted()) {
-			return 0;
+			this.numOfBeingPreempted = p.getNumOfBeingPreempted();
 		}
 		this.numOfBeingPreempted = convertFromProtoFormat(p.getNumOfBeingPreempted());
 		numOfBeingPreempted++;
@@ -291,16 +294,29 @@ public class ContainerPBImpl extends Container {
 	}
 
 	@Override
-	public Time getDeadline(){
-		if (this.deadline != null) {
+	public long getDeadline(){
+		if (this.deadline != 0) {
 			return this.deadline;
 		}
 		ContainerProtoOrBuilder p = viaProto ? proto : builder;
 		if (!p.hasDeadline()) {
-			return null;
+			return 0;
 		}
 		this.deadline = convertFromProtoFormat(p.getDeadline());
 		return this.deadline;
+	}
+
+	@Override
+	public long getAppArrivalTime(){
+		if (this.ApparrivalTime != 0) {
+			return this.ApparrivalTime;
+		}
+		ContainerProtoOrBuilder p = viaProto ? proto : builder;
+		if (!p.hasAppArrivalTime()) {
+			return 0;
+		}
+		this.AppArrivalTime = convertFromProtoFormat(p.getAppArrivalTime());
+		return this.AppArrivalTime;
 	}
 
 	@Override
@@ -339,7 +355,7 @@ public class ContainerPBImpl extends Container {
 		return new PriorityPBImpl(p);
 	}
 
-	private PriorityProto convertToProtoFormat(Priority p) {
+	private PriorityProto convertToProtoFormat(float p) {
 		return ((PriorityPBImpl) p).getProto();
 	}
 
@@ -359,8 +375,10 @@ public class ContainerPBImpl extends Container {
 		sb.append("NodeId: ").append(getNodeId()).append(", ");
 		sb.append("NodeHttpAddress: ").append(getNodeHttpAddress()).append(", ");
 		sb.append("Resource: ").append(getResource()).append(", ");
+		sb.append("AppArrivalTime: ").append(getAppArrivalTime()).append(",");
 		sb.append("deadline: ").append(getDeadline()).append(",");
 		sb.append("Priority: ").append(getPriority()).append(", ");
+		sb.append("PreemptionPriority").append(getPreemptionPriority()).append(",");
 		sb.append("Token: ").append(getContainerToken()).append(", ");
 		sb.append("]");
 		return sb.toString();

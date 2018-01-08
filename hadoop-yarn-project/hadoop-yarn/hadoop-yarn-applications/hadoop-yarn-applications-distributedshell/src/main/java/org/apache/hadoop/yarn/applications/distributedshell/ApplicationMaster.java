@@ -1020,7 +1020,7 @@ public class ApplicationMaster {
 				command.append(str).append(" ");
 			}
 
-			List<String> commands = new ArrayList<String>();
+			List<String> commands = new ArrayList<>();
 			commands.add(command.toString());
 
 			// Set up ContainerLaunchContext, setting local resource, environment,
@@ -1034,7 +1034,8 @@ public class ApplicationMaster {
 			// "hadoop dfs" command inside the distributed shell.
 			long arrivalTime = Time.now();
 			ContainerLaunchContext ctx = ContainerLaunchContext.newInstance(
-				localResources, shellEnv, commands, null, allTokens.duplicate(), null);
+				localResources, shellEnv, commands, null, allTokens.duplicate(), null,
+				container.getAppArrivalTime(), container.getDeadline());
 			containerListener.addContainer(container.getId(), container);
 			nmClientAsync.startContainerAsync(container, ctx);
 		}

@@ -89,9 +89,9 @@ message ContainerProto {
     optional string node_http_address = 3;
     optional ResourceProto resource = 4;
     optional PriorityProto priority = 5;
-    optional PreemptionPriorityProto preemptionPriority = 6;
+    optional float preemptionPriority = 6;
     optional hadoop.common.TokenProto container_token = 7;
-    optional org.apache.hadoop.util.Time deadline = 8;
+    optional int64 deadline = 8;
     optional int32 numOfBeingPreempted = 9;
 }
 
@@ -319,8 +319,8 @@ message ApplicationSubmissionContextProto {
     optional ReservationIdProto reservation_id = 15;
     optional string node_label_expression = 16;
     optional ResourceRequestProto am_container_resource_request = 17;
-    optional org.apache.hadoop.util.Time deadline = 18;
-    optional org.apache.hadoop.util.Time arravalTime = 19;
+    optional int64 deadline = 18;
+    optional int64 arravalTime = 19;
 }
 
 message LogAggregationContextProto {

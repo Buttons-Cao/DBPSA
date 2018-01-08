@@ -499,6 +499,9 @@ public abstract class TaskAttemptImpl implements
 	private static final String LINE_SEPARATOR = System
 		.getProperty("line.separator");
 
+	private long arrivalTime;
+	private long deadline;
+
 	public TaskAttemptImpl(TaskId taskId, int i,
 	                       EventHandler eventHandler,
 	                       TaskAttemptListener taskAttemptListener, Path jobFile, int partition,
@@ -615,7 +618,7 @@ public abstract class TaskAttemptImpl implements
 		Map<ApplicationAccessType, String> applicationACLs, Configuration conf,
 		Token<JobTokenIdentifier> jobToken,
 		final org.apache.hadoop.mapred.JobID oldJobId,
-		Credentials credentials) {
+		Credentials credentials, long arrivalTime, long deadline) {
 		// Application resources
 		Map<String, LocalResource> localResources =
 			new HashMap<>();
@@ -772,10 +775,9 @@ public abstract class TaskAttemptImpl implements
 		// Construct the actual Container
 		// The null fields are per-container and will be constructed for each
 		// container separately.
-		long arrivalTime = Time.now();
 		ContainerLaunchContext container =
 			ContainerLaunchContext.newInstance(localResources, environment, null, serviceData,
-				taskCredentialsBuffer, applicationACLs);
+				taskCredentialsBuffer, applicationACLs, arrivalTime, deadline);
 		return container;
 	}
 
@@ -785,12 +787,12 @@ public abstract class TaskAttemptImpl implements
 		final org.apache.hadoop.mapred.JobID oldJobId,
 		WrappedJvmID jvmID,
 		TaskAttemptListener taskAttemptListener,
-		Credentials credentials) {
+		Credentials credentials, long arrivalTime, long deadline) {
 
 		synchronized (commonContainerSpecLock) {
 			if (commonContainerSpec == null) {
 				commonContainerSpec = createCommonContainerLaunchContext(
-					applicationACLs, conf, jobToken, oldJobId, credentials);
+					applicationACLs, conf, jobToken, oldJobId, credentials, arrivalTime, deadline);
 			}
 		}
 
@@ -821,9 +823,9 @@ public abstract class TaskAttemptImpl implements
 		}
 
 		// Construct the actual Container
-		long arrivalTime = Time.now();
 		ContainerLaunchContext container = ContainerLaunchContext.newInstance( commonContainerSpec.getLocalResources(),
-			myEnv, commands, myServiceData, commonContainerSpec.getTokens().duplicate(), applicationACLs);
+			myEnv, commands, myServiceData, commonContainerSpec.getTokens().duplicate(), applicationACLs, arrivalTime,
+			deadline);
 
 		return container;
 	}
@@ -1512,7 +1514,8 @@ public abstract class TaskAttemptImpl implements
 			ContainerLaunchContext launchContext = createContainerLaunchContext(
 				cEvent.getApplicationACLs(), taskAttempt.conf, taskAttempt.jobToken,
 				taskAttempt.remoteTask, taskAttempt.oldJobId, taskAttempt.jvmID,
-				taskAttempt.taskAttemptListener, taskAttempt.credentials);
+				taskAttempt.taskAttemptListener, taskAttempt.credentials, taskAttempt.getArrivalTime(),
+				taskAttempt.getDeadline());
 			taskAttempt.eventHandler
 				.handle(new ContainerRemoteLaunchEvent(taskAttempt.attemptId,
 					launchContext, container, taskAttempt.remoteTask));
@@ -1947,4 +1950,11 @@ public abstract class TaskAttemptImpl implements
 		result.counters = counters;
 	}
 
+	public long getArrivalTime() {
+		return arrivalTime;
+	}
+
+	public long getDeadline() {
+		return deadline;
+	}
 }

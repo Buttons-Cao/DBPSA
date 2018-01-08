@@ -89,6 +89,7 @@ import org.apache.hadoop.yarn.security.client.RMDelegationTokenSelector;
 import org.apache.hadoop.yarn.util.ConverterUtils;
 
 import com.google.common.annotations.VisibleForTesting;
+import sun.awt.AppContext;
 
 /**
  * This class enables the current JobClient (0.22 hadoop) to run on YARN.
@@ -283,8 +284,10 @@ public class YARNRunner implements ClientProtocol {
 		addHistoryToken(ts);
 
 		// Construct necessary information to start the MR AM
+		long arrivalTime = Time.now();
 		ApplicationSubmissionContext appContext =
-			createApplicationSubmissionContext(conf, jobSubmitDir, ts);
+			createApplicationSubmissionContext(conf, jobSubmitDir, ts, arrivalTime,
+				arrivalTime + Long.parseLong(MRJobConfig.JOB_DEADLINE));
 
 		// Submit to ResourceManager
 		try {
@@ -323,7 +326,7 @@ public class YARNRunner implements ClientProtocol {
 
 	public ApplicationSubmissionContext createApplicationSubmissionContext(
 		Configuration jobConf,
-		String jobSubmitDir, Credentials ts) throws IOException {
+		String jobSubmitDir, Credentials ts, long arrivalTime, long deadline) throws IOException {
 		// 生成appID，获取资源信息，获取提交路径信息
 		ApplicationId applicationId = resMgrDelegate.getApplicationId();
 
@@ -483,7 +486,7 @@ public class YARNRunner implements ClientProtocol {
 		// Setup ContainerLaunchContext for AM container
 		ContainerLaunchContext amContainer =
 			ContainerLaunchContext.newInstance(localResources, environment,
-				vargsFinal, null, securityTokens, acls);
+				vargsFinal, null, securityTokens, acls, arrivalTime, deadline);
 
 		Collection<String> tagsFromConf =
 			jobConf.getTrimmedStringCollection(MRJobConfig.JOB_TAGS);
@@ -526,7 +529,6 @@ public class YARNRunner implements ClientProtocol {
 				MRJobConfig.DEFAULT_MR_AM_MAX_ATTEMPTS));
 		appContext.setResource(capability);
 		appContext.setApplicationType(MRJobConfig.MR_APPLICATION_TYPE);
-		long arrivalTime = Time.now();
 		appContext.setDeadline(arrivalTime + conf.getLong(JobContext.JOB_DEADLINE, 180000L));
 		appContext.setArriavalTime(arrivalTime);
 		if (tagsFromConf != null && !tagsFromConf.isEmpty()) {

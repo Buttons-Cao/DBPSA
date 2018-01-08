@@ -670,7 +670,7 @@ public class Client {
 
 		// Set up the container launch context for the application master
 		ContainerLaunchContext amContainer = ContainerLaunchContext.newInstance(
-			localResources, env, commands, null, null, null);
+			localResources, env, commands, null, null, null, arrivalTime, deadline);
 
 		// Set up resource type requirements
 		// For now, both memory and vcores are supported, so we set memory and
