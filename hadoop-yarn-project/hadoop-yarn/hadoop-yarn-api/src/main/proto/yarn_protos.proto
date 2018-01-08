@@ -320,7 +320,7 @@ message ApplicationSubmissionContextProto {
     optional string node_label_expression = 16;
     optional ResourceRequestProto am_container_resource_request = 17;
     optional int64 deadline = 18;
-    optional int64 arravalTime = 19;
+    optional int64 arrivalTime = 19;
 }
 
 message LogAggregationContextProto {
