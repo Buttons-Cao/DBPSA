@@ -497,7 +497,7 @@ public class ContainerLaunchContextPBImpl extends ContainerLaunchContext {
 		return numOfBeingPreempted;
 	}
 
-	public Priority getPreemptionPriority() {
+	public float getPreemptionPriority() {
 		return preemptionPriority;
 	}
 }

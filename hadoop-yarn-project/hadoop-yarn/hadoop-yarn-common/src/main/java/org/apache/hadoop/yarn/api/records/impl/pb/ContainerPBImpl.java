@@ -360,6 +360,13 @@ public class ContainerPBImpl extends Container {
 		return new PriorityPBImpl(p);
 	}
 
+	private int convertFromProtoFormat(int p) {
+		return p;
+	}
+
+	private long convertFromProtoFormat(long p) {
+		return p;
+	}
 
 	private PriorityProto convertToProtoFormat(Priority p) {
 		return ((PriorityPBImpl) p).getProto();
