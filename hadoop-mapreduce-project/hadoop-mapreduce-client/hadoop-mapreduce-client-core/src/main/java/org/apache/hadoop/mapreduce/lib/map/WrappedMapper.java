@@ -200,6 +200,16 @@ public class WrappedMapper<KEYIN, VALUEIN, KEYOUT, VALUEOUT>
     }
 
     @Override
+    public long getDeadline() {
+      return mapContext.getDeadline();
+    }
+
+    @Override
+    public long getArrivalTime() {
+      return mapContext.getArrivalTime();
+    }
+
+    @Override
     public boolean getJobSetupCleanupNeeded() {
       return mapContext.getJobSetupCleanupNeeded();
     }
