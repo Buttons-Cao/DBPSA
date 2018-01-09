@@ -579,7 +579,7 @@ abstract public class Task implements Writable, Configurable {
                          boolean useNewApi) throws IOException, 
                                                    ClassNotFoundException,
                                                    InterruptedException {
-    jobContext = new JobContextImpl(job, id, reporter);
+    jobContext = new JobContextImpl(job, id, reporter, job.getArrivalTime(), job.getDeadline());
     taskContext = new TaskAttemptContextImpl(job, taskId, reporter);
     if (getState() == TaskStatus.State.UNASSIGNED) {
       setState(TaskStatus.State.RUNNING);
