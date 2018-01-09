@@ -236,7 +236,7 @@ public class TestMapProgress extends TestCase {
             TEST_ROOT_DIR);
     jobId = taskId.getJobID();
     
-    JobContext jContext = new JobContextImpl(job, jobId);
+    JobContext jContext = new JobContextImpl(job, jobId, job.getArrivalTime(), job.getDeadline());
     InputFormat<?, ?> input =
       ReflectionUtils.newInstance(jContext.getInputFormatClass(), job);
 

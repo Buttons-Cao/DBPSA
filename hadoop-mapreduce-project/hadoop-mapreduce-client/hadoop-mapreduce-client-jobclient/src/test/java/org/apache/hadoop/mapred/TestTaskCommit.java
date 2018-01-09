@@ -194,7 +194,7 @@ public class TestTaskCommit extends HadoopTestCase {
     String dummyAttemptID = "attempt_200707121733_0001_m_000000_0";
     TaskAttemptID attemptID = TaskAttemptID.forName(dummyAttemptID);
     OutputCommitter committer = new CommitterWithoutCleanup();
-    JobContext jContext = new JobContextImpl(job, attemptID.getJobID());
+    JobContext jContext = new JobContextImpl(job, attemptID.getJobID(), job.getArrivalTime(), job.getDeadline());
     committer.setupJob(jContext);
     
 
