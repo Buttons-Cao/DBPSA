@@ -1,20 +1,20 @@
 /**
-* Licensed to the Apache Software Foundation (ASF) under one
-* or more contributor license agreements.  See the NOTICE file
-* distributed with this work for additional information
-* regarding copyright ownership.  The ASF licenses this file
-* to you under the Apache License, Version 2.0 (the
-* "License"); you may not use this file except in compliance
-* with the License.  You may obtain a copy of the License at
-*
-*     http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package org.apache.hadoop.mapreduce.v2.app;
 
@@ -53,6 +53,7 @@ import org.apache.hadoop.metrics2.lib.DefaultMetricsSystem;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.service.AbstractService;
 import org.apache.hadoop.service.Service;
+import org.apache.hadoop.util.Time;
 import org.apache.hadoop.yarn.api.records.ApplicationAttemptId;
 import org.apache.hadoop.yarn.api.records.ApplicationId;
 import org.apache.hadoop.yarn.api.records.ContainerId;
@@ -67,417 +68,419 @@ import org.junit.Test;
 /**
  * Make sure that the job staging directory clean up happens.
  */
- public class TestStagingCleanup {
-   
-   private Configuration conf = new Configuration();
-   private FileSystem fs;
-   private String stagingJobDir = "tmpJobDir";
-   private Path stagingJobPath = new Path(stagingJobDir);
-   private final static RecordFactory recordFactory = RecordFactoryProvider.
-       getRecordFactory(null);
+public class TestStagingCleanup {
 
-   @Test
-   public void testDeletionofStagingOnUnregistrationFailure()
-       throws IOException {
-     testDeletionofStagingOnUnregistrationFailure(2, false);
-     testDeletionofStagingOnUnregistrationFailure(1, false);
-   }
+	private Configuration conf = new Configuration();
+	private FileSystem fs;
+	private String stagingJobDir = "tmpJobDir";
+	private Path stagingJobPath = new Path(stagingJobDir);
+	private final static RecordFactory recordFactory = RecordFactoryProvider.
+		getRecordFactory(null);
 
-   @SuppressWarnings("resource")
-   private void testDeletionofStagingOnUnregistrationFailure(
-       int maxAttempts, boolean shouldHaveDeleted) throws IOException {
-     conf.set(MRJobConfig.MAPREDUCE_JOB_DIR, stagingJobDir);
-     fs = mock(FileSystem.class);
-     when(fs.delete(any(Path.class), anyBoolean())).thenReturn(true);
-     //Staging Dir exists
-     String user = UserGroupInformation.getCurrentUser().getShortUserName();
-     Path stagingDir = MRApps.getStagingAreaDir(conf, user);
-     when(fs.exists(stagingDir)).thenReturn(true);
-     ApplicationId appId = ApplicationId.newInstance(0, 1);
-     ApplicationAttemptId attemptId = ApplicationAttemptId.newInstance(appId, 1);
-     JobId jobid = recordFactory.newRecordInstance(JobId.class);
-     jobid.setAppId(appId);
-     TestMRApp appMaster = new TestMRApp(attemptId, null,
-         JobStateInternal.RUNNING, maxAttempts);
-     appMaster.crushUnregistration = true;
-     appMaster.init(conf);
-     appMaster.start();
-     appMaster.shutDownJob();
-     ((RunningAppContext) appMaster.getContext()).resetIsLastAMRetry();
-     if (shouldHaveDeleted) {
-       Assert.assertEquals(new Boolean(true), appMaster.isLastAMRetry());
-       verify(fs).delete(stagingJobPath, true);
-     } else {
-       Assert.assertEquals(new Boolean(false), appMaster.isLastAMRetry());
-       verify(fs, never()).delete(stagingJobPath, true);
-     }
-   }
+	@Test
+	public void testDeletionofStagingOnUnregistrationFailure()
+		throws IOException {
+		testDeletionofStagingOnUnregistrationFailure(2, false);
+		testDeletionofStagingOnUnregistrationFailure(1, false);
+	}
 
-   @Test
-   public void testDeletionofStaging() throws IOException {
-     conf.set(MRJobConfig.MAPREDUCE_JOB_DIR, stagingJobDir);
-     fs = mock(FileSystem.class);
-     when(fs.delete(any(Path.class), anyBoolean())).thenReturn(true);
-     //Staging Dir exists
-     String user = UserGroupInformation.getCurrentUser().getShortUserName();
-     Path stagingDir = MRApps.getStagingAreaDir(conf, user);
-     when(fs.exists(stagingDir)).thenReturn(true);
-     ApplicationId appId = ApplicationId.newInstance(System.currentTimeMillis(),
-        0);
-     ApplicationAttemptId attemptId = ApplicationAttemptId.newInstance(appId, 1);
-     JobId jobid = recordFactory.newRecordInstance(JobId.class);
-     jobid.setAppId(appId);
-     ContainerAllocator mockAlloc = mock(ContainerAllocator.class);
-     Assert.assertTrue(MRJobConfig.DEFAULT_MR_AM_MAX_ATTEMPTS > 1);
-     MRAppMaster appMaster = new TestMRApp(attemptId, mockAlloc,
-         JobStateInternal.RUNNING, MRJobConfig.DEFAULT_MR_AM_MAX_ATTEMPTS);
-     appMaster.init(conf);
-     appMaster.start();
-     appMaster.shutDownJob();
-     //test whether notifyIsLastAMRetry called
-     Assert.assertEquals(true, ((TestMRApp)appMaster).getTestIsLastAMRetry());
-     verify(fs).delete(stagingJobPath, true);
-   }
+	@SuppressWarnings("resource")
+	private void testDeletionofStagingOnUnregistrationFailure(
+		int maxAttempts, boolean shouldHaveDeleted) throws IOException {
+		conf.set(MRJobConfig.MAPREDUCE_JOB_DIR, stagingJobDir);
+		fs = mock(FileSystem.class);
+		when(fs.delete(any(Path.class), anyBoolean())).thenReturn(true);
+		//Staging Dir exists
+		String user = UserGroupInformation.getCurrentUser().getShortUserName();
+		Path stagingDir = MRApps.getStagingAreaDir(conf, user);
+		when(fs.exists(stagingDir)).thenReturn(true);
+		ApplicationId appId = ApplicationId.newInstance(0, 1);
+		ApplicationAttemptId attemptId = ApplicationAttemptId.newInstance(appId, 1);
+		JobId jobid = recordFactory.newRecordInstance(JobId.class);
+		jobid.setAppId(appId);
+		TestMRApp appMaster = new TestMRApp(attemptId, null,
+			JobStateInternal.RUNNING, maxAttempts);
+		appMaster.crushUnregistration = true;
+		appMaster.init(conf);
+		appMaster.start();
+		appMaster.shutDownJob();
+		((RunningAppContext) appMaster.getContext()).resetIsLastAMRetry();
+		if (shouldHaveDeleted) {
+			Assert.assertEquals(new Boolean(true), appMaster.isLastAMRetry());
+			verify(fs).delete(stagingJobPath, true);
+		} else {
+			Assert.assertEquals(new Boolean(false), appMaster.isLastAMRetry());
+			verify(fs, never()).delete(stagingJobPath, true);
+		}
+	}
 
-   @Test (timeout = 30000)
-   public void testNoDeletionofStagingOnReboot() throws IOException {
-     conf.set(MRJobConfig.MAPREDUCE_JOB_DIR, stagingJobDir);
-     fs = mock(FileSystem.class);
-     when(fs.delete(any(Path.class),anyBoolean())).thenReturn(true);
-     String user = UserGroupInformation.getCurrentUser().getShortUserName();
-     Path stagingDir = MRApps.getStagingAreaDir(conf, user);
-     when(fs.exists(stagingDir)).thenReturn(true);
-     ApplicationId appId = ApplicationId.newInstance(System.currentTimeMillis(),
-         0);
-     ApplicationAttemptId attemptId = ApplicationAttemptId.newInstance(appId, 1);
-     ContainerAllocator mockAlloc = mock(ContainerAllocator.class);
-     Assert.assertTrue(MRJobConfig.DEFAULT_MR_AM_MAX_ATTEMPTS > 1);
-     MRAppMaster appMaster = new TestMRApp(attemptId, mockAlloc,
-         JobStateInternal.REBOOT, MRJobConfig.DEFAULT_MR_AM_MAX_ATTEMPTS);
-     appMaster.init(conf);
-     appMaster.start();
-     //shutdown the job, not the lastRetry
-     appMaster.shutDownJob();
-     //test whether notifyIsLastAMRetry called
-     Assert.assertEquals(false, ((TestMRApp)appMaster).getTestIsLastAMRetry());
-     verify(fs, times(0)).delete(stagingJobPath, true);
-   }
+	@Test
+	public void testDeletionofStaging() throws IOException {
+		conf.set(MRJobConfig.MAPREDUCE_JOB_DIR, stagingJobDir);
+		fs = mock(FileSystem.class);
+		when(fs.delete(any(Path.class), anyBoolean())).thenReturn(true);
+		//Staging Dir exists
+		String user = UserGroupInformation.getCurrentUser().getShortUserName();
+		Path stagingDir = MRApps.getStagingAreaDir(conf, user);
+		when(fs.exists(stagingDir)).thenReturn(true);
+		ApplicationId appId = ApplicationId.newInstance(System.currentTimeMillis(),
+			0);
+		ApplicationAttemptId attemptId = ApplicationAttemptId.newInstance(appId, 1);
+		JobId jobid = recordFactory.newRecordInstance(JobId.class);
+		jobid.setAppId(appId);
+		ContainerAllocator mockAlloc = mock(ContainerAllocator.class);
+		Assert.assertTrue(MRJobConfig.DEFAULT_MR_AM_MAX_ATTEMPTS > 1);
+		MRAppMaster appMaster = new TestMRApp(attemptId, mockAlloc,
+			JobStateInternal.RUNNING, MRJobConfig.DEFAULT_MR_AM_MAX_ATTEMPTS);
+		appMaster.init(conf);
+		appMaster.start();
+		appMaster.shutDownJob();
+		//test whether notifyIsLastAMRetry called
+		Assert.assertEquals(true, ((TestMRApp) appMaster).getTestIsLastAMRetry());
+		verify(fs).delete(stagingJobPath, true);
+	}
 
-   // FIXME:
-   // Disabled this test because currently, when job state=REBOOT at shutdown 
-   // when lastRetry = true in RM view, cleanup will not do. 
-   // This will be supported after YARN-2261 completed
+	@Test(timeout = 30000)
+	public void testNoDeletionofStagingOnReboot() throws IOException {
+		conf.set(MRJobConfig.MAPREDUCE_JOB_DIR, stagingJobDir);
+		fs = mock(FileSystem.class);
+		when(fs.delete(any(Path.class), anyBoolean())).thenReturn(true);
+		String user = UserGroupInformation.getCurrentUser().getShortUserName();
+		Path stagingDir = MRApps.getStagingAreaDir(conf, user);
+		when(fs.exists(stagingDir)).thenReturn(true);
+		ApplicationId appId = ApplicationId.newInstance(System.currentTimeMillis(),
+			0);
+		ApplicationAttemptId attemptId = ApplicationAttemptId.newInstance(appId, 1);
+		ContainerAllocator mockAlloc = mock(ContainerAllocator.class);
+		Assert.assertTrue(MRJobConfig.DEFAULT_MR_AM_MAX_ATTEMPTS > 1);
+		MRAppMaster appMaster = new TestMRApp(attemptId, mockAlloc,
+			JobStateInternal.REBOOT, MRJobConfig.DEFAULT_MR_AM_MAX_ATTEMPTS);
+		appMaster.init(conf);
+		appMaster.start();
+		//shutdown the job, not the lastRetry
+		appMaster.shutDownJob();
+		//test whether notifyIsLastAMRetry called
+		Assert.assertEquals(false, ((TestMRApp) appMaster).getTestIsLastAMRetry());
+		verify(fs, times(0)).delete(stagingJobPath, true);
+	}
+
+	// FIXME:
+	// Disabled this test because currently, when job state=REBOOT at shutdown
+	// when lastRetry = true in RM view, cleanup will not do.
+	// This will be supported after YARN-2261 completed
 //   @Test (timeout = 30000)
-   public void testDeletionofStagingOnReboot() throws IOException {
-     conf.set(MRJobConfig.MAPREDUCE_JOB_DIR, stagingJobDir);
-     fs = mock(FileSystem.class);
-     when(fs.delete(any(Path.class),anyBoolean())).thenReturn(true);
-     String user = UserGroupInformation.getCurrentUser().getShortUserName();
-     Path stagingDir = MRApps.getStagingAreaDir(conf, user);
-     when(fs.exists(stagingDir)).thenReturn(true);
-     ApplicationId appId = ApplicationId.newInstance(System.currentTimeMillis(),
-         0);
-     ApplicationAttemptId attemptId = ApplicationAttemptId.newInstance(appId, 1);
-     ContainerAllocator mockAlloc = mock(ContainerAllocator.class);
-     MRAppMaster appMaster = new TestMRApp(attemptId, mockAlloc,
-         JobStateInternal.REBOOT, 1); //no retry
-     appMaster.init(conf);
-     appMaster.start();
-     //shutdown the job, is lastRetry
-     appMaster.shutDownJob();
-     //test whether notifyIsLastAMRetry called
-     Assert.assertEquals(true, ((TestMRApp)appMaster).getTestIsLastAMRetry());
-     verify(fs).delete(stagingJobPath, true);
-   }
-   
-   @Test (timeout = 30000)
-   public void testDeletionofStagingOnKill() throws IOException {
-     conf.set(MRJobConfig.MAPREDUCE_JOB_DIR, stagingJobDir);
-     fs = mock(FileSystem.class);
-     when(fs.delete(any(Path.class), anyBoolean())).thenReturn(true);
-     //Staging Dir exists
-     String user = UserGroupInformation.getCurrentUser().getShortUserName();
-     Path stagingDir = MRApps.getStagingAreaDir(conf, user);
-     when(fs.exists(stagingDir)).thenReturn(true);
-     ApplicationId appId = ApplicationId.newInstance(System.currentTimeMillis(),
-         0);
-     ApplicationAttemptId attemptId = ApplicationAttemptId.newInstance(appId, 0);
-     JobId jobid = recordFactory.newRecordInstance(JobId.class);
-     jobid.setAppId(appId);
-     ContainerAllocator mockAlloc = mock(ContainerAllocator.class);
-     MRAppMaster appMaster = new TestMRApp(attemptId, mockAlloc);
-     appMaster.init(conf);
-     //simulate the process being killed
-     MRAppMaster.MRAppMasterShutdownHook hook = 
-       new MRAppMaster.MRAppMasterShutdownHook(appMaster);
-     hook.run();
-     verify(fs, times(0)).delete(stagingJobPath, true);
-   }
+	public void testDeletionofStagingOnReboot() throws IOException {
+		conf.set(MRJobConfig.MAPREDUCE_JOB_DIR, stagingJobDir);
+		fs = mock(FileSystem.class);
+		when(fs.delete(any(Path.class), anyBoolean())).thenReturn(true);
+		String user = UserGroupInformation.getCurrentUser().getShortUserName();
+		Path stagingDir = MRApps.getStagingAreaDir(conf, user);
+		when(fs.exists(stagingDir)).thenReturn(true);
+		ApplicationId appId = ApplicationId.newInstance(System.currentTimeMillis(),
+			0);
+		ApplicationAttemptId attemptId = ApplicationAttemptId.newInstance(appId, 1);
+		ContainerAllocator mockAlloc = mock(ContainerAllocator.class);
+		MRAppMaster appMaster = new TestMRApp(attemptId, mockAlloc,
+			JobStateInternal.REBOOT, 1); //no retry
+		appMaster.init(conf);
+		appMaster.start();
+		//shutdown the job, is lastRetry
+		appMaster.shutDownJob();
+		//test whether notifyIsLastAMRetry called
+		Assert.assertEquals(true, ((TestMRApp) appMaster).getTestIsLastAMRetry());
+		verify(fs).delete(stagingJobPath, true);
+	}
 
-  // FIXME:
-  // Disabled this test because currently, when shutdown hook triggered at
-  // lastRetry in RM view, cleanup will not do. This should be supported after
-  // YARN-2261 completed
+	@Test(timeout = 30000)
+	public void testDeletionofStagingOnKill() throws IOException {
+		conf.set(MRJobConfig.MAPREDUCE_JOB_DIR, stagingJobDir);
+		fs = mock(FileSystem.class);
+		when(fs.delete(any(Path.class), anyBoolean())).thenReturn(true);
+		//Staging Dir exists
+		String user = UserGroupInformation.getCurrentUser().getShortUserName();
+		Path stagingDir = MRApps.getStagingAreaDir(conf, user);
+		when(fs.exists(stagingDir)).thenReturn(true);
+		ApplicationId appId = ApplicationId.newInstance(System.currentTimeMillis(),
+			0);
+		ApplicationAttemptId attemptId = ApplicationAttemptId.newInstance(appId, 0);
+		JobId jobid = recordFactory.newRecordInstance(JobId.class);
+		jobid.setAppId(appId);
+		ContainerAllocator mockAlloc = mock(ContainerAllocator.class);
+		MRAppMaster appMaster = new TestMRApp(attemptId, mockAlloc);
+		appMaster.init(conf);
+		//simulate the process being killed
+		MRAppMaster.MRAppMasterShutdownHook hook =
+			new MRAppMaster.MRAppMasterShutdownHook(appMaster);
+		hook.run();
+		verify(fs, times(0)).delete(stagingJobPath, true);
+	}
+
+	// FIXME:
+	// Disabled this test because currently, when shutdown hook triggered at
+	// lastRetry in RM view, cleanup will not do. This should be supported after
+	// YARN-2261 completed
 //   @Test (timeout = 30000)
-   public void testDeletionofStagingOnKillLastTry() throws IOException {
-     conf.set(MRJobConfig.MAPREDUCE_JOB_DIR, stagingJobDir);
-     fs = mock(FileSystem.class);
-     when(fs.delete(any(Path.class), anyBoolean())).thenReturn(true);
-     //Staging Dir exists
-     String user = UserGroupInformation.getCurrentUser().getShortUserName();
-     Path stagingDir = MRApps.getStagingAreaDir(conf, user);
-     when(fs.exists(stagingDir)).thenReturn(true);
-     ApplicationId appId = ApplicationId.newInstance(System.currentTimeMillis(),
-         0);
-     ApplicationAttemptId attemptId = ApplicationAttemptId.newInstance(appId, 1);
-     JobId jobid = recordFactory.newRecordInstance(JobId.class);
-     jobid.setAppId(appId);
-     ContainerAllocator mockAlloc = mock(ContainerAllocator.class);
-     MRAppMaster appMaster = new TestMRApp(attemptId, mockAlloc); //no retry
-     appMaster.init(conf);
-     assertTrue("appMaster.isLastAMRetry() is false", appMaster.isLastAMRetry());
-     //simulate the process being killed
-     MRAppMaster.MRAppMasterShutdownHook hook = 
-       new MRAppMaster.MRAppMasterShutdownHook(appMaster);
-     hook.run();
-     assertTrue("MRAppMaster isn't stopped",
-                appMaster.isInState(Service.STATE.STOPPED));
-     verify(fs).delete(stagingJobPath, true);
-   }
+	public void testDeletionofStagingOnKillLastTry() throws IOException {
+		conf.set(MRJobConfig.MAPREDUCE_JOB_DIR, stagingJobDir);
+		fs = mock(FileSystem.class);
+		when(fs.delete(any(Path.class), anyBoolean())).thenReturn(true);
+		//Staging Dir exists
+		String user = UserGroupInformation.getCurrentUser().getShortUserName();
+		Path stagingDir = MRApps.getStagingAreaDir(conf, user);
+		when(fs.exists(stagingDir)).thenReturn(true);
+		ApplicationId appId = ApplicationId.newInstance(System.currentTimeMillis(),
+			0);
+		ApplicationAttemptId attemptId = ApplicationAttemptId.newInstance(appId, 1);
+		JobId jobid = recordFactory.newRecordInstance(JobId.class);
+		jobid.setAppId(appId);
+		ContainerAllocator mockAlloc = mock(ContainerAllocator.class);
+		MRAppMaster appMaster = new TestMRApp(attemptId, mockAlloc); //no retry
+		appMaster.init(conf);
+		assertTrue("appMaster.isLastAMRetry() is false", appMaster.isLastAMRetry());
+		//simulate the process being killed
+		MRAppMaster.MRAppMasterShutdownHook hook =
+			new MRAppMaster.MRAppMasterShutdownHook(appMaster);
+		hook.run();
+		assertTrue("MRAppMaster isn't stopped",
+			appMaster.isInState(Service.STATE.STOPPED));
+		verify(fs).delete(stagingJobPath, true);
+	}
 
-   private class TestMRApp extends MRAppMaster {
-     ContainerAllocator allocator;
-     boolean testIsLastAMRetry = false;
-     JobStateInternal jobStateInternal;
-     boolean crushUnregistration = false;
+	private class TestMRApp extends MRAppMaster {
+		ContainerAllocator allocator;
+		boolean testIsLastAMRetry = false;
+		JobStateInternal jobStateInternal;
+		boolean crushUnregistration = false;
 
-     public TestMRApp(ApplicationAttemptId applicationAttemptId, 
-         ContainerAllocator allocator) {
-       super(applicationAttemptId, ContainerId.newContainerId(
-           applicationAttemptId, 1), "testhost", 2222, 3333,
-           System.currentTimeMillis());
-       this.allocator = allocator;
-       this.successfullyUnregistered.set(true);
-     }
+		public TestMRApp(ApplicationAttemptId applicationAttemptId,
+		                 ContainerAllocator allocator) {
+			super(applicationAttemptId, ContainerId.newContainerId(
+				applicationAttemptId, 1), "testhost", 2222, 3333,
+				System.currentTimeMillis(), Long.parseLong(MRJobConfig.DEFAULT_JOB_DEADLINE));
+			this.allocator = allocator;
+			this.successfullyUnregistered.set(true);
+		}
 
-     public TestMRApp(ApplicationAttemptId applicationAttemptId,
-         ContainerAllocator allocator, JobStateInternal jobStateInternal,
-             int maxAppAttempts) {
-       this(applicationAttemptId, allocator);
-       this.jobStateInternal = jobStateInternal;
-     }
+		public TestMRApp(ApplicationAttemptId applicationAttemptId,
+		                 ContainerAllocator allocator, JobStateInternal jobStateInternal,
+		                 int maxAppAttempts) {
+			this(applicationAttemptId, allocator);
+			this.jobStateInternal = jobStateInternal;
+		}
 
-     @Override
-     protected FileSystem getFileSystem(Configuration conf) {
-       return fs;
-     }
+		@Override
+		protected FileSystem getFileSystem(Configuration conf) {
+			return fs;
+		}
 
-     @Override
-     protected ContainerAllocator createContainerAllocator(
-         final ClientService clientService, final AppContext context) {
-       if(allocator == null) {
-         if (crushUnregistration) {
-           return new CustomContainerAllocator(context);
-         } else {
-           return super.createContainerAllocator(clientService, context);
-         }
-       }
-       return allocator;
-     }
+		@Override
+		protected ContainerAllocator createContainerAllocator(
+			final ClientService clientService, final AppContext context) {
+			if (allocator == null) {
+				if (crushUnregistration) {
+					return new CustomContainerAllocator(context);
+				} else {
+					return super.createContainerAllocator(clientService, context);
+				}
+			}
+			return allocator;
+		}
 
-     @Override
-     protected Job createJob(Configuration conf, JobStateInternal forcedState,
-         String diagnostic) {
-       JobImpl jobImpl = mock(JobImpl.class);
-       when(jobImpl.getInternalState()).thenReturn(this.jobStateInternal);
-       when(jobImpl.getAllCounters()).thenReturn(new Counters());
-       JobID jobID = JobID.forName("job_1234567890000_0001");
-       JobId jobId = TypeConverter.toYarn(jobID);
-       when(jobImpl.getID()).thenReturn(jobId);
-       ((AppContext) getContext())
-           .getAllJobs().put(jobImpl.getID(), jobImpl);
-       return jobImpl;
-     }
+		@Override
+		protected Job createJob(Configuration conf, JobStateInternal forcedState,
+		                        String diagnostic) {
+			JobImpl jobImpl = mock(JobImpl.class);
+			when(jobImpl.getInternalState()).thenReturn(this.jobStateInternal);
+			when(jobImpl.getAllCounters()).thenReturn(new Counters());
+			JobID jobID = JobID.forName("job_1234567890000_0001");
+			JobId jobId = TypeConverter.toYarn(jobID);
+			when(jobImpl.getID()).thenReturn(jobId);
+			((AppContext) getContext())
+				.getAllJobs().put(jobImpl.getID(), jobImpl);
+			return jobImpl;
+		}
 
-     @Override
-     public void serviceStart() throws Exception {
-       super.serviceStart();
-       DefaultMetricsSystem.shutdown();
-     }
+		@Override
+		public void serviceStart() throws Exception {
+			super.serviceStart();
+			DefaultMetricsSystem.shutdown();
+		}
 
-     @Override
-     public void notifyIsLastAMRetry(boolean isLastAMRetry){
-       testIsLastAMRetry = isLastAMRetry;
-       super.notifyIsLastAMRetry(isLastAMRetry);
-     }
+		@Override
+		public void notifyIsLastAMRetry(boolean isLastAMRetry) {
+			testIsLastAMRetry = isLastAMRetry;
+			super.notifyIsLastAMRetry(isLastAMRetry);
+		}
 
-     @Override
-     public RMHeartbeatHandler getRMHeartbeatHandler() {
-       return getStubbedHeartbeatHandler(getContext());
-     }
+		@Override
+		public RMHeartbeatHandler getRMHeartbeatHandler() {
+			return getStubbedHeartbeatHandler(getContext());
+		}
 
-     @Override
-     protected void sysexit() {      
-     }
+		@Override
+		protected void sysexit() {
+		}
 
-     @Override
-     public Configuration getConfig() {
-       return conf;
-     }
+		@Override
+		public Configuration getConfig() {
+			return conf;
+		}
 
-     @Override
-     protected void initJobCredentialsAndUGI(Configuration conf) {
-     }
+		@Override
+		protected void initJobCredentialsAndUGI(Configuration conf) {
+		}
 
-     public boolean getTestIsLastAMRetry(){
-       return testIsLastAMRetry;
-     }
+		public boolean getTestIsLastAMRetry() {
+			return testIsLastAMRetry;
+		}
 
-    private class CustomContainerAllocator extends RMCommunicator
-        implements ContainerAllocator {
+		private class CustomContainerAllocator extends RMCommunicator
+			implements ContainerAllocator {
 
-      public CustomContainerAllocator(AppContext context) {
-        super(null, context);
-      }
+			public CustomContainerAllocator(AppContext context) {
+				super(null, context);
+			}
 
-      @Override
-      public void serviceInit(Configuration conf) {
-      }
+			@Override
+			public void serviceInit(Configuration conf) {
+			}
 
-      @Override
-      public void serviceStart() {
-      }
+			@Override
+			public void serviceStart() {
+			}
 
-      @Override
-      public void serviceStop() {
-        unregister();
-      }
+			@Override
+			public void serviceStop() {
+				unregister();
+			}
 
-      @Override
-      protected void doUnregistration()
-          throws YarnException, IOException, InterruptedException {
-        throw new YarnException("test exception");
-      }
+			@Override
+			protected void doUnregistration()
+				throws YarnException, IOException, InterruptedException {
+				throw new YarnException("test exception");
+			}
 
-      @Override
-      protected void heartbeat() throws Exception {
-      }
+			@Override
+			protected void heartbeat() throws Exception {
+			}
 
-      @Override
-      public void handle(ContainerAllocatorEvent event) {
-      }
-    }
-   }
+			@Override
+			public void handle(ContainerAllocatorEvent event) {
+			}
+		}
+	}
 
-  private final class MRAppTestCleanup extends MRApp {
-    int stagingDirCleanedup;
-    int ContainerAllocatorStopped;
-    int numStops;
-    public MRAppTestCleanup(int maps, int reduces, boolean autoComplete,
-        String testName, boolean cleanOnStart) {
-      super(maps, reduces, autoComplete, testName, cleanOnStart);
-      stagingDirCleanedup = 0;
-      ContainerAllocatorStopped = 0;
-      numStops = 0;
-    }
+	private final class MRAppTestCleanup extends MRApp {
+		int stagingDirCleanedup;
+		int ContainerAllocatorStopped;
+		int numStops;
 
-    @Override
-    protected Job createJob(Configuration conf, JobStateInternal forcedState, 
-        String diagnostic) {
-      UserGroupInformation currentUser = null;
-      try {
-        currentUser = UserGroupInformation.getCurrentUser();
-      } catch (IOException e) {
-        throw new YarnRuntimeException(e);
-      }
-      Job newJob = new TestJob(getJobId(), getAttemptID(), conf,
-          getDispatcher().getEventHandler(),
-          getTaskAttemptListener(), getContext().getClock(),
-          getCommitter(), isNewApiCommitter(),
-          currentUser.getUserName(), getContext(),
-          forcedState, diagnostic);
-      ((AppContext) getContext()).getAllJobs().put(newJob.getID(), newJob);
+		public MRAppTestCleanup(int maps, int reduces, boolean autoComplete,
+		                        String testName, boolean cleanOnStart) {
+			super(maps, reduces, autoComplete, testName, cleanOnStart);
+			stagingDirCleanedup = 0;
+			ContainerAllocatorStopped = 0;
+			numStops = 0;
+		}
 
-      getDispatcher().register(JobFinishEvent.Type.class,
-          createJobFinishEventHandler());
+		@Override
+		protected Job createJob(Configuration conf, JobStateInternal forcedState,
+		                        String diagnostic) {
+			UserGroupInformation currentUser = null;
+			try {
+				currentUser = UserGroupInformation.getCurrentUser();
+			} catch (IOException e) {
+				throw new YarnRuntimeException(e);
+			}
+			Job newJob = new TestJob(getJobId(), getAttemptID(), conf,
+				getDispatcher().getEventHandler(),
+				getTaskAttemptListener(), getContext().getClock(),
+				getCommitter(), isNewApiCommitter(),
+				currentUser.getUserName(), getContext(),
+				forcedState, diagnostic);
+			((AppContext) getContext()).getAllJobs().put(newJob.getID(), newJob);
 
-      return newJob;
-    }
+			getDispatcher().register(JobFinishEvent.Type.class,
+				createJobFinishEventHandler());
 
-    @Override
-    protected ContainerAllocator createContainerAllocator(
-        ClientService clientService, AppContext context) {
-      return new TestCleanupContainerAllocator();
-    }
+			return newJob;
+		}
 
-    private class TestCleanupContainerAllocator extends AbstractService
-        implements ContainerAllocator {
-      private MRAppContainerAllocator allocator;
+		@Override
+		protected ContainerAllocator createContainerAllocator(
+			ClientService clientService, AppContext context) {
+			return new TestCleanupContainerAllocator();
+		}
 
-      TestCleanupContainerAllocator() {
-        super(TestCleanupContainerAllocator.class.getName());
-        allocator = new MRAppContainerAllocator();
-      }
+		private class TestCleanupContainerAllocator extends AbstractService
+			implements ContainerAllocator {
+			private MRAppContainerAllocator allocator;
 
-      @Override
-      public void handle(ContainerAllocatorEvent event) {
-        allocator.handle(event);
-      }
+			TestCleanupContainerAllocator() {
+				super(TestCleanupContainerAllocator.class.getName());
+				allocator = new MRAppContainerAllocator();
+			}
 
-      @Override
-      protected void serviceStop() throws Exception {
-        numStops++;
-        ContainerAllocatorStopped = numStops;
-        super.serviceStop();
-      }
-    }
+			@Override
+			public void handle(ContainerAllocatorEvent event) {
+				allocator.handle(event);
+			}
 
-    @Override
-    public RMHeartbeatHandler getRMHeartbeatHandler() {
-      return getStubbedHeartbeatHandler(getContext());
-    }
+			@Override
+			protected void serviceStop() throws Exception {
+				numStops++;
+				ContainerAllocatorStopped = numStops;
+				super.serviceStop();
+			}
+		}
 
-    @Override
-    public void cleanupStagingDir() throws IOException {
-      numStops++;
-      stagingDirCleanedup = numStops;
-    }
+		@Override
+		public RMHeartbeatHandler getRMHeartbeatHandler() {
+			return getStubbedHeartbeatHandler(getContext());
+		}
 
-    @Override
-    protected void sysexit() {
-    }
-  }
+		@Override
+		public void cleanupStagingDir() throws IOException {
+			numStops++;
+			stagingDirCleanedup = numStops;
+		}
 
-  private static RMHeartbeatHandler getStubbedHeartbeatHandler(
-      final AppContext appContext) {
-    return new RMHeartbeatHandler() {
-      @Override
-      public long getLastHeartbeatTime() {
-        return appContext.getClock().getTime();
-      }
-      @Override
-      public void runOnNextHeartbeat(Runnable callback) {
-        callback.run();
-      }
-    };
-  }
+		@Override
+		protected void sysexit() {
+		}
+	}
 
-  @Test(timeout=20000)
-  public void testStagingCleanupOrder() throws Exception {
-    MRAppTestCleanup app = new MRAppTestCleanup(1, 1, true,
-        this.getClass().getName(), true);
-    JobImpl job = (JobImpl)app.submit(new Configuration());
-    app.waitForState(job, JobState.SUCCEEDED);
-    app.verifyCompleted();
+	private static RMHeartbeatHandler getStubbedHeartbeatHandler(
+		final AppContext appContext) {
+		return new RMHeartbeatHandler() {
+			@Override
+			public long getLastHeartbeatTime() {
+				return appContext.getClock().getTime();
+			}
 
-    int waitTime = 20 * 1000;
-    while (waitTime > 0 && app.numStops < 2) {
-      Thread.sleep(100);
-      waitTime -= 100;
-    }
+			@Override
+			public void runOnNextHeartbeat(Runnable callback) {
+				callback.run();
+			}
+		};
+	}
 
-    // assert ContainerAllocatorStopped and then tagingDirCleanedup
-    Assert.assertEquals(1, app.ContainerAllocatorStopped);
-    Assert.assertEquals(2, app.stagingDirCleanedup);
-  }
- }
+	@Test(timeout = 20000)
+	public void testStagingCleanupOrder() throws Exception {
+		MRAppTestCleanup app = new MRAppTestCleanup(1, 1, true,
+			this.getClass().getName(), true);
+		JobImpl job = (JobImpl) app.submit(new Configuration());
+		app.waitForState(job, JobState.SUCCEEDED);
+		app.verifyCompleted();
+
+		int waitTime = 20 * 1000;
+		while (waitTime > 0 && app.numStops < 2) {
+			Thread.sleep(100);
+			waitTime -= 100;
+		}
+
+		// assert ContainerAllocatorStopped and then tagingDirCleanedup
+		Assert.assertEquals(1, app.ContainerAllocatorStopped);
+		Assert.assertEquals(2, app.stagingDirCleanedup);
+	}
+}
