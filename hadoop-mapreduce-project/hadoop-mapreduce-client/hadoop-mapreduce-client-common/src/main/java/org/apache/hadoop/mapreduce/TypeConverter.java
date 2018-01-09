@@ -304,7 +304,7 @@ public class TypeConverter {
             .getMapProgress(), jobreport.getReduceProgress(), jobreport
             .getCleanupProgress(), fromYarn(jobreport.getJobState()),
         jobPriority, jobreport.getUser(), jobreport.getJobName(), jobreport
-            .getJobFile(), trackingUrl, jobreport.isUber());
+            .getJobFile(), trackingUrl, jobreport.isUber(), jobreport.getSubmitTime(), jobreport.getDeadline());
     jobStatus.setStartTime(jobreport.getStartTime());
     jobStatus.setFinishTime(jobreport.getFinishTime());
     jobStatus.setFailureInfo(jobreport.getDiagnostics());
@@ -444,7 +444,7 @@ public class TypeConverter {
           TypeConverter.fromYarn(application.getYarnApplicationState(), application.getFinalApplicationStatus()),
           org.apache.hadoop.mapreduce.JobPriority.NORMAL,
           application.getUser(), application.getName(),
-          application.getQueue(), jobFile, trackingUrl, false
+          application.getQueue(), jobFile, trackingUrl, false, application.getArrivalTime(), application.getDeadline()
       );
     jobStatus.setSchedulingInfo(trackingUrl); // Set AM tracking url
     jobStatus.setStartTime(application.getStartTime());

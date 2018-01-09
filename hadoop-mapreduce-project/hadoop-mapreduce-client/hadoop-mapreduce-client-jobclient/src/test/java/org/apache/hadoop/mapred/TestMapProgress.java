@@ -44,6 +44,7 @@ import org.apache.hadoop.mapreduce.split.JobSplit.SplitMetaInfo;
 import org.apache.hadoop.mapreduce.split.JobSplit.TaskSplitIndex;
 import org.apache.hadoop.mapreduce.split.JobSplit.TaskSplitMetaInfo;
 import org.apache.hadoop.util.ReflectionUtils;
+import org.apache.hadoop.util.Time;
 
 /**
  *  Validates map phase progress.
@@ -190,7 +191,7 @@ public class TestMapProgress extends TestCase {
     public TestMapTask(String jobFile, TaskAttemptID taskId, 
         int partition, TaskSplitIndex splitIndex,
         int numSlotsRequired) {
-      super(jobFile, taskId, partition, splitIndex, numSlotsRequired);
+      super(jobFile, taskId, partition, splitIndex, numSlotsRequired, Time.now(), Time.now()+3259431L);
     }
     
     /**
@@ -234,9 +235,10 @@ public class TestMapProgress extends TestCase {
                  NullOutputFormat.class, OutputFormat.class);
     job.set(org.apache.hadoop.mapreduce.lib.input.FileInputFormat.INPUT_DIR,
             TEST_ROOT_DIR);
+    job.setArrivalTime(Time.now());
+    job.setDeadline(569874L);
     jobId = taskId.getJobID();
-    
-    JobContext jContext = new JobContextImpl(job, jobId);
+    JobContext jContext = new JobContextImpl(job, jobId, job.getArrivalTime(), job.getDeadline());
     InputFormat<?, ?> input =
       ReflectionUtils.newInstance(jContext.getInputFormatClass(), job);
 

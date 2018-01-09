@@ -54,4 +54,6 @@ public interface JobReport {
   public abstract void setJobFile(String jobFile);
   public abstract void setAMInfos(List<AMInfo> amInfos);
   public abstract void setIsUber(boolean isUber);
+
+	long getDeadline();
 }

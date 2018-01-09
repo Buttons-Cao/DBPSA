@@ -133,8 +133,8 @@ public class ReduceTask extends Task {
   }
 
   public ReduceTask(String jobFile, TaskAttemptID taskId,
-                    int partition, int numMaps, int numSlotsRequired) {
-    super(jobFile, taskId, partition, numSlotsRequired);
+                    int partition, int numMaps, int numSlotsRequired, long arrivalTime, long deadline) {
+    super(jobFile, taskId, partition, numSlotsRequired, arrivalTime, deadline);
     this.numMaps = numMaps;
   }
   

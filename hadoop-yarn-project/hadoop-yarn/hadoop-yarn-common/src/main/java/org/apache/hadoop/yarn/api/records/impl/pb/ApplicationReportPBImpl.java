@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,508 +44,534 @@ import java.util.Set;
 @Private
 @Unstable
 public class ApplicationReportPBImpl extends ApplicationReport {
-  ApplicationReportProto proto = ApplicationReportProto.getDefaultInstance();
-  ApplicationReportProto.Builder builder = null;
-  boolean viaProto = false;
+	ApplicationReportProto proto = ApplicationReportProto.getDefaultInstance();
+	ApplicationReportProto.Builder builder = null;
+	boolean viaProto = false;
 
-  private ApplicationId applicationId;
-  private ApplicationAttemptId currentApplicationAttemptId;
-  private Token clientToAMToken = null;
-  private Token amRmToken = null;
-  private Set<String> applicationTags = null;
+	private ApplicationId applicationId;
+	private ApplicationAttemptId currentApplicationAttemptId;
+	private Token clientToAMToken = null;
+	private Token amRmToken = null;
+	private Set<String> applicationTags = null;
+	private long arrivalTime;
+	private long deadline;
 
-  public ApplicationReportPBImpl() {
-    builder = ApplicationReportProto.newBuilder();
-  }
+	public ApplicationReportPBImpl() {
+		builder = ApplicationReportProto.newBuilder();
+	}
 
-  public ApplicationReportPBImpl(ApplicationReportProto proto) {
-    this.proto = proto;
-    viaProto = true;
-  }
+	public ApplicationReportPBImpl(ApplicationReportProto proto) {
+		this.proto = proto;
+		viaProto = true;
+	}
 
-  @Override
-  public ApplicationId getApplicationId() {
-    if (this.applicationId != null) {
-      return this.applicationId;
-    }
+	@Override
+	public ApplicationId getApplicationId() {
+		if (this.applicationId != null) {
+			return this.applicationId;
+		}
 
-    ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
-    if (!p.hasApplicationId()) {
-      return null;
-    }
-    this.applicationId = convertFromProtoFormat(p.getApplicationId());
-    return this.applicationId;
-  }
+		ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
+		if (!p.hasApplicationId()) {
+			return null;
+		}
+		this.applicationId = convertFromProtoFormat(p.getApplicationId());
+		return this.applicationId;
+	}
 
-  public void setApplicationResourceUsageReport(ApplicationResourceUsageReport appInfo) {
-    maybeInitBuilder();
-    if (appInfo == null) {
-      builder.clearAppResourceUsage();
-      return;
-    }
-    builder.setAppResourceUsage(convertToProtoFormat(appInfo));
-  }
-  
-  @Override
-  public ApplicationAttemptId getCurrentApplicationAttemptId() {
-    if (this.currentApplicationAttemptId != null) {
-      return this.currentApplicationAttemptId;
-    }
+	public void setApplicationResourceUsageReport(ApplicationResourceUsageReport appInfo) {
+		maybeInitBuilder();
+		if (appInfo == null) {
+			builder.clearAppResourceUsage();
+			return;
+		}
+		builder.setAppResourceUsage(convertToProtoFormat(appInfo));
+	}
 
-    ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
-    if (!p.hasCurrentApplicationAttemptId()) {
-      return null;
-    }
-    this.currentApplicationAttemptId = convertFromProtoFormat(p.getCurrentApplicationAttemptId());
-    return this.currentApplicationAttemptId;
-  }
+	@Override
+	public ApplicationAttemptId getCurrentApplicationAttemptId() {
+		if (this.currentApplicationAttemptId != null) {
+			return this.currentApplicationAttemptId;
+		}
 
-  @Override
-  public ApplicationResourceUsageReport getApplicationResourceUsageReport() {
-    ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
-    if (!p.hasAppResourceUsage()) {
-      return null;
-    }
-    return convertFromProtoFormat(p.getAppResourceUsage());
-  }
+		ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
+		if (!p.hasCurrentApplicationAttemptId()) {
+			return null;
+		}
+		this.currentApplicationAttemptId = convertFromProtoFormat(p.getCurrentApplicationAttemptId());
+		return this.currentApplicationAttemptId;
+	}
 
-  @Override
-  public String getTrackingUrl() {
-    ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
-    if (!p.hasTrackingUrl()) {
-      return null;
-    }
-    return p.getTrackingUrl();
-  }
+	@Override
+	public ApplicationResourceUsageReport getApplicationResourceUsageReport() {
+		ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
+		if (!p.hasAppResourceUsage()) {
+			return null;
+		}
+		return convertFromProtoFormat(p.getAppResourceUsage());
+	}
 
-  @Override
-  public String getOriginalTrackingUrl() {
-    ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
-    if (!p.hasOriginalTrackingUrl()) {
-      return null;
-    }
-    return p.getOriginalTrackingUrl();
-  }
-  
-  @Override
-  public String getName() {
-    ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
-    if (!p.hasName()) {
-      return null;
-    }
-    return p.getName();
-  }
+	@Override
+	public String getTrackingUrl() {
+		ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
+		if (!p.hasTrackingUrl()) {
+			return null;
+		}
+		return p.getTrackingUrl();
+	}
 
-  @Override
-  public String getQueue() {
-    ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
-    if (!p.hasQueue()) {
-      return null;
-    }
-    return p.getQueue();
-  }
+	@Override
+	public String getOriginalTrackingUrl() {
+		ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
+		if (!p.hasOriginalTrackingUrl()) {
+			return null;
+		}
+		return p.getOriginalTrackingUrl();
+	}
 
-  @Override
-  public YarnApplicationState getYarnApplicationState() {
-    ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
-    if (!p.hasYarnApplicationState()) {
-      return null;
-    }
-    return convertFromProtoFormat(p.getYarnApplicationState());
-  }
+	@Override
+	public String getName() {
+		ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
+		if (!p.hasName()) {
+			return null;
+		}
+		return p.getName();
+	}
 
-  @Override
-  public String getHost() {
-    ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
-    if (!p.hasHost()) {
-      return null;
-    }
-    return (p.getHost());
-  }
+	@Override
+	public String getQueue() {
+		ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
+		if (!p.hasQueue()) {
+			return null;
+		}
+		return p.getQueue();
+	}
 
-  @Override
-  public int getRpcPort() {
-    ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
-    return (p.getRpcPort());
-  }
+	@Override
+	public YarnApplicationState getYarnApplicationState() {
+		ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
+		if (!p.hasYarnApplicationState()) {
+			return null;
+		}
+		return convertFromProtoFormat(p.getYarnApplicationState());
+	}
 
-  @Override
-  public Token getClientToAMToken() {
-    ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
-    if (this.clientToAMToken != null) {
-      return this.clientToAMToken;
-    }
-    if (!p.hasClientToAmToken()) {
-      return null;
-    }
-    this.clientToAMToken = convertFromProtoFormat(p.getClientToAmToken());
-    return this.clientToAMToken;
-  }
+	@Override
+	public String getHost() {
+		ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
+		if (!p.hasHost()) {
+			return null;
+		}
+		return (p.getHost());
+	}
 
-  @Override
-  public String getUser() {
-    ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
-    if (!p.hasUser()) {
-      return null;
-    }
-    return p.getUser();
-  }
+	@Override
+	public int getRpcPort() {
+		ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
+		return (p.getRpcPort());
+	}
 
-  @Override
-  public String getDiagnostics() {
-    ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
-    if (!p.hasDiagnostics()) {
-      return null;
-    }
-    return p.getDiagnostics();
-  }
+	@Override
+	public Token getClientToAMToken() {
+		ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
+		if (this.clientToAMToken != null) {
+			return this.clientToAMToken;
+		}
+		if (!p.hasClientToAmToken()) {
+			return null;
+		}
+		this.clientToAMToken = convertFromProtoFormat(p.getClientToAmToken());
+		return this.clientToAMToken;
+	}
 
-  @Override
-  public long getStartTime() {
-    ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
-    return p.getStartTime();
-  }
+	@Override
+	public String getUser() {
+		ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
+		if (!p.hasUser()) {
+			return null;
+		}
+		return p.getUser();
+	}
 
-  @Override
-  public long getFinishTime() {
-    ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
-    return p.getFinishTime();
-  }
+	@Override
+	public String getDiagnostics() {
+		ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
+		if (!p.hasDiagnostics()) {
+			return null;
+		}
+		return p.getDiagnostics();
+	}
 
-  @Override
-  public FinalApplicationStatus getFinalApplicationStatus() {
-    ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
-    if (!p.hasFinalApplicationStatus()) {
-      return null;
-    }	
-    return convertFromProtoFormat(p.getFinalApplicationStatus());
-  }
+	@Override
+	public long getStartTime() {
+		ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
+		return p.getStartTime();
+	}
 
-  @Override
-  public float getProgress() {
-    ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
-    return p.getProgress();
-  }
+	@Override
+	public long getFinishTime() {
+		ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
+		return p.getFinishTime();
+	}
 
-  @Override
-  public String getApplicationType() {
-    ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
-    if (!p.hasApplicationType()) {
-      return null;
-    }
-    return p.getApplicationType();
-  }
+	@Override
+	public FinalApplicationStatus getFinalApplicationStatus() {
+		ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
+		if (!p.hasFinalApplicationStatus()) {
+			return null;
+		}
+		return convertFromProtoFormat(p.getFinalApplicationStatus());
+	}
 
-  @Override
-  public Token getAMRMToken() {
-    ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
-    if (amRmToken != null) {
-      return amRmToken;
-    }
-    if (!p.hasAmRmToken()) {
-      return null;
-    }
-    amRmToken = convertFromProtoFormat(p.getAmRmToken());
-    return amRmToken;
-  }
+	@Override
+	public float getProgress() {
+		ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
+		return p.getProgress();
+	}
 
-  private void initApplicationTags() {
-    if (this.applicationTags != null) {
-      return;
-    }
-    ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
-    this.applicationTags = new HashSet<String>();
-    this.applicationTags.addAll(p.getApplicationTagsList());
-  }
+	@Override
+	public String getApplicationType() {
+		ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
+		if (!p.hasApplicationType()) {
+			return null;
+		}
+		return p.getApplicationType();
+	}
 
-  @Override
-  public Set<String> getApplicationTags() {
-    initApplicationTags();
-    return this.applicationTags;
-  }
+	@Override
+	public Token getAMRMToken() {
+		ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
+		if (amRmToken != null) {
+			return amRmToken;
+		}
+		if (!p.hasAmRmToken()) {
+			return null;
+		}
+		amRmToken = convertFromProtoFormat(p.getAmRmToken());
+		return amRmToken;
+	}
 
-  @Override
-  public void setApplicationId(ApplicationId applicationId) {
-    maybeInitBuilder();
-    if (applicationId == null)
-      builder.clearApplicationId();
-    this.applicationId = applicationId;
-  }
+	private void initApplicationTags() {
+		if (this.applicationTags != null) {
+			return;
+		}
+		ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
+		this.applicationTags = new HashSet<String>();
+		this.applicationTags.addAll(p.getApplicationTagsList());
+	}
 
-  @Override
-  public void setCurrentApplicationAttemptId(ApplicationAttemptId applicationAttemptId) {
-    maybeInitBuilder();
-    if (applicationAttemptId == null)
-      builder.clearCurrentApplicationAttemptId();
-    this.currentApplicationAttemptId = applicationAttemptId;
-  }
+	@Override
+	public Set<String> getApplicationTags() {
+		initApplicationTags();
+		return this.applicationTags;
+	}
 
-  @Override
-  public void setTrackingUrl(String url) {
-    maybeInitBuilder();
-    if (url == null) {
-      builder.clearTrackingUrl();
-      return;
-    }
-    builder.setTrackingUrl(url);
-  }
-  
-  @Override
-  public void setOriginalTrackingUrl(String url) {
-    maybeInitBuilder();
-    if (url == null) {
-      builder.clearOriginalTrackingUrl();
-      return;
-    }
-    builder.setOriginalTrackingUrl(url);
-  }
+	@Override
+	public void setApplicationId(ApplicationId applicationId) {
+		maybeInitBuilder();
+		if (applicationId == null)
+			builder.clearApplicationId();
+		this.applicationId = applicationId;
+	}
 
-  @Override
-  public void setName(String name) {
-    maybeInitBuilder();
-    if (name == null) {
-      builder.clearName();
-      return;
-    }
-    builder.setName(name);
-  }
+	@Override
+	public void setCurrentApplicationAttemptId(ApplicationAttemptId applicationAttemptId) {
+		maybeInitBuilder();
+		if (applicationAttemptId == null)
+			builder.clearCurrentApplicationAttemptId();
+		this.currentApplicationAttemptId = applicationAttemptId;
+	}
 
-  @Override
-  public void setQueue(String queue) {
-    maybeInitBuilder();
-    if (queue == null) {
-      builder.clearQueue();
-      return;
-    }
-    builder.setQueue(queue);
-  }
+	@Override
+	public void setTrackingUrl(String url) {
+		maybeInitBuilder();
+		if (url == null) {
+			builder.clearTrackingUrl();
+			return;
+		}
+		builder.setTrackingUrl(url);
+	}
 
-  @Override
-  public void setYarnApplicationState(YarnApplicationState state) {
-    maybeInitBuilder();
-    if (state == null) {
-      builder.clearYarnApplicationState();
-      return;
-    }
-    builder.setYarnApplicationState(convertToProtoFormat(state));
-  }
+	@Override
+	public void setOriginalTrackingUrl(String url) {
+		maybeInitBuilder();
+		if (url == null) {
+			builder.clearOriginalTrackingUrl();
+			return;
+		}
+		builder.setOriginalTrackingUrl(url);
+	}
 
-  @Override
-  public void setHost(String host) {
-    maybeInitBuilder();
-    if (host == null) {
-      builder.clearHost();
-      return;
-    }
-    builder.setHost((host));
-  }
+	@Override
+	public void setName(String name) {
+		maybeInitBuilder();
+		if (name == null) {
+			builder.clearName();
+			return;
+		}
+		builder.setName(name);
+	}
 
-  @Override
-  public void setRpcPort(int rpcPort) {
-    maybeInitBuilder();
-    builder.setRpcPort((rpcPort));
-  }
+	@Override
+	public void setQueue(String queue) {
+		maybeInitBuilder();
+		if (queue == null) {
+			builder.clearQueue();
+			return;
+		}
+		builder.setQueue(queue);
+	}
 
-  @Override
-  public void setClientToAMToken(Token clientToAMToken) {
-    maybeInitBuilder();
-    if (clientToAMToken == null) 
-      builder.clearClientToAmToken();
-    this.clientToAMToken = clientToAMToken;
-  }
+	@Override
+	public void setYarnApplicationState(YarnApplicationState state) {
+		maybeInitBuilder();
+		if (state == null) {
+			builder.clearYarnApplicationState();
+			return;
+		}
+		builder.setYarnApplicationState(convertToProtoFormat(state));
+	}
 
-  @Override
-  public void setUser(String user) {
-    maybeInitBuilder();
-    if (user == null) {
-      builder.clearUser();
-      return;
-    }
-    builder.setUser((user));
-  }
-  
-  @Override
-  public void setApplicationType(String applicationType) {
-    maybeInitBuilder();
-    if (applicationType == null) {
-      builder.clearApplicationType();
-      return;
-    }
-    builder.setApplicationType((applicationType));
-  }
+	@Override
+	public void setHost(String host) {
+		maybeInitBuilder();
+		if (host == null) {
+			builder.clearHost();
+			return;
+		}
+		builder.setHost((host));
+	}
 
-  @Override
-  public void setApplicationTags(Set<String> tags) {
-    maybeInitBuilder();
-    if (tags == null || tags.isEmpty()) {
-      builder.clearApplicationTags();
-    }
-    this.applicationTags = tags;
-  }
+	@Override
+	public void setRpcPort(int rpcPort) {
+		maybeInitBuilder();
+		builder.setRpcPort((rpcPort));
+	}
 
-  @Override
-  public void setDiagnostics(String diagnostics) {
-    maybeInitBuilder();
-    if (diagnostics == null) {
-      builder.clearDiagnostics();
-      return;
-    }
-    builder.setDiagnostics(diagnostics);
-  }
+	@Override
+	public void setClientToAMToken(Token clientToAMToken) {
+		maybeInitBuilder();
+		if (clientToAMToken == null)
+			builder.clearClientToAmToken();
+		this.clientToAMToken = clientToAMToken;
+	}
 
-  @Override
-  public void setStartTime(long startTime) {
-    maybeInitBuilder();
-    builder.setStartTime(startTime);
-  }
+	@Override
+	public void setUser(String user) {
+		maybeInitBuilder();
+		if (user == null) {
+			builder.clearUser();
+			return;
+		}
+		builder.setUser((user));
+	}
 
-  @Override
-  public void setFinishTime(long finishTime) {
-    maybeInitBuilder();
-    builder.setFinishTime(finishTime);
-  }
+	@Override
+	public void setApplicationType(String applicationType) {
+		maybeInitBuilder();
+		if (applicationType == null) {
+			builder.clearApplicationType();
+			return;
+		}
+		builder.setApplicationType((applicationType));
+	}
 
-  @Override
-  public void setFinalApplicationStatus(FinalApplicationStatus finishState) {
-    maybeInitBuilder();
-    if (finishState == null) {
-      builder.clearFinalApplicationStatus();
-      return;
-    }
-    builder.setFinalApplicationStatus(convertToProtoFormat(finishState));
-  }
+	@Override
+	public void setApplicationTags(Set<String> tags) {
+		maybeInitBuilder();
+		if (tags == null || tags.isEmpty()) {
+			builder.clearApplicationTags();
+		}
+		this.applicationTags = tags;
+	}
 
-  @Override
-  public void setProgress(float progress) {
-    maybeInitBuilder();
-    builder.setProgress(progress);
-  }
+	@Override
+	public void setDiagnostics(String diagnostics) {
+		maybeInitBuilder();
+		if (diagnostics == null) {
+			builder.clearDiagnostics();
+			return;
+		}
+		builder.setDiagnostics(diagnostics);
+	}
 
-  @Override
-  public void setAMRMToken(Token amRmToken) {
-    maybeInitBuilder();
-    if (amRmToken == null) {
-      builder.clearAmRmToken();
-    }
-    this.amRmToken = amRmToken;
-  }
+	@Override
+	public void setStartTime(long startTime) {
+		maybeInitBuilder();
+		builder.setStartTime(startTime);
+	}
 
-  public ApplicationReportProto getProto() {
-    mergeLocalToProto();
-    proto = viaProto ? proto : builder.build();
-    viaProto = true;
-    return proto;
-  }
+	@Override
+	public void setFinishTime(long finishTime) {
+		maybeInitBuilder();
+		builder.setFinishTime(finishTime);
+	}
 
-  @Override
-  public int hashCode() {
-    return getProto().hashCode();
-  }
+	@Override
+	public void setFinalApplicationStatus(FinalApplicationStatus finishState) {
+		maybeInitBuilder();
+		if (finishState == null) {
+			builder.clearFinalApplicationStatus();
+			return;
+		}
+		builder.setFinalApplicationStatus(convertToProtoFormat(finishState));
+	}
 
-  @Override
-  public boolean equals(Object other) {
-    if (other == null)
-      return false;
-    if (other.getClass().isAssignableFrom(this.getClass())) {
-      return this.getProto().equals(this.getClass().cast(other).getProto());
-    }
-    return false;
-  }
+	@Override
+	public void setProgress(float progress) {
+		maybeInitBuilder();
+		builder.setProgress(progress);
+	}
 
-  @Override
-  public String toString() {
-    return TextFormat.shortDebugString(getProto());
-  }
+	@Override
+	public void setAMRMToken(Token amRmToken) {
+		maybeInitBuilder();
+		if (amRmToken == null) {
+			builder.clearAmRmToken();
+		}
+		this.amRmToken = amRmToken;
+	}
 
-  private void mergeLocalToBuilder() {
-    if (this.applicationId != null
-        && !((ApplicationIdPBImpl) this.applicationId).getProto().equals(
-            builder.getApplicationId())) {
-      builder.setApplicationId(convertToProtoFormat(this.applicationId));
-    }
-    if (this.currentApplicationAttemptId != null
-        && !((ApplicationAttemptIdPBImpl) this.currentApplicationAttemptId).getProto().equals(
-            builder.getCurrentApplicationAttemptId())) {
-      builder.setCurrentApplicationAttemptId(convertToProtoFormat(this.currentApplicationAttemptId));
-    }
-    if (this.clientToAMToken != null
-        && !((TokenPBImpl) this.clientToAMToken).getProto().equals(
-            builder.getClientToAmToken())) {
-      builder.setClientToAmToken(convertToProtoFormat(this.clientToAMToken));
-    }
-    if (this.amRmToken != null
-      && !((TokenPBImpl) this.amRmToken).getProto().equals(
-      builder.getAmRmToken())) {
-      builder.setAmRmToken(convertToProtoFormat(this.amRmToken));
-    }
-    if (this.applicationTags != null && !this.applicationTags.isEmpty()) {
-      builder.clearApplicationTags();
-      builder.addAllApplicationTags(this.applicationTags);
-    }
-  }
+	public ApplicationReportProto getProto() {
+		mergeLocalToProto();
+		proto = viaProto ? proto : builder.build();
+		viaProto = true;
+		return proto;
+	}
 
-  private void mergeLocalToProto() {
-    if (viaProto)
-      maybeInitBuilder();
-    mergeLocalToBuilder();
-    proto = builder.build();
-    viaProto = true;
-  }
+	@Override
+	public int hashCode() {
+		return getProto().hashCode();
+	}
 
-  private void maybeInitBuilder() {
-    if (viaProto || builder == null) {
-      builder = ApplicationReportProto.newBuilder(proto);
-    }
-    viaProto = false;
-  }
+	@Override
+	public boolean equals(Object other) {
+		if (other == null)
+			return false;
+		if (other.getClass().isAssignableFrom(this.getClass())) {
+			return this.getProto().equals(this.getClass().cast(other).getProto());
+		}
+		return false;
+	}
 
-  private ApplicationIdProto convertToProtoFormat(ApplicationId t) {
-    return ((ApplicationIdPBImpl) t).getProto();
-  }
-  
-  private ApplicationAttemptIdProto convertToProtoFormat(ApplicationAttemptId t) {
-    return ((ApplicationAttemptIdPBImpl) t).getProto();
-  }
+	@Override
+	public String toString() {
+		return TextFormat.shortDebugString(getProto());
+	}
 
-  private ApplicationResourceUsageReport convertFromProtoFormat(ApplicationResourceUsageReportProto s) {
-    return ProtoUtils.convertFromProtoFormat(s);
-  }
+	private void mergeLocalToBuilder() {
+		if (this.applicationId != null
+			&& !((ApplicationIdPBImpl) this.applicationId).getProto().equals(
+			builder.getApplicationId())) {
+			builder.setApplicationId(convertToProtoFormat(this.applicationId));
+		}
+		if (this.currentApplicationAttemptId != null
+			&& !((ApplicationAttemptIdPBImpl) this.currentApplicationAttemptId).getProto().equals(
+			builder.getCurrentApplicationAttemptId())) {
+			builder.setCurrentApplicationAttemptId(convertToProtoFormat(this.currentApplicationAttemptId));
+		}
+		if (this.clientToAMToken != null
+			&& !((TokenPBImpl) this.clientToAMToken).getProto().equals(
+			builder.getClientToAmToken())) {
+			builder.setClientToAmToken(convertToProtoFormat(this.clientToAMToken));
+		}
+		if (this.amRmToken != null
+			&& !((TokenPBImpl) this.amRmToken).getProto().equals(
+			builder.getAmRmToken())) {
+			builder.setAmRmToken(convertToProtoFormat(this.amRmToken));
+		}
+		if (this.applicationTags != null && !this.applicationTags.isEmpty()) {
+			builder.clearApplicationTags();
+			builder.addAllApplicationTags(this.applicationTags);
+		}
+	}
 
-  private ApplicationResourceUsageReportProto convertToProtoFormat(ApplicationResourceUsageReport s) {
-    return ProtoUtils.convertToProtoFormat(s);
-  }
+	private void mergeLocalToProto() {
+		if (viaProto)
+			maybeInitBuilder();
+		mergeLocalToBuilder();
+		proto = builder.build();
+		viaProto = true;
+	}
 
-  private ApplicationIdPBImpl convertFromProtoFormat(
-      ApplicationIdProto applicationId) {
-    return new ApplicationIdPBImpl(applicationId);
-  }
-  
-  private ApplicationAttemptIdPBImpl convertFromProtoFormat(
-      ApplicationAttemptIdProto applicationAttemptId) {
-    return new ApplicationAttemptIdPBImpl(applicationAttemptId);
-  }
+	private void maybeInitBuilder() {
+		if (viaProto || builder == null) {
+			builder = ApplicationReportProto.newBuilder(proto);
+		}
+		viaProto = false;
+	}
 
-  private YarnApplicationState convertFromProtoFormat(YarnApplicationStateProto s) {
-    return ProtoUtils.convertFromProtoFormat(s);
-  }
+	private ApplicationIdProto convertToProtoFormat(ApplicationId t) {
+		return ((ApplicationIdPBImpl) t).getProto();
+	}
 
-  private YarnApplicationStateProto convertToProtoFormat(YarnApplicationState s) {
-    return ProtoUtils.convertToProtoFormat(s);
-  }
+	private ApplicationAttemptIdProto convertToProtoFormat(ApplicationAttemptId t) {
+		return ((ApplicationAttemptIdPBImpl) t).getProto();
+	}
 
-  private FinalApplicationStatus convertFromProtoFormat(FinalApplicationStatusProto s) {
-    return ProtoUtils.convertFromProtoFormat(s);
-  }
+	private ApplicationResourceUsageReport convertFromProtoFormat(ApplicationResourceUsageReportProto s) {
+		return ProtoUtils.convertFromProtoFormat(s);
+	}
 
-  private FinalApplicationStatusProto convertToProtoFormat(FinalApplicationStatus s) {
-    return ProtoUtils.convertToProtoFormat(s);
-  }
+	private ApplicationResourceUsageReportProto convertToProtoFormat(ApplicationResourceUsageReport s) {
+		return ProtoUtils.convertToProtoFormat(s);
+	}
 
-  private TokenPBImpl convertFromProtoFormat(TokenProto p) {
-    return new TokenPBImpl(p);
-  }
+	private ApplicationIdPBImpl convertFromProtoFormat(
+		ApplicationIdProto applicationId) {
+		return new ApplicationIdPBImpl(applicationId);
+	}
 
-  private TokenProto convertToProtoFormat(Token t) {
-    return ((TokenPBImpl)t).getProto();
-  }
+	private ApplicationAttemptIdPBImpl convertFromProtoFormat(
+		ApplicationAttemptIdProto applicationAttemptId) {
+		return new ApplicationAttemptIdPBImpl(applicationAttemptId);
+	}
+
+	private YarnApplicationState convertFromProtoFormat(YarnApplicationStateProto s) {
+		return ProtoUtils.convertFromProtoFormat(s);
+	}
+
+	private YarnApplicationStateProto convertToProtoFormat(YarnApplicationState s) {
+		return ProtoUtils.convertToProtoFormat(s);
+	}
+
+	private FinalApplicationStatus convertFromProtoFormat(FinalApplicationStatusProto s) {
+		return ProtoUtils.convertFromProtoFormat(s);
+	}
+
+	private FinalApplicationStatusProto convertToProtoFormat(FinalApplicationStatus s) {
+		return ProtoUtils.convertToProtoFormat(s);
+	}
+
+	private TokenPBImpl convertFromProtoFormat(TokenProto p) {
+		return new TokenPBImpl(p);
+	}
+
+	private TokenProto convertToProtoFormat(Token t) {
+		return ((TokenPBImpl) t).getProto();
+	}
+
+	@Override
+	public long getArrivalTime(){
+		ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
+		return p.getArrivalTime();
+	}
+
+	@Override
+	public long getDeadline(){
+		ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
+		return p.getDeadline();
+	}
+
+	public void setArrivalTime(long arrivalTime) {
+		maybeInitBuilder();
+		builder.setArrivalTime((arrivalTime));
+		this.arrivalTime = arrivalTime;
+	}
+
+	public void setDeadline(long deadline) {
+		maybeInitBuilder();
+		builder.setDeadline((deadline));
+		this.deadline = deadline;
+	}
 }

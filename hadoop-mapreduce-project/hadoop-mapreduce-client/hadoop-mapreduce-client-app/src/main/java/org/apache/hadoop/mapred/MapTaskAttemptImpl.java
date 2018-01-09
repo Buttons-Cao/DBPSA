@@ -55,7 +55,7 @@ public class MapTaskAttemptImpl extends TaskAttemptImpl {
     //job file name is set in TaskAttempt, setting it null here
     MapTask mapTask =
       new MapTask("", TypeConverter.fromYarn(getID()), partition,
-          splitInfo.getSplitIndex(), 1); // YARN doesn't have the concept of slots per task, set it as 1.
+          splitInfo.getSplitIndex(), 1, conf.getArrivalTime(), conf.getDeadline()); // YARN doesn't have the concept of slots per task, set it as 1.
     mapTask.setUser(conf.get(MRJobConfig.USER_NAME));
     mapTask.setConf(conf);
     return mapTask;

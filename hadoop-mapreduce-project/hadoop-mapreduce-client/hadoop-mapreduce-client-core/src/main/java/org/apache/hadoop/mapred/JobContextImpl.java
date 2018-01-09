@@ -23,38 +23,41 @@ import org.apache.hadoop.util.Progressable;
 
 @InterfaceAudience.Private
 @InterfaceStability.Unstable
-public class JobContextImpl 
-    extends org.apache.hadoop.mapreduce.task.JobContextImpl 
-    implements JobContext {
-  private JobConf job;
-  private Progressable progress;
+public class JobContextImpl
+	extends org.apache.hadoop.mapreduce.task.JobContextImpl
+	implements JobContext {
+	private JobConf job;
+	private Progressable progress;
 
-  public JobContextImpl(JobConf conf, org.apache.hadoop.mapreduce.JobID jobId, 
-                 Progressable progress, long arrivalTime, long deadline) {
-    super(conf, jobId, arrivalTime, deadline);
-    this.job = conf;
-    this.progress = progress;
-  }
+	public JobContextImpl(JobConf conf, org.apache.hadoop.mapreduce.JobID jobId,
+	                      Progressable progress, long arrivalTime, long deadline) {
+		super(conf, jobId, arrivalTime, deadline);
+		this.job = conf;
+		this.progress = progress;
+	}
 
-  public JobContextImpl(JobConf conf, org.apache.hadoop.mapreduce.JobID jobId, long arrivalTime, long deadline) {
-    this(conf, jobId, Reporter.NULL, arrivalTime, deadline);
-  }
-  
-  /**
-   * Get the job Configuration
-   * 
-   * @return JobConf
-   */
-  public JobConf getJobConf() {
-    return job;
-  }
-  
-  /**
-   * Get the progress mechanism for reporting progress.
-   * 
-   * @return progress mechanism 
-   */
-  public Progressable getProgressible() {
-    return progress;
-  }
+	public JobContextImpl(JobConf conf, org.apache.hadoop.mapreduce.JobID jobId, long arrivalTime, long deadline) {
+		this(conf, jobId, Reporter.NULL, arrivalTime, deadline);
+	}
+
+	/**
+	 * Get the job Configuration
+	 *
+	 * @return JobConf
+	 */
+	public JobConf getJobConf() {
+		return job;
+	}
+
+	/**
+	 * Get the progress mechanism for reporting progress.
+	 *
+	 * @return progress mechanism
+	 */
+	public Progressable getProgressible() {
+		return progress;
+	}
+
+
+
 }
