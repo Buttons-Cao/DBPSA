@@ -263,7 +263,7 @@ public class ApplicationReportPBImpl extends ApplicationReport {
 	}
 
 	@Override
-	public long getArrivalTime(){
+	public long getDeadline(){
 		ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
 		if (!p.hasDeadline()) {
 			return 0;
