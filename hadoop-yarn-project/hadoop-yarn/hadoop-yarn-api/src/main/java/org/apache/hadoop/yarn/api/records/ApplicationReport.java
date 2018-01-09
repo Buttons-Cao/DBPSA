@@ -361,5 +361,8 @@ public abstract class ApplicationReport {
   @Public
   @Stable
   public abstract Token getAMRMToken();
-  
+
+  public abstract long getArrivalTime();
+
+  public abstract long getDeadline();
 }
