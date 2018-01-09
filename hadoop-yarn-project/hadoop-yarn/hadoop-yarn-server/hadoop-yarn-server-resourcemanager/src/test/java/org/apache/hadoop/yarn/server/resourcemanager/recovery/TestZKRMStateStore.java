@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,6 +37,7 @@ import org.apache.hadoop.ha.HAServiceProtocol.StateChangeRequestInfo;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.security.token.delegation.DelegationKey;
 import org.apache.hadoop.service.Service;
+import org.apache.hadoop.util.Time;
 import org.apache.hadoop.yarn.api.records.ApplicationAttemptId;
 import org.apache.hadoop.yarn.api.records.ApplicationId;
 import org.apache.hadoop.yarn.api.records.ApplicationSubmissionContext;
@@ -67,342 +68,343 @@ import org.junit.Test;
 
 public class TestZKRMStateStore extends RMStateStoreTestBase {
 
-  public static final Log LOG = LogFactory.getLog(TestZKRMStateStore.class);
-  private static final int ZK_TIMEOUT_MS = 1000;
+	public static final Log LOG = LogFactory.getLog(TestZKRMStateStore.class);
+	private static final int ZK_TIMEOUT_MS = 1000;
 
-  class TestZKRMStateStoreTester implements RMStateStoreHelper {
+	class TestZKRMStateStoreTester implements RMStateStoreHelper {
 
-    ZooKeeper client;
-    TestZKRMStateStoreInternal store;
-    String workingZnode;
+		ZooKeeper client;
+		TestZKRMStateStoreInternal store;
+		String workingZnode;
 
-    class TestZKRMStateStoreInternal extends ZKRMStateStore {
+		class TestZKRMStateStoreInternal extends ZKRMStateStore {
 
-      public TestZKRMStateStoreInternal(Configuration conf, String workingZnode)
-          throws Exception {
-        init(conf);
-        start();
-        assertTrue(znodeWorkingPath.equals(workingZnode));
-      }
+			public TestZKRMStateStoreInternal(Configuration conf, String workingZnode)
+				throws Exception {
+				init(conf);
+				start();
+				assertTrue(znodeWorkingPath.equals(workingZnode));
+			}
 
-      @Override
-      public ZooKeeper getNewZooKeeper() throws IOException {
-        return client;
-      }
+			@Override
+			public ZooKeeper getNewZooKeeper() throws IOException {
+				return client;
+			}
 
-      public String getVersionNode() {
-        return znodeWorkingPath + "/" + ROOT_ZNODE_NAME + "/" + VERSION_NODE;
-      }
+			public String getVersionNode() {
+				return znodeWorkingPath + "/" + ROOT_ZNODE_NAME + "/" + VERSION_NODE;
+			}
 
-      public Version getCurrentVersion() {
-        return CURRENT_VERSION_INFO;
-      }
+			public Version getCurrentVersion() {
+				return CURRENT_VERSION_INFO;
+			}
 
-      public String getAppNode(String appId) {
-        return workingZnode + "/" + ROOT_ZNODE_NAME + "/" + RM_APP_ROOT + "/"
-            + appId;
-      }
-    }
+			public String getAppNode(String appId) {
+				return workingZnode + "/" + ROOT_ZNODE_NAME + "/" + RM_APP_ROOT + "/"
+					+ appId;
+			}
+		}
 
-    public RMStateStore getRMStateStore() throws Exception {
-      YarnConfiguration conf = new YarnConfiguration();
-      workingZnode = "/jira/issue/3077/rmstore";
-      conf.set(YarnConfiguration.RM_ZK_ADDRESS, hostPort);
-      conf.set(YarnConfiguration.ZK_RM_STATE_STORE_PARENT_PATH, workingZnode);
-      this.client = createClient();
-      this.store = new TestZKRMStateStoreInternal(conf, workingZnode);
-      return this.store;
-    }
+		public RMStateStore getRMStateStore() throws Exception {
+			YarnConfiguration conf = new YarnConfiguration();
+			workingZnode = "/jira/issue/3077/rmstore";
+			conf.set(YarnConfiguration.RM_ZK_ADDRESS, hostPort);
+			conf.set(YarnConfiguration.ZK_RM_STATE_STORE_PARENT_PATH, workingZnode);
+			this.client = createClient();
+			this.store = new TestZKRMStateStoreInternal(conf, workingZnode);
+			return this.store;
+		}
 
-    @Override
-    public boolean isFinalStateValid() throws Exception {
-      List<String> nodes = client.getChildren(store.znodeWorkingPath, false);
-      return nodes.size() == 1;
-    }
+		@Override
+		public boolean isFinalStateValid() throws Exception {
+			List<String> nodes = client.getChildren(store.znodeWorkingPath, false);
+			return nodes.size() == 1;
+		}
 
-    @Override
-    public void writeVersion(Version version) throws Exception {
-      client.setData(store.getVersionNode(), ((VersionPBImpl) version)
-        .getProto().toByteArray(), -1);
-    }
+		@Override
+		public void writeVersion(Version version) throws Exception {
+			client.setData(store.getVersionNode(), ((VersionPBImpl) version)
+				.getProto().toByteArray(), -1);
+		}
 
-    @Override
-    public Version getCurrentVersion() throws Exception {
-      return store.getCurrentVersion();
-    }
+		@Override
+		public Version getCurrentVersion() throws Exception {
+			return store.getCurrentVersion();
+		}
 
-    public boolean appExists(RMApp app) throws Exception {
-      Stat node =
-          client.exists(store.getAppNode(app.getApplicationId().toString()),
-            false);
-      return node !=null;
-    }
-  }
+		public boolean appExists(RMApp app) throws Exception {
+			Stat node =
+				client.exists(store.getAppNode(app.getApplicationId().toString()),
+					false);
+			return node != null;
+		}
+	}
 
-  @Test (timeout = 60000)
-  public void testZKRMStateStoreRealZK() throws Exception {
-    TestZKRMStateStoreTester zkTester = new TestZKRMStateStoreTester();
-    testRMAppStateStore(zkTester);
-    testRMDTSecretManagerStateStore(zkTester);
-    testCheckVersion(zkTester);
-    testEpoch(zkTester);
-    testAppDeletion(zkTester);
-    testDeleteStore(zkTester);
-    testAMRMTokenSecretManagerStateStore(zkTester);
-  }
+	@Test(timeout = 60000)
+	public void testZKRMStateStoreRealZK() throws Exception {
+		TestZKRMStateStoreTester zkTester = new TestZKRMStateStoreTester();
+		testRMAppStateStore(zkTester);
+		testRMDTSecretManagerStateStore(zkTester);
+		testCheckVersion(zkTester);
+		testEpoch(zkTester);
+		testAppDeletion(zkTester);
+		testDeleteStore(zkTester);
+		testAMRMTokenSecretManagerStateStore(zkTester);
+	}
 
-  @Test (timeout = 60000)
-  public void testCheckMajorVersionChange() throws Exception {
-    TestZKRMStateStoreTester zkTester = new TestZKRMStateStoreTester() {
-      Version VERSION_INFO = Version.newInstance(Integer.MAX_VALUE, 0);
+	@Test(timeout = 60000)
+	public void testCheckMajorVersionChange() throws Exception {
+		TestZKRMStateStoreTester zkTester = new TestZKRMStateStoreTester() {
+			Version VERSION_INFO = Version.newInstance(Integer.MAX_VALUE, 0);
 
-      @Override
-      public Version getCurrentVersion() throws Exception {
-        return VERSION_INFO;
-      }
+			@Override
+			public Version getCurrentVersion() throws Exception {
+				return VERSION_INFO;
+			}
 
-      @Override
-      public RMStateStore getRMStateStore() throws Exception {
-        YarnConfiguration conf = new YarnConfiguration();
-        workingZnode = "/jira/issue/3077/rmstore";
-        conf.set(YarnConfiguration.RM_ZK_ADDRESS, hostPort);
-        conf.set(YarnConfiguration.ZK_RM_STATE_STORE_PARENT_PATH, workingZnode);
-        this.client = createClient();
-        this.store = new TestZKRMStateStoreInternal(conf, workingZnode) {
-          Version storedVersion = null;
+			@Override
+			public RMStateStore getRMStateStore() throws Exception {
+				YarnConfiguration conf = new YarnConfiguration();
+				workingZnode = "/jira/issue/3077/rmstore";
+				conf.set(YarnConfiguration.RM_ZK_ADDRESS, hostPort);
+				conf.set(YarnConfiguration.ZK_RM_STATE_STORE_PARENT_PATH, workingZnode);
+				this.client = createClient();
+				this.store = new TestZKRMStateStoreInternal(conf, workingZnode) {
+					Version storedVersion = null;
 
-          @Override
-          public Version getCurrentVersion() {
-            return VERSION_INFO;
-          }
+					@Override
+					public Version getCurrentVersion() {
+						return VERSION_INFO;
+					}
 
-          @Override
-          protected synchronized Version loadVersion() throws Exception {
-            return storedVersion;
-          }
+					@Override
+					protected synchronized Version loadVersion() throws Exception {
+						return storedVersion;
+					}
 
-          @Override
-          protected synchronized void storeVersion() throws Exception {
-            storedVersion = VERSION_INFO;
-          }
-        };
-        return this.store;
-      }
+					@Override
+					protected synchronized void storeVersion() throws Exception {
+						storedVersion = VERSION_INFO;
+					}
+				};
+				return this.store;
+			}
 
-    };
-    // default version
-    RMStateStore store = zkTester.getRMStateStore();
-    Version defaultVersion = zkTester.getCurrentVersion();
-    store.checkVersion();
-    Assert.assertEquals(defaultVersion, store.loadVersion());
-  }
+		};
+		// default version
+		RMStateStore store = zkTester.getRMStateStore();
+		Version defaultVersion = zkTester.getCurrentVersion();
+		store.checkVersion();
+		Assert.assertEquals(defaultVersion, store.loadVersion());
+	}
 
-  private Configuration createHARMConf(
-      String rmIds, String rmId, int adminPort) {
-    Configuration conf = new YarnConfiguration();
-    conf.setBoolean(YarnConfiguration.RM_HA_ENABLED, true);
-    conf.set(YarnConfiguration.RM_HA_IDS, rmIds);
-    conf.setBoolean(YarnConfiguration.RECOVERY_ENABLED, true);
-    conf.set(YarnConfiguration.RM_STORE, ZKRMStateStore.class.getName());
-    conf.set(YarnConfiguration.RM_ZK_ADDRESS, hostPort);
-    conf.setInt(YarnConfiguration.RM_ZK_TIMEOUT_MS, ZK_TIMEOUT_MS);
-    conf.set(YarnConfiguration.RM_HA_ID, rmId);
-    conf.set(YarnConfiguration.RM_WEBAPP_ADDRESS, "localhost:0");
+	private Configuration createHARMConf(
+		String rmIds, String rmId, int adminPort) {
+		Configuration conf = new YarnConfiguration();
+		conf.setBoolean(YarnConfiguration.RM_HA_ENABLED, true);
+		conf.set(YarnConfiguration.RM_HA_IDS, rmIds);
+		conf.setBoolean(YarnConfiguration.RECOVERY_ENABLED, true);
+		conf.set(YarnConfiguration.RM_STORE, ZKRMStateStore.class.getName());
+		conf.set(YarnConfiguration.RM_ZK_ADDRESS, hostPort);
+		conf.setInt(YarnConfiguration.RM_ZK_TIMEOUT_MS, ZK_TIMEOUT_MS);
+		conf.set(YarnConfiguration.RM_HA_ID, rmId);
+		conf.set(YarnConfiguration.RM_WEBAPP_ADDRESS, "localhost:0");
 
-    for (String rpcAddress : YarnConfiguration.getServiceAddressConfKeys(conf)) {
-      for (String id : HAUtil.getRMHAIds(conf)) {
-        conf.set(HAUtil.addSuffix(rpcAddress, id), "localhost:0");
-      }
-    }
-    conf.set(HAUtil.addSuffix(YarnConfiguration.RM_ADMIN_ADDRESS, rmId),
-        "localhost:" + adminPort);
-    return conf;
-  }
+		for (String rpcAddress : YarnConfiguration.getServiceAddressConfKeys(conf)) {
+			for (String id : HAUtil.getRMHAIds(conf)) {
+				conf.set(HAUtil.addSuffix(rpcAddress, id), "localhost:0");
+			}
+		}
+		conf.set(HAUtil.addSuffix(YarnConfiguration.RM_ADMIN_ADDRESS, rmId),
+			"localhost:" + adminPort);
+		return conf;
+	}
 
-  @SuppressWarnings("unchecked")
-  @Test
-  public void testFencing() throws Exception {
-    StateChangeRequestInfo req = new StateChangeRequestInfo(
-        HAServiceProtocol.RequestSource.REQUEST_BY_USER);
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testFencing() throws Exception {
+		StateChangeRequestInfo req = new StateChangeRequestInfo(
+			HAServiceProtocol.RequestSource.REQUEST_BY_USER);
 
-    Configuration conf1 = createHARMConf("rm1,rm2", "rm1", 1234);
-    conf1.setBoolean(YarnConfiguration.AUTO_FAILOVER_ENABLED, false);
-    ResourceManager rm1 = new ResourceManager();
-    rm1.init(conf1);
-    rm1.start();
-    rm1.getRMContext().getRMAdminService().transitionToActive(req);
-    assertEquals("RM with ZKStore didn't start",
-        Service.STATE.STARTED, rm1.getServiceState());
-    assertEquals("RM should be Active",
-        HAServiceProtocol.HAServiceState.ACTIVE,
-        rm1.getRMContext().getRMAdminService().getServiceStatus().getState());
+		Configuration conf1 = createHARMConf("rm1,rm2", "rm1", 1234);
+		conf1.setBoolean(YarnConfiguration.AUTO_FAILOVER_ENABLED, false);
+		ResourceManager rm1 = new ResourceManager();
+		rm1.init(conf1);
+		rm1.start();
+		rm1.getRMContext().getRMAdminService().transitionToActive(req);
+		assertEquals("RM with ZKStore didn't start",
+			Service.STATE.STARTED, rm1.getServiceState());
+		assertEquals("RM should be Active",
+			HAServiceProtocol.HAServiceState.ACTIVE,
+			rm1.getRMContext().getRMAdminService().getServiceStatus().getState());
 
-    Configuration conf2 = createHARMConf("rm1,rm2", "rm2", 5678);
-    conf2.setBoolean(YarnConfiguration.AUTO_FAILOVER_ENABLED, false);
-    ResourceManager rm2 = new ResourceManager();
-    rm2.init(conf2);
-    rm2.start();
-    rm2.getRMContext().getRMAdminService().transitionToActive(req);
-    assertEquals("RM with ZKStore didn't start",
-        Service.STATE.STARTED, rm2.getServiceState());
-    assertEquals("RM should be Active",
-        HAServiceProtocol.HAServiceState.ACTIVE,
-        rm2.getRMContext().getRMAdminService().getServiceStatus().getState());
+		Configuration conf2 = createHARMConf("rm1,rm2", "rm2", 5678);
+		conf2.setBoolean(YarnConfiguration.AUTO_FAILOVER_ENABLED, false);
+		ResourceManager rm2 = new ResourceManager();
+		rm2.init(conf2);
+		rm2.start();
+		rm2.getRMContext().getRMAdminService().transitionToActive(req);
+		assertEquals("RM with ZKStore didn't start",
+			Service.STATE.STARTED, rm2.getServiceState());
+		assertEquals("RM should be Active",
+			HAServiceProtocol.HAServiceState.ACTIVE,
+			rm2.getRMContext().getRMAdminService().getServiceStatus().getState());
 
-    for (int i = 0; i < ZK_TIMEOUT_MS / 50; i++) {
-      if (HAServiceProtocol.HAServiceState.ACTIVE ==
-          rm1.getRMContext().getRMAdminService().getServiceStatus().getState()) {
-        Thread.sleep(100);
-      }
-    }
-    assertEquals("RM should have been fenced",
-        HAServiceProtocol.HAServiceState.STANDBY,
-        rm1.getRMContext().getRMAdminService().getServiceStatus().getState());
-    assertEquals("RM should be Active",
-        HAServiceProtocol.HAServiceState.ACTIVE,
-        rm2.getRMContext().getRMAdminService().getServiceStatus().getState());
-  }
-  
-  @Test
-  public void testFencedState() throws Exception {
-    TestZKRMStateStoreTester zkTester = new TestZKRMStateStoreTester();
-	RMStateStore store = zkTester.getRMStateStore();
-   
-    // Move state to FENCED from ACTIVE
-    store.updateFencedState();
-    assertEquals("RMStateStore should have been in fenced state",
-            true, store.isFencedState());    
+		for (int i = 0; i < ZK_TIMEOUT_MS / 50; i++) {
+			if (HAServiceProtocol.HAServiceState.ACTIVE ==
+				rm1.getRMContext().getRMAdminService().getServiceStatus().getState()) {
+				Thread.sleep(100);
+			}
+		}
+		assertEquals("RM should have been fenced",
+			HAServiceProtocol.HAServiceState.STANDBY,
+			rm1.getRMContext().getRMAdminService().getServiceStatus().getState());
+		assertEquals("RM should be Active",
+			HAServiceProtocol.HAServiceState.ACTIVE,
+			rm2.getRMContext().getRMAdminService().getServiceStatus().getState());
+	}
 
-    long submitTime = System.currentTimeMillis();
-    long startTime = submitTime + 1000;
+	@Test
+	public void testFencedState() throws Exception {
+		TestZKRMStateStoreTester zkTester = new TestZKRMStateStoreTester();
+		RMStateStore store = zkTester.getRMStateStore();
 
-    // Add a new app
-    RMApp mockApp = mock(RMApp.class);
-    ApplicationSubmissionContext context =
-      new ApplicationSubmissionContextPBImpl();
-    when(mockApp.getSubmitTime()).thenReturn(submitTime);
-    when(mockApp.getStartTime()).thenReturn(startTime);
-    when(mockApp.getApplicationSubmissionContext()).thenReturn(context);
-    when(mockApp.getUser()).thenReturn("test");
-    store.storeNewApplication(mockApp);
-    assertEquals("RMStateStore should have been in fenced state",
-            true, store.isFencedState());
+		// Move state to FENCED from ACTIVE
+		store.updateFencedState();
+		assertEquals("RMStateStore should have been in fenced state",
+			true, store.isFencedState());
 
-    // Add a new attempt
-    ClientToAMTokenSecretManagerInRM clientToAMTokenMgr =
-            new ClientToAMTokenSecretManagerInRM();
-    ApplicationAttemptId attemptId = ConverterUtils
-            .toApplicationAttemptId("appattempt_1234567894321_0001_000001");
-    SecretKey clientTokenMasterKey =
-                clientToAMTokenMgr.createMasterKey(attemptId);
-    RMAppAttemptMetrics mockRmAppAttemptMetrics = 
-         mock(RMAppAttemptMetrics.class);
-    Container container = new ContainerPBImpl();
-    container.setId(ConverterUtils.toContainerId("container_1234567891234_0001_01_000001"));
-    RMAppAttempt mockAttempt = mock(RMAppAttempt.class);
-    when(mockAttempt.getAppAttemptId()).thenReturn(attemptId);
-    when(mockAttempt.getMasterContainer()).thenReturn(container);
-    when(mockAttempt.getClientTokenMasterKey())
-        .thenReturn(clientTokenMasterKey);
-    when(mockAttempt.getRMAppAttemptMetrics())
-        .thenReturn(mockRmAppAttemptMetrics);
-    when(mockRmAppAttemptMetrics.getAggregateAppResourceUsage())
-        .thenReturn(new AggregateAppResourceUsage(0,0));
-    store.storeNewApplicationAttempt(mockAttempt);
-    assertEquals("RMStateStore should have been in fenced state",
-            true, store.isFencedState());
+		long submitTime = System.currentTimeMillis();
+		long startTime = submitTime + 1000;
 
-    long finishTime = submitTime + 1000;
-    // Update attempt
-    ApplicationAttemptStateData newAttemptState =
-      ApplicationAttemptStateData.newInstance(attemptId, container,
-            store.getCredentialsFromAppAttempt(mockAttempt),
-            startTime, RMAppAttemptState.FINISHED, "testUrl", 
-            "test", FinalApplicationStatus.SUCCEEDED, 100, 
-            finishTime, 0, 0);
-    store.updateApplicationAttemptState(newAttemptState);
-    assertEquals("RMStateStore should have been in fenced state",
-            true, store.isFencedState());
+		// Add a new app
+		RMApp mockApp = mock(RMApp.class);
+		ApplicationSubmissionContext context =
+			new ApplicationSubmissionContextPBImpl();
+		when(mockApp.getSubmitTime()).thenReturn(submitTime);
+		when(mockApp.getStartTime()).thenReturn(startTime);
+		when(mockApp.getApplicationSubmissionContext()).thenReturn(context);
+		when(mockApp.getUser()).thenReturn("test");
+		store.storeNewApplication(mockApp);
+		assertEquals("RMStateStore should have been in fenced state",
+			true, store.isFencedState());
 
-    // Update app
-    ApplicationStateData appState = ApplicationStateData.newInstance(submitTime, 
-            startTime, context, "test");
-    store.updateApplicationState(appState);
-    assertEquals("RMStateStore should have been in fenced state",
-            true, store.isFencedState());
+		// Add a new attempt
+		ClientToAMTokenSecretManagerInRM clientToAMTokenMgr =
+			new ClientToAMTokenSecretManagerInRM();
+		ApplicationAttemptId attemptId = ConverterUtils
+			.toApplicationAttemptId("appattempt_1234567894321_0001_000001");
+		SecretKey clientTokenMasterKey =
+			clientToAMTokenMgr.createMasterKey(attemptId);
+		RMAppAttemptMetrics mockRmAppAttemptMetrics =
+			mock(RMAppAttemptMetrics.class);
+        long arrivalTime = Time.now();
+		Container container = new ContainerPBImpl(arrivalTime, arrivalTime+147255L);
+		container.setId(ConverterUtils.toContainerId("container_1234567891234_0001_01_000001"));
+		RMAppAttempt mockAttempt = mock(RMAppAttempt.class);
+		when(mockAttempt.getAppAttemptId()).thenReturn(attemptId);
+		when(mockAttempt.getMasterContainer()).thenReturn(container);
+		when(mockAttempt.getClientTokenMasterKey())
+			.thenReturn(clientTokenMasterKey);
+		when(mockAttempt.getRMAppAttemptMetrics())
+			.thenReturn(mockRmAppAttemptMetrics);
+		when(mockRmAppAttemptMetrics.getAggregateAppResourceUsage())
+			.thenReturn(new AggregateAppResourceUsage(0, 0));
+		store.storeNewApplicationAttempt(mockAttempt);
+		assertEquals("RMStateStore should have been in fenced state",
+			true, store.isFencedState());
 
-    // Remove app
-    store.removeApplication(mockApp);
-    assertEquals("RMStateStore should have been in fenced state",
-            true, store.isFencedState());
+		long finishTime = submitTime + 1000;
+		// Update attempt
+		ApplicationAttemptStateData newAttemptState =
+			ApplicationAttemptStateData.newInstance(attemptId, container,
+				store.getCredentialsFromAppAttempt(mockAttempt),
+				startTime, RMAppAttemptState.FINISHED, "testUrl",
+				"test", FinalApplicationStatus.SUCCEEDED, 100,
+				finishTime, 0, 0);
+		store.updateApplicationAttemptState(newAttemptState);
+		assertEquals("RMStateStore should have been in fenced state",
+			true, store.isFencedState());
 
-    // store RM delegation token;
-    RMDelegationTokenIdentifier dtId1 =
-        new RMDelegationTokenIdentifier(new Text("owner1"),
-            new Text("renewer1"), new Text("realuser1"));
-    Long renewDate1 = new Long(System.currentTimeMillis()); 
-    dtId1.setSequenceNumber(1111);
-    store.storeRMDelegationToken(dtId1, renewDate1);
-    assertEquals("RMStateStore should have been in fenced state", true,
-        store.isFencedState());
+		// Update app
+		ApplicationStateData appState = ApplicationStateData.newInstance(submitTime,
+			startTime, context, "test");
+		store.updateApplicationState(appState);
+		assertEquals("RMStateStore should have been in fenced state",
+			true, store.isFencedState());
 
-    store.updateRMDelegationToken(dtId1, renewDate1);
-    assertEquals("RMStateStore should have been in fenced state", true,
-        store.isFencedState());
+		// Remove app
+		store.removeApplication(mockApp);
+		assertEquals("RMStateStore should have been in fenced state",
+			true, store.isFencedState());
 
-    // remove delegation key;
-    store.removeRMDelegationToken(dtId1);
-    assertEquals("RMStateStore should have been in fenced state", true,
-        store.isFencedState());
+		// store RM delegation token;
+		RMDelegationTokenIdentifier dtId1 =
+			new RMDelegationTokenIdentifier(new Text("owner1"),
+				new Text("renewer1"), new Text("realuser1"));
+		Long renewDate1 = new Long(System.currentTimeMillis());
+		dtId1.setSequenceNumber(1111);
+		store.storeRMDelegationToken(dtId1, renewDate1);
+		assertEquals("RMStateStore should have been in fenced state", true,
+			store.isFencedState());
 
-    // store delegation master key;
-    DelegationKey key = new DelegationKey(1234, 4321, "keyBytes".getBytes());
-    store.storeRMDTMasterKey(key);
-    assertEquals("RMStateStore should have been in fenced state", true,
-        store.isFencedState());
+		store.updateRMDelegationToken(dtId1, renewDate1);
+		assertEquals("RMStateStore should have been in fenced state", true,
+			store.isFencedState());
 
-    // remove delegation master key;
-    store.removeRMDTMasterKey(key);
-    assertEquals("RMStateStore should have been in fenced state", true,
-        store.isFencedState());
+		// remove delegation key;
+		store.removeRMDelegationToken(dtId1);
+		assertEquals("RMStateStore should have been in fenced state", true,
+			store.isFencedState());
 
-    // store or update AMRMToken;
-    store.storeOrUpdateAMRMTokenSecretManager(null, false);
-    assertEquals("RMStateStore should have been in fenced state", true,
-        store.isFencedState());
+		// store delegation master key;
+		DelegationKey key = new DelegationKey(1234, 4321, "keyBytes".getBytes());
+		store.storeRMDTMasterKey(key);
+		assertEquals("RMStateStore should have been in fenced state", true,
+			store.isFencedState());
 
-    store.close();
-  }
+		// remove delegation master key;
+		store.removeRMDTMasterKey(key);
+		assertEquals("RMStateStore should have been in fenced state", true,
+			store.isFencedState());
 
-  @Test
-  public void testDuplicateRMAppDeletion() throws Exception {
-    TestZKRMStateStoreTester zkTester = new TestZKRMStateStoreTester();
-    long submitTime = System.currentTimeMillis();
-    long startTime = System.currentTimeMillis() + 1234;
-    RMStateStore store = zkTester.getRMStateStore();
-    TestDispatcher dispatcher = new TestDispatcher();
-    store.setRMDispatcher(dispatcher);
+		// store or update AMRMToken;
+		store.storeOrUpdateAMRMTokenSecretManager(null, false);
+		assertEquals("RMStateStore should have been in fenced state", true,
+			store.isFencedState());
 
-    ApplicationAttemptId attemptIdRemoved = ConverterUtils
-        .toApplicationAttemptId("appattempt_1352994193343_0002_000001");
-    ApplicationId appIdRemoved = attemptIdRemoved.getApplicationId();
-    storeApp(store, appIdRemoved, submitTime, startTime);
-    storeAttempt(store, attemptIdRemoved,
-        "container_1352994193343_0002_01_000001", null, null, dispatcher);
+		store.close();
+	}
 
-    ApplicationSubmissionContext context =
-        new ApplicationSubmissionContextPBImpl();
-    context.setApplicationId(appIdRemoved);
-    ApplicationStateData appStateRemoved =
-        ApplicationStateData.newInstance(
-            submitTime, startTime, context, "user1");
-    appStateRemoved.attempts.put(attemptIdRemoved, null);
-    store.removeApplicationStateInternal(appStateRemoved);
-    try {
-      store.removeApplicationStateInternal(appStateRemoved);
-    } catch (KeeperException.NoNodeException nne) {
-      Assert.fail("NoNodeException should not happen.");
-    }
-    store.close();
-  }
+	@Test
+	public void testDuplicateRMAppDeletion() throws Exception {
+		TestZKRMStateStoreTester zkTester = new TestZKRMStateStoreTester();
+		long submitTime = System.currentTimeMillis();
+		long startTime = System.currentTimeMillis() + 1234;
+		RMStateStore store = zkTester.getRMStateStore();
+		TestDispatcher dispatcher = new TestDispatcher();
+		store.setRMDispatcher(dispatcher);
+
+		ApplicationAttemptId attemptIdRemoved = ConverterUtils
+			.toApplicationAttemptId("appattempt_1352994193343_0002_000001");
+		ApplicationId appIdRemoved = attemptIdRemoved.getApplicationId();
+		storeApp(store, appIdRemoved, submitTime, startTime);
+		storeAttempt(store, attemptIdRemoved,
+			"container_1352994193343_0002_01_000001", null, null, dispatcher);
+
+		ApplicationSubmissionContext context =
+			new ApplicationSubmissionContextPBImpl();
+		context.setApplicationId(appIdRemoved);
+		ApplicationStateData appStateRemoved =
+			ApplicationStateData.newInstance(
+				submitTime, startTime, context, "user1");
+		appStateRemoved.attempts.put(attemptIdRemoved, null);
+		store.removeApplicationStateInternal(appStateRemoved);
+		try {
+			store.removeApplicationStateInternal(appStateRemoved);
+		} catch (KeeperException.NoNodeException nne) {
+			Assert.fail("NoNodeException should not happen.");
+		}
+		store.close();
+	}
 }
