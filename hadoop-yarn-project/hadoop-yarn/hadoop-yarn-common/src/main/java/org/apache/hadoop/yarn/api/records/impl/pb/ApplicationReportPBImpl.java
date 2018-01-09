@@ -258,7 +258,7 @@ public class ApplicationReportPBImpl extends ApplicationReport {
 		if (!p.hasArrivalTime()) {
 			return 0;
 		}
-		arrivalTime = convertFromProtoFormat(p.getArrivalTime());
+		arrivalTime = p.getArrivalTime();
 		return arrivalTime;
 	}
 
@@ -268,7 +268,7 @@ public class ApplicationReportPBImpl extends ApplicationReport {
 		if (!p.hasDeadline()) {
 			return 0;
 		}
-		deadline = convertFromProtoFormat(p.getDeadline());
+		deadline = p.getDeadline();
 		return deadline;
 	}
 
