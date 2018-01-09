@@ -98,8 +98,6 @@ public class FiCaSchedulerApp extends SchedulerApplicationAttempt {
 			amResource = rmApp.getAMResourceRequest().getCapability();
 		}
 
-		setPpreempt(0);
-
 		setAMResource(amResource);
 
 		isTestDone = false;
@@ -461,9 +459,6 @@ public class FiCaSchedulerApp extends SchedulerApplicationAttempt {
 		return headroomProvider;
 	}
 
-	public void updatePriorityOfPreempt(){
-		priorityOfPreempt = numOfBeingPreempted +
-	}
 	public boolean getTestDone() {
 		return isTestDone;
 	}
