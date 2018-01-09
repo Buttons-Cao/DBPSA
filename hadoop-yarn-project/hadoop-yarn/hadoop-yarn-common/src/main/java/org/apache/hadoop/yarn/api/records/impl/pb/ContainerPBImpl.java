@@ -50,11 +50,11 @@ public class ContainerPBImpl extends Container {
 	// add deadline for scheduling
 	private long deadline;
 
-	private long ApparrivalTime;
+	private long appArrivalTime;
 
-	public ContainerPBImpl(long AppArrivalTime, long deadline) {
+	public ContainerPBImpl(long appArrivalTime, long deadline) {
 		builder = ContainerProto.newBuilder();
-		this.ApparrivalTime = AppArrivalTime;
+		this.appArrivalTime = appArrivalTime;
 		this.deadline = deadline;
 	}
 
@@ -62,7 +62,7 @@ public class ContainerPBImpl extends Container {
 		this.proto = proto;
 		viaProto = true;
 		this.deadline = proto.getDeadline();
-		this.ApparrivalTime = proto.getAppArrivalTime();
+		this.appArrivalTime = proto.getAppArrivalTime();
 	}
 
 	public ContainerProto getProto() {
@@ -313,15 +313,15 @@ public class ContainerPBImpl extends Container {
 
 	@Override
 	public long getAppArrivalTime(){
-		if (this.ApparrivalTime != 0) {
-			return this.ApparrivalTime;
+		if (this.appArrivalTime != 0) {
+			return this.appArrivalTime;
 		}
 		ContainerProtoOrBuilder p = viaProto ? proto : builder;
 		if (!p.hasAppArrivalTime()) {
 			return 0;
 		}
-		this.AppArrivalTime = convertFromProtoFormat(p.getAppArrivalTime());
-		return this.AppArrivalTime;
+		this.appArrivalTime = convertFromProtoFormat(p.getAppArrivalTime());
+		return this.appArrivalTime;
 	}
 
 	@Override
