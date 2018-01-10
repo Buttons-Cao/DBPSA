@@ -205,4 +205,15 @@ public abstract class Container implements Comparable<Container> {
 	@Unstable
 	public abstract long getAppArrivalTime();
 
+	@Private
+	@Unstable
+	public abstract void setDeadline(long deadline);
+
+	@Private
+	@Unstable
+	 public abstract void setAppArrivalTime(long appArrivalTime);
+
+	@Private
+	@Unstable
+	public abstract void setNumOfBeingPreempted(int numOfBeingPreempted);
 }

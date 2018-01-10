@@ -248,6 +248,7 @@ public class ContainerPBImpl extends Container {
 		return this.preemptionPriority;
 	}
 
+
 	@Override
 	public void setPreemptionPriority(float p){
 		maybeInitBuilder();
@@ -322,6 +323,16 @@ public class ContainerPBImpl extends Container {
 		}
 		this.appArrivalTime = convertFromProtoFormat(p.getAppArrivalTime());
 		return this.appArrivalTime;
+	}
+
+	@Override
+	public void setDeadline(long deadline){
+		this.deadline = deadline;
+	}
+
+	@Override
+	public void setAppArrivalTime(long appArrivalTime){
+		this.appArrivalTime = appArrivalTime;
 	}
 
 	@Override
