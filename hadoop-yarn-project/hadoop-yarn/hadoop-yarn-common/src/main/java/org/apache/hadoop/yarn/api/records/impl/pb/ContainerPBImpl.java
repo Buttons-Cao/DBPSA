@@ -55,7 +55,7 @@ public class ContainerPBImpl extends Container {
 	public ContainerPBImpl(long appArrivalTime, long deadline) {
 		builder = ContainerProto.newBuilder();
 		this.appArrivalTime = appArrivalTime;
-		this.deadline = deadline;
+		this.deadline = appArrivalTime + deadline;
 	}
 
 	public ContainerPBImpl(ContainerProto proto) {

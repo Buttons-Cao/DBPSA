@@ -186,7 +186,6 @@ public class RMContainerImpl implements RMContainer {
 	private long creationTime;
 	private long finishTime;
 	private int resumeOpportunity;
-	private int numOfBeingPreempted;
 
 	static public int PR_NUMBER = 2;
 
@@ -232,7 +231,6 @@ public class RMContainerImpl implements RMContainer {
 		this.isAMContainer = false;
 		this.resourceRequests = null;
 		this.resumeOpportunity = 0;
-		this.numOfBeingPreempted = 0;
 
 		this.utilization = 1;
 		this.suspendTime = new LinkedList<Long>();
@@ -272,6 +270,36 @@ public class RMContainerImpl implements RMContainer {
 	@Override
 	public List<Long> getResumeTime() {
 		return resumeTime;
+	}
+
+	@Override
+	public long getDeadline() {
+		return container.getDeadline();
+	}
+
+	@Override
+	public long getArrivalTime() {
+		return container.getAppArrivalTime();
+	}
+
+	@Override
+	public int getnumOfBeingPreempted() {
+		return container.getNumOfBeingPreempted();
+	}
+
+	@Override
+	public float getPreemptionPriority() {
+		return container.getPreemptionPriority();
+	}
+
+	@Override
+	public void setNumOfBeingPreemted(int numOfBeingPreemted) {
+
+	}
+
+	@Override
+	public void setPreemptionPriority(float preemptionPriority) {
+		container.setPreemptionPriority(preemptionPriority);
 	}
 
 	public double getUtilization() {
