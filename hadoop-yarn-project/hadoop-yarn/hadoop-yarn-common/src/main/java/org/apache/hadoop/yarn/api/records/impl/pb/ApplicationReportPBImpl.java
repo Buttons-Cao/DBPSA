@@ -253,7 +253,7 @@ public class ApplicationReportPBImpl extends ApplicationReport {
 	}
 
 	@Override
-	public long getArrivalTime(){
+	public long getArrivalTime() {
 		ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
 		if (!p.hasArrivalTime()) {
 			return 0;
@@ -263,7 +263,7 @@ public class ApplicationReportPBImpl extends ApplicationReport {
 	}
 
 	@Override
-	public long getDeadline(){
+	public long getDeadline() {
 		ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
 		if (!p.hasDeadline()) {
 			return 0;
@@ -573,13 +573,13 @@ public class ApplicationReportPBImpl extends ApplicationReport {
 	}
 
 	@Override
-	public long getArrivalTime(){
+	public long getArrivalTime() {
 		ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
 		return p.getArrivalTime();
 	}
 
 	@Override
-	public long getDeadline(){
+	public long getDeadline() {
 		ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
 		return p.getDeadline();
 	}

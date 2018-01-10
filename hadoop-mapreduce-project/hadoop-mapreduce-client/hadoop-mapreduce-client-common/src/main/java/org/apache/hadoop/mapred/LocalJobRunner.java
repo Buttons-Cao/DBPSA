@@ -68,18 +68,24 @@ import org.apache.hadoop.util.ReflectionUtils;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
-/** Implements MapReduce locally, in-process, for debugging. */
+/**
+ * Implements MapReduce locally, in-process, for debugging.
+ */
 @InterfaceAudience.Private
 @InterfaceStability.Unstable
 public class LocalJobRunner implements ClientProtocol {
 	public static final Log LOG =
 		LogFactory.getLog(LocalJobRunner.class);
 
-	/** The maximum number of map tasks to run in parallel in LocalJobRunner */
+	/**
+	 * The maximum number of map tasks to run in parallel in LocalJobRunner
+	 */
 	public static final String LOCAL_MAX_MAPS =
 		"mapreduce.local.map.tasks.maximum";
 
-	/** The maximum number of reduce tasks to run in parallel in LocalJobRunner */
+	/**
+	 * The maximum number of reduce tasks to run in parallel in LocalJobRunner
+	 */
 	public static final String LOCAL_MAX_REDUCES =
 		"mapreduce.local.reduce.tasks.maximum";
 
@@ -181,7 +187,7 @@ public class LocalJobRunner implements ClientProtocol {
 
 			profile = new JobProfile(job.getUser(), id, systemJobFile.toString(),
 				"http://localhost:8080/", job.getJobName());
-			status = new JobStatus(id, 0.0f, 0.0f,  JobStatus.RUNNING,
+			status = new JobStatus(id, 0.0f, 0.0f, JobStatus.RUNNING,
 				profile.getUser(), profile.getJobName(), profile.getJobFile(),
 				profile.getURL().toString(), job.getArrivalTime(), job.getDeadline());
 
@@ -256,8 +262,9 @@ public class LocalJobRunner implements ClientProtocol {
 		/**
 		 * Create Runnables to encapsulate map tasks for use by the executor
 		 * service.
-		 * @param taskInfo Info about the map task splits
-		 * @param jobId the job id
+		 *
+		 * @param taskInfo       Info about the map task splits
+		 * @param jobId          the job id
 		 * @param mapOutputFiles a mapping from task attempts to output files
 		 * @return a List of Runnables, one per map task.
 		 */
@@ -336,7 +343,8 @@ public class LocalJobRunner implements ClientProtocol {
 		/**
 		 * Create Runnables to encapsulate reduce tasks for use by the executor
 		 * service.
-		 * @param jobId the job id
+		 *
+		 * @param jobId          the job id
 		 * @param mapOutputFiles a mapping from task attempts to output files
 		 * @return a List of Runnables, one per reduce task.
 		 */
@@ -356,6 +364,7 @@ public class LocalJobRunner implements ClientProtocol {
 		/**
 		 * Initialize the counters that will hold partial-progress from
 		 * the various task attempts.
+		 *
 		 * @param numMaps the number of map tasks in this job.
 		 */
 		private synchronized void initCounters(int numMaps, int numReduces) {
@@ -431,7 +440,9 @@ public class LocalJobRunner implements ClientProtocol {
 			return executor;
 		}
 
-		/** Run a set of tasks and waits for them to complete. */
+		/**
+		 * Run a set of tasks and waits for them to complete.
+		 */
 		private void runTasks(List<RunnableWithThrowable> runnables,
 		                      ExecutorService service, String taskType) throws Exception {
 			// Start populating the executor with work units.
@@ -623,7 +634,8 @@ public class LocalJobRunner implements ClientProtocol {
 			return true;
 		}
 
-		/** Return the current values of the counters for this job,
+		/**
+		 * Return the current values of the counters for this job,
 		 * including tasks that are in progress.
 		 */
 		public synchronized Counters getCurrentCounters() {
@@ -747,7 +759,9 @@ public class LocalJobRunner implements ClientProtocol {
 			"in LocalJobRunner is not supported.");
 	}
 
-	/** Throws {@link UnsupportedOperationException} */
+	/**
+	 * Throws {@link UnsupportedOperationException}
+	 */
 	public boolean killTask(org.apache.hadoop.mapreduce.TaskAttemptID taskId,
 	                        boolean shouldFail) throws IOException {
 		throw new UnsupportedOperationException("Killing tasks in " +
@@ -796,6 +810,7 @@ public class LocalJobRunner implements ClientProtocol {
 
 	/**
 	 * Get all active trackers in cluster.
+	 *
 	 * @return array of TaskTrackerInfo
 	 */
 	public TaskTrackerInfo[] getActiveTrackers()
@@ -805,6 +820,7 @@ public class LocalJobRunner implements ClientProtocol {
 
 	/**
 	 * Get all blacklisted trackers in cluster.
+	 *
 	 * @return array of TaskTrackerInfo
 	 */
 	public TaskTrackerInfo[] getBlacklistedTrackers()
@@ -898,7 +914,8 @@ public class LocalJobRunner implements ClientProtocol {
 
 	/**
 	 * Set the max number of map tasks to run concurrently in the LocalJobRunner.
-	 * @param job the job to configure
+	 *
+	 * @param job     the job to configure
 	 * @param maxMaps the maximum number of map tasks to allow.
 	 */
 	public static void setLocalMaxRunningMaps(
@@ -919,7 +936,8 @@ public class LocalJobRunner implements ClientProtocol {
 
 	/**
 	 * Set the max number of reduce tasks to run concurrently in the LocalJobRunner.
-	 * @param job the job to configure
+	 *
+	 * @param job        the job to configure
 	 * @param maxReduces the maximum number of reduce tasks to allow.
 	 */
 	public static void setLocalMaxRunningReduces(
