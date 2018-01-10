@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -61,207 +61,209 @@ import org.apache.hadoop.util.Time;
  *  validated here.
  */
 public class TestMapProgress extends TestCase {
-  public static final Log LOG = LogFactory.getLog(TestMapProgress.class);
-  private static String TEST_ROOT_DIR;
-  static {
-    String root = new File(System.getProperty("test.build.data", "/tmp"))
-      .getAbsolutePath();
-    TEST_ROOT_DIR = new Path(root, "mapPhaseprogress").toString();
-  }
+	public static final Log LOG = LogFactory.getLog(TestMapProgress.class);
+	private static String TEST_ROOT_DIR;
 
-  static class FakeUmbilical implements TaskUmbilicalProtocol {
+	static {
+		String root = new File(System.getProperty("test.build.data", "/tmp"))
+			.getAbsolutePath();
+		TEST_ROOT_DIR = new Path(root, "mapPhaseprogress").toString();
+	}
 
-    public long getProtocolVersion(String protocol, long clientVersion) {
-      return TaskUmbilicalProtocol.versionID;
-    }
-    
-    @Override
-    public ProtocolSignature getProtocolSignature(String protocol,
-        long clientVersion, int clientMethodsHash) throws IOException {
-      return ProtocolSignature.getProtocolSignature(
-          this, protocol, clientVersion, clientMethodsHash);
-    }
+	static class FakeUmbilical implements TaskUmbilicalProtocol {
 
-    public void done(TaskAttemptID taskid) throws IOException {
-      LOG.info("Task " + taskid + " reporting done.");
-    }
+		public long getProtocolVersion(String protocol, long clientVersion) {
+			return TaskUmbilicalProtocol.versionID;
+		}
 
-    public void fsError(TaskAttemptID taskId, String message) throws IOException {
-      LOG.info("Task " + taskId + " reporting file system error: " + message);
-    }
+		@Override
+		public ProtocolSignature getProtocolSignature(String protocol,
+		                                              long clientVersion, int clientMethodsHash) throws IOException {
+			return ProtocolSignature.getProtocolSignature(
+				this, protocol, clientVersion, clientMethodsHash);
+		}
 
-    public void shuffleError(TaskAttemptID taskId, String message) throws IOException {
-      LOG.info("Task " + taskId + " reporting shuffle error: " + message);
-    }
+		public void done(TaskAttemptID taskid) throws IOException {
+			LOG.info("Task " + taskid + " reporting done.");
+		}
 
-    public void fatalError(TaskAttemptID taskId, String msg) throws IOException {
-      LOG.info("Task " + taskId + " reporting fatal error: " + msg);
-    }
+		public void fsError(TaskAttemptID taskId, String message) throws IOException {
+			LOG.info("Task " + taskId + " reporting file system error: " + message);
+		}
 
-    public JvmTask getTask(JvmContext context) throws IOException {
-      return null;
-    }
+		public void shuffleError(TaskAttemptID taskId, String message) throws IOException {
+			LOG.info("Task " + taskId + " reporting shuffle error: " + message);
+		}
 
-    public boolean ping(TaskAttemptID taskid) throws IOException {
-      return true;
-    }
+		public void fatalError(TaskAttemptID taskId, String msg) throws IOException {
+			LOG.info("Task " + taskId + " reporting fatal error: " + msg);
+		}
 
-    public void commitPending(TaskAttemptID taskId, TaskStatus taskStatus) 
-    throws IOException, InterruptedException {
-      statusUpdate(taskId, taskStatus);
-    }
-    
-    public boolean canCommit(TaskAttemptID taskid) throws IOException {
-      return true;
-    }
-    
-    public boolean statusUpdate(TaskAttemptID taskId, TaskStatus taskStatus) 
-    throws IOException, InterruptedException {
-      StringBuffer buf = new StringBuffer("Task ");
-      buf.append(taskId);
-      if (taskStatus != null) {
-        buf.append(" making progress to ");
-        buf.append(taskStatus.getProgress());
-        String state = taskStatus.getStateString();
-        if (state != null) {
-          buf.append(" and state of ");
-          buf.append(state);
-        }
-      }
-      LOG.info(buf.toString());
-      // ignore phase
-      // ignore counters
-      return true;
-    }
+		public JvmTask getTask(JvmContext context) throws IOException {
+			return null;
+		}
 
-    public void reportDiagnosticInfo(TaskAttemptID taskid, String trace) throws IOException {
-      LOG.info("Task " + taskid + " has problem " + trace);
-    }
-    
-    public MapTaskCompletionEventsUpdate getMapCompletionEvents(JobID jobId, 
-        int fromEventId, int maxLocs, TaskAttemptID id) throws IOException {
-      return new MapTaskCompletionEventsUpdate(TaskCompletionEvent.EMPTY_ARRAY, 
-                                               false);
-    }
+		public boolean ping(TaskAttemptID taskid) throws IOException {
+			return true;
+		}
 
-    public void reportNextRecordRange(TaskAttemptID taskid, 
-        SortedRanges.Range range) throws IOException {
-      LOG.info("Task " + taskid + " reportedNextRecordRange " + range);
-    }
-  }
-  
-  private FileSystem fs = null;
-  private TestMapTask map = null;
-  private JobID jobId = null;
-  private FakeUmbilical fakeUmbilical = new FakeUmbilical();
+		public void commitPending(TaskAttemptID taskId, TaskStatus taskStatus)
+			throws IOException, InterruptedException {
+			statusUpdate(taskId, taskStatus);
+		}
 
-  /**
-   *  Task Reporter that validates map phase progress after each record is
-   *  processed by map task
-   */ 
-  public class TestTaskReporter extends Task.TaskReporter {
-    private int recordNum = 0; // number of records processed
-    TestTaskReporter(Task task) {
-      task.super(task.getProgress(), fakeUmbilical);
-    }
+		public boolean canCommit(TaskAttemptID taskid) throws IOException {
+			return true;
+		}
 
-    @Override
-    public void setProgress(float progress) {
-      super.setProgress(progress);
-      float mapTaskProgress = map.getProgress().getProgress();
-      LOG.info("Map task progress is " + mapTaskProgress);
-      if (recordNum < 3) {
-        // only 3 records are there; Ignore validating progress after 3 times
-        recordNum++;
-      }
-      else {
-        return;
-      }
-      // validate map task progress when the map task is in map phase
-      assertTrue("Map progress is not the expected value.",
-                 Math.abs(mapTaskProgress - ((float)recordNum/3)) < 0.001);
-    }
-  }
+		public boolean statusUpdate(TaskAttemptID taskId, TaskStatus taskStatus)
+			throws IOException, InterruptedException {
+			StringBuffer buf = new StringBuffer("Task ");
+			buf.append(taskId);
+			if (taskStatus != null) {
+				buf.append(" making progress to ");
+				buf.append(taskStatus.getProgress());
+				String state = taskStatus.getStateString();
+				if (state != null) {
+					buf.append(" and state of ");
+					buf.append(state);
+				}
+			}
+			LOG.info(buf.toString());
+			// ignore phase
+			// ignore counters
+			return true;
+		}
 
-  /**
-   * Map Task that overrides run method and uses TestTaskReporter instead of
-   * TaskReporter and uses FakeUmbilical.
-   */
-  class TestMapTask extends MapTask {
-    public TestMapTask(String jobFile, TaskAttemptID taskId, 
-        int partition, TaskSplitIndex splitIndex,
-        int numSlotsRequired) {
-      super(jobFile, taskId, partition, splitIndex, numSlotsRequired, Time.now(), Time.now()+3259431L);
-    }
-    
-    /**
-     * Create a TestTaskReporter and use it for validating map phase progress
-     */
-    @Override
-    TaskReporter startReporter(final TaskUmbilicalProtocol umbilical) {  
-      // start thread that will handle communication with parent
-      TaskReporter reporter = new TestTaskReporter(map);
-      return reporter;
-    }
-  }
-  
-  // In the given dir, creates part-0 file with 3 records of same size
-  private void createInputFile(Path rootDir) throws IOException {
-    if(fs.exists(rootDir)){
-      fs.delete(rootDir, true);
-    }
-    
-    String str = "The quick brown fox\n" + "The brown quick fox\n"
-    + "The fox brown quick\n";
-    DataOutputStream inpFile = fs.create(new Path(rootDir, "part-0"));
-    inpFile.writeBytes(str);
-    inpFile.close();
-  }
+		public void reportDiagnosticInfo(TaskAttemptID taskid, String trace) throws IOException {
+			LOG.info("Task " + taskid + " has problem " + trace);
+		}
 
-  /**
-   *  Validates map phase progress after each record is processed by map task
-   *  using custom task reporter.
-   */ 
-  public void testMapProgress() throws Exception {
-    JobConf job = new JobConf();
-    fs = FileSystem.getLocal(job);
-    Path rootDir = new Path(TEST_ROOT_DIR);
-    createInputFile(rootDir);
+		public MapTaskCompletionEventsUpdate getMapCompletionEvents(JobID jobId,
+		                                                            int fromEventId, int maxLocs, TaskAttemptID id) throws IOException {
+			return new MapTaskCompletionEventsUpdate(TaskCompletionEvent.EMPTY_ARRAY,
+				false);
+		}
 
-    job.setNumReduceTasks(0);
-    TaskAttemptID taskId = TaskAttemptID.forName(
-                                  "attempt_200907082313_0424_m_000000_0");
-    job.setClass("mapreduce.job.outputformat.class",
-                 NullOutputFormat.class, OutputFormat.class);
-    job.set(org.apache.hadoop.mapreduce.lib.input.FileInputFormat.INPUT_DIR,
-            TEST_ROOT_DIR);
-    job.setArrivalTime(Time.now());
-    job.setDeadline(569874L);
-    jobId = taskId.getJobID();
-    JobContext jContext = new JobContextImpl(job, jobId, job.getArrivalTime(), job.getDeadline());
-    InputFormat<?, ?> input =
-      ReflectionUtils.newInstance(jContext.getInputFormatClass(), job);
+		public void reportNextRecordRange(TaskAttemptID taskid,
+		                                  SortedRanges.Range range) throws IOException {
+			LOG.info("Task " + taskid + " reportedNextRecordRange " + range);
+		}
+	}
 
-    List<InputSplit> splits = input.getSplits(jContext);
-    JobSplitWriter.createSplitFiles(new Path(TEST_ROOT_DIR), job, 
-                   new Path(TEST_ROOT_DIR).getFileSystem(job),
-                   splits);
-    TaskSplitMetaInfo[] splitMetaInfo = 
-      SplitMetaInfoReader.readSplitMetaInfo(jobId, fs, job, new Path(TEST_ROOT_DIR));
-    job.setUseNewMapper(true); // use new api    
-    for (int i = 0; i < splitMetaInfo.length; i++) {// rawSplits.length is 1
-      map = new TestMapTask(
-          job.get(JTConfig.JT_SYSTEM_DIR, "/tmp/hadoop/mapred/system") +
-          jobId + "job.xml",  
-          taskId, i,
-          splitMetaInfo[i].getSplitIndex(), 1);
+	private FileSystem fs = null;
+	private TestMapTask map = null;
+	private JobID jobId = null;
+	private FakeUmbilical fakeUmbilical = new FakeUmbilical();
 
-      JobConf localConf = new JobConf(job);
-      map.localizeConfiguration(localConf);
-      map.setConf(localConf);
-      map.run(localConf, fakeUmbilical);
-    }
-    // clean up
-    fs.delete(rootDir, true);
-  }
+	/**
+	 *  Task Reporter that validates map phase progress after each record is
+	 *  processed by map task
+	 */
+	public class TestTaskReporter extends Task.TaskReporter {
+		private int recordNum = 0; // number of records processed
+
+		TestTaskReporter(Task task) {
+			task.super(task.getProgress(), fakeUmbilical);
+		}
+
+		@Override
+		public void setProgress(float progress) {
+			super.setProgress(progress);
+			float mapTaskProgress = map.getProgress().getProgress();
+			LOG.info("Map task progress is " + mapTaskProgress);
+			if (recordNum < 3) {
+				// only 3 records are there; Ignore validating progress after 3 times
+				recordNum++;
+			} else {
+				return;
+			}
+			// validate map task progress when the map task is in map phase
+			assertTrue("Map progress is not the expected value.",
+				Math.abs(mapTaskProgress - ((float) recordNum / 3)) < 0.001);
+		}
+	}
+
+	/**
+	 * Map Task that overrides run method and uses TestTaskReporter instead of
+	 * TaskReporter and uses FakeUmbilical.
+	 */
+	class TestMapTask extends MapTask {
+		public TestMapTask(String jobFile, TaskAttemptID taskId,
+		                   int partition, TaskSplitIndex splitIndex,
+		                   int numSlotsRequired) {
+			super(jobFile, taskId, partition, splitIndex, numSlotsRequired, Time.now(), Time.now() + 3259431L);
+		}
+
+		/**
+		 * Create a TestTaskReporter and use it for validating map phase progress
+		 */
+		@Override
+		TaskReporter startReporter(final TaskUmbilicalProtocol umbilical) {
+			// start thread that will handle communication with parent
+			TaskReporter reporter = new TestTaskReporter(map);
+			return reporter;
+		}
+	}
+
+	// In the given dir, creates part-0 file with 3 records of same size
+	private void createInputFile(Path rootDir) throws IOException {
+		if (fs.exists(rootDir)) {
+			fs.delete(rootDir, true);
+		}
+
+		String str = "The quick brown fox\n" + "The brown quick fox\n"
+			+ "The fox brown quick\n";
+		DataOutputStream inpFile = fs.create(new Path(rootDir, "part-0"));
+		inpFile.writeBytes(str);
+		inpFile.close();
+	}
+
+	/**
+	 *  Validates map phase progress after each record is processed by map task
+	 *  using custom task reporter.
+	 */
+	public void testMapProgress() throws Exception {
+		JobConf job = new JobConf();
+		fs = FileSystem.getLocal(job);
+		Path rootDir = new Path(TEST_ROOT_DIR);
+		createInputFile(rootDir);
+
+		job.setNumReduceTasks(0);
+		TaskAttemptID taskId = TaskAttemptID.forName(
+			"attempt_200907082313_0424_m_000000_0");
+		job.setClass("mapreduce.job.outputformat.class",
+			NullOutputFormat.class, OutputFormat.class);
+		job.set(org.apache.hadoop.mapreduce.lib.input.FileInputFormat.INPUT_DIR,
+			TEST_ROOT_DIR);
+		job.setArrivalTime(Time.now());
+		job.setDeadline(569874L);
+		jobId = taskId.getJobID();
+
+		JobContext jContext = new JobContextImpl(job, jobId, job.getArrivalTime(), job.getDeadline());
+		InputFormat<?, ?> input =
+			ReflectionUtils.newInstance(jContext.getInputFormatClass(), job);
+
+		List<InputSplit> splits = input.getSplits(jContext);
+		JobSplitWriter.createSplitFiles(new Path(TEST_ROOT_DIR), job,
+			new Path(TEST_ROOT_DIR).getFileSystem(job),
+			splits);
+		TaskSplitMetaInfo[] splitMetaInfo =
+			SplitMetaInfoReader.readSplitMetaInfo(jobId, fs, job, new Path(TEST_ROOT_DIR));
+		job.setUseNewMapper(true); // use new api
+		for (int i = 0; i < splitMetaInfo.length; i++) {// rawSplits.length is 1
+			map = new TestMapTask(
+				job.get(JTConfig.JT_SYSTEM_DIR, "/tmp/hadoop/mapred/system") +
+					jobId + "job.xml",
+				taskId, i,
+				splitMetaInfo[i].getSplitIndex(), 1);
+
+			JobConf localConf = new JobConf(job);
+			map.localizeConfiguration(localConf);
+			map.setConf(localConf);
+			map.run(localConf, fakeUmbilical);
+		}
+		// clean up
+		fs.delete(rootDir, true);
+	}
 }

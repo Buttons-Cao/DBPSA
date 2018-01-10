@@ -286,4 +286,5 @@ public class TestTaskCommit extends HadoopTestCase {
 		TestTaskCommit td = new TestTaskCommit();
 		td.testCommitFail();
 	}
+
 }

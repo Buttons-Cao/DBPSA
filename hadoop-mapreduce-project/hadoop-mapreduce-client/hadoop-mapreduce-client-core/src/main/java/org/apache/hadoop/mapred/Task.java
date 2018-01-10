@@ -128,8 +128,10 @@ abstract public class Task implements Writable, Configurable {
 	// Helper methods to construct task-output paths
 	///////////////////////////////////////////////////////////
 
-	/** Construct output file names so that, when an output directory listing is
-	 * sorted lexicographically, positions correspond to output partitions.*/
+	/**
+	 * Construct output file names so that, when an output directory listing is
+	 * sorted lexicographically, positions correspond to output partitions.
+	 */
 	private static final NumberFormat NUMBER_FORMAT = NumberFormat.getInstance();
 
 	static {
@@ -261,6 +263,7 @@ abstract public class Task implements Writable, Configurable {
 
 	/**
 	 * Get the job name for this task.
+	 *
 	 * @return the job name
 	 */
 	public JobID getJobID() {
@@ -269,6 +272,7 @@ abstract public class Task implements Writable, Configurable {
 
 	/**
 	 * Set the job token secret
+	 *
 	 * @param tokenSecret the secret
 	 */
 	public void setJobTokenSecret(SecretKey tokenSecret) {
@@ -277,6 +281,7 @@ abstract public class Task implements Writable, Configurable {
 
 	/**
 	 * Get Encrypted spill key
+	 *
 	 * @return encrypted spill key
 	 */
 	public byte[] getEncryptedSpillKey() {
@@ -285,6 +290,7 @@ abstract public class Task implements Writable, Configurable {
 
 	/**
 	 * Set Encrypted spill key
+	 *
 	 * @param encryptedSpillKey key
 	 */
 	public void setEncryptedSpillKey(byte[] encryptedSpillKey) {
@@ -295,6 +301,7 @@ abstract public class Task implements Writable, Configurable {
 
 	/**
 	 * Get the job token secret
+	 *
 	 * @return the token secret
 	 */
 	public SecretKey getJobTokenSecret() {
@@ -303,6 +310,7 @@ abstract public class Task implements Writable, Configurable {
 
 	/**
 	 * Set the secret key used to authenticate the shuffle
+	 *
 	 * @param shuffleSecret the secret
 	 */
 	public void setShuffleSecret(SecretKey shuffleSecret) {
@@ -311,6 +319,7 @@ abstract public class Task implements Writable, Configurable {
 
 	/**
 	 * Get the secret key used to authenticate the shuffle
+	 *
 	 * @return the shuffle secret
 	 */
 	public SecretKey getShuffleSecret() {
@@ -319,6 +328,7 @@ abstract public class Task implements Writable, Configurable {
 
 	/**
 	 * Get the index of this task within the job.
+	 *
 	 * @return the integer part of the task id
 	 */
 	public int getPartition() {
@@ -328,6 +338,7 @@ abstract public class Task implements Writable, Configurable {
 	/**
 	 * Return current phase of the task.
 	 * needs to be synchronized as communication thread sends the phase every second
+	 *
 	 * @return the curent phase of the task
 	 */
 	public synchronized TaskStatus.Phase getPhase() {
@@ -336,6 +347,7 @@ abstract public class Task implements Writable, Configurable {
 
 	/**
 	 * Set current phase of the task.
+	 *
 	 * @param phase task phase
 	 */
 	protected synchronized void setPhase(TaskStatus.Phase phase) {
@@ -385,7 +397,7 @@ abstract public class Task implements Writable, Configurable {
 	 *
 	 * @param path the path.
 	 * @param conf the configuration to extract the scheme from if not part of
-	 *   the path.
+	 *             the path.
 	 * @return a Statistics instance, or null if none is found for the scheme.
 	 */
 	protected static List<Statistics> getFsStatistics(Path path, Configuration conf) throws IOException {
@@ -423,6 +435,7 @@ abstract public class Task implements Writable, Configurable {
 
 	/**
 	 * Sets whether to run Task in skipping mode.
+	 *
 	 * @param skipping
 	 */
 	public void setSkipping(boolean skipping) {
@@ -433,6 +446,7 @@ abstract public class Task implements Writable, Configurable {
 	 * Return current state of the task.
 	 * needs to be synchronized as communication thread
 	 * sends the state every second
+	 *
 	 * @return task state
 	 */
 	synchronized TaskStatus.State getState() {
@@ -441,6 +455,7 @@ abstract public class Task implements Writable, Configurable {
 
 	/**
 	 * Set current state of the task.
+	 *
 	 * @param state
 	 */
 	synchronized void setState(TaskStatus.State state) {
@@ -481,6 +496,7 @@ abstract public class Task implements Writable, Configurable {
 
 	/**
 	 * Sets the task to do job abort in the cleanup.
+	 *
 	 * @param status the final runstate of the job.
 	 */
 	void setJobCleanupTaskState(JobStatus.State status) {
@@ -575,14 +591,18 @@ abstract public class Task implements Writable, Configurable {
 		conf.set(JobContext.ID, taskId.getJobID().toString());
 	}
 
-	/** Run this task as a part of the named job.  This method is executed in the
+	/**
+	 * Run this task as a part of the named job.  This method is executed in the
 	 * child process and is what invokes user-supplied map, reduce, etc. methods.
+	 *
 	 * @param umbilical for progress reports
 	 */
 	public abstract void run(JobConf job, TaskUmbilicalProtocol umbilical)
 		throws IOException, ClassNotFoundException, InterruptedException;
 
-	/** The number of milliseconds between progress reports. */
+	/**
+	 * The number of milliseconds between progress reports.
+	 */
 	public static final int PROGRESS_INTERVAL = 3000;
 
 	private transient Progress taskProgress = new Progress();
@@ -864,7 +884,7 @@ abstract public class Task implements Writable, Configurable {
 	}
 
 	/**
-	 *  Reports the next executing record range to TaskTracker.
+	 * Reports the next executing record range to TaskTracker.
 	 *
 	 * @param umbilical
 	 * @param nextRecIndex the record index which would be fed next.
@@ -1128,6 +1148,7 @@ abstract public class Task implements Writable, Configurable {
 
 	/**
 	 * Send a status update to the task tracker
+	 *
 	 * @param umbilical
 	 * @throws IOException
 	 */
@@ -1392,7 +1413,9 @@ abstract public class Task implements Writable, Configurable {
 		}
 	}
 
-	/** Iterates values while keys match in sorted input. */
+	/**
+	 * Iterates values while keys match in sorted input.
+	 */
 	static class ValuesIterator<KEY, VALUE> implements Iterator<VALUE> {
 		protected RawKeyValueIterator in; //input iterator
 		private KEY key;               // current key
@@ -1459,7 +1482,9 @@ abstract public class Task implements Writable, Configurable {
 
 		/// Auxiliary methods
 
-		/** Start processing next unique key. */
+		/**
+		 * Start processing next unique key.
+		 */
 		public void nextKey() throws IOException {
 			// read until we find a new key
 			while (hasNext) {
@@ -1474,12 +1499,16 @@ abstract public class Task implements Writable, Configurable {
 			hasNext = more;
 		}
 
-		/** True iff more keys remain. */
+		/**
+		 * True iff more keys remain.
+		 */
 		public boolean more() {
 			return more;
 		}
 
-		/** The current key. */
+		/**
+		 * The current key.
+		 */
 		public KEY getKey() {
 			return key;
 		}
@@ -1501,6 +1530,7 @@ abstract public class Task implements Writable, Configurable {
 
 		/**
 		 * Read the next value
+		 *
 		 * @throws IOException
 		 */
 		private void readNextValue() throws IOException {
@@ -1510,7 +1540,9 @@ abstract public class Task implements Writable, Configurable {
 		}
 	}
 
-	/** Iterator to return Combined values */
+	/**
+	 * Iterator to return Combined values
+	 */
 	@InterfaceAudience.Private
 	@InterfaceStability.Unstable
 	public static class CombineValuesIterator<KEY, VALUE>
@@ -1586,7 +1618,8 @@ abstract public class Task implements Writable, Configurable {
 
 		/**
 		 * Run the combiner over a set of inputs.
-		 * @param iterator the key/value pairs to use as input
+		 *
+		 * @param iterator  the key/value pairs to use as input
 		 * @param collector the output collector
 		 */
 		public abstract void combine(RawKeyValueIterator iterator,

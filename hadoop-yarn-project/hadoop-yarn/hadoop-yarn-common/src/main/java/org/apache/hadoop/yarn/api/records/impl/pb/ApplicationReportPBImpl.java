@@ -53,6 +53,7 @@ public class ApplicationReportPBImpl extends ApplicationReport {
 	private Token clientToAMToken = null;
 	private Token amRmToken = null;
 	private Set<String> applicationTags = null;
+
 	private long arrivalTime;
 	private long deadline;
 
@@ -249,6 +250,26 @@ public class ApplicationReportPBImpl extends ApplicationReport {
 		}
 		amRmToken = convertFromProtoFormat(p.getAmRmToken());
 		return amRmToken;
+	}
+
+	@Override
+	public long getArrivalTime(){
+		ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
+		if (!p.hasArrivalTime()) {
+			return 0;
+		}
+		arrivalTime = p.getArrivalTime();
+		return arrivalTime;
+	}
+
+	@Override
+	public long getDeadline(){
+		ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
+		if (!p.hasDeadline()) {
+			return 0;
+		}
+		deadline = p.getDeadline();
+		return deadline;
 	}
 
 	private void initApplicationTags() {
@@ -574,4 +595,5 @@ public class ApplicationReportPBImpl extends ApplicationReport {
 		builder.setDeadline((deadline));
 		this.deadline = deadline;
 	}
+
 }

@@ -81,7 +81,7 @@ public class SchedulerApplicationAttempt {
 	protected final AppSchedulingInfo appSchedulingInfo;
 	protected ApplicationAttemptId attemptId;
 	protected Map<ContainerId, RMContainer> liveContainers =
-		new HashMap<ContainerId, RMContainer>();
+		new HashMap<>();
 	protected final Map<Priority, Map<NodeId, RMContainer>> reservedContainers =
 		new HashMap<Priority, Map<NodeId, RMContainer>>();
 

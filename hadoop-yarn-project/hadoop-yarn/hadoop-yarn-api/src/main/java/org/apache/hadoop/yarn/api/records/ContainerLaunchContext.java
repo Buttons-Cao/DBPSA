@@ -206,7 +206,25 @@ public abstract class ContainerLaunchContext {
 
 	@Public
 	@Stable
+	public abstract long getArrivalTime();
+
+	@Public
+	@Stable
 	public abstract void setDeadline(long deadline);
 
+	@Public
+	@Stable
+	public abstract long getDeadline();
+
+	@Public
+	@Stable
+	public abstract float getPreemptionPriority();
+
+	@Public
+	@Stable
 	public abstract void setPreemptionPriority(float preemptionPriority);
+
+	@Public
+	@Stable
+	public abstract int getNumOfBeingPreempted();
 }

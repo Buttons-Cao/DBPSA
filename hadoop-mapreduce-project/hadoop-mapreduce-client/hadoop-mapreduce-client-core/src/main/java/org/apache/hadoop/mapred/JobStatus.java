@@ -140,7 +140,7 @@ public class JobStatus extends org.apache.hadoop.mapreduce.JobStatus {
 	 * @param runState The current state of the job
 	 * @param user userid of the person who submitted the job.
 	 * @param jobName user-specified job name.
-	 * @param jobFile job configuration file. 
+	 * @param jobFile job configuration file.
 	 * @param trackingUrl link to the web-ui for details of the job.
 	 */
 	public JobStatus(JobID jobid, float mapProgress, float reduceProgress,

@@ -485,18 +485,22 @@ public class ContainerLaunchContextPBImpl extends ContainerLaunchContext {
 		this.preemptionPriority = preemptionPriority;
 	}
 
+	@Override
 	public long getArrivalTime() {
 		return arrivalTime;
 	}
 
+	@Override
 	public long getDeadline() {
 		return deadline;
 	}
 
+	@Override
 	public int getNumOfBeingPreempted() {
 		return numOfBeingPreempted;
 	}
 
+	@Override
 	public float getPreemptionPriority() {
 		return preemptionPriority;
 	}

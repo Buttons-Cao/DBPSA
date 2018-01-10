@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -45,291 +45,299 @@ import org.apache.hadoop.security.Credentials;
  */
 @InterfaceAudience.Public
 @InterfaceStability.Evolving
-public class WrappedReducer<KEYIN, VALUEIN, KEYOUT, VALUEOUT> 
-    extends Reducer<KEYIN, VALUEIN, KEYOUT, VALUEOUT> {
+public class WrappedReducer<KEYIN, VALUEIN, KEYOUT, VALUEOUT>
+	extends Reducer<KEYIN, VALUEIN, KEYOUT, VALUEOUT> {
 
-  /**
-   * A a wrapped {@link Reducer.Context} for custom implementations.
-   * @param reduceContext <code>ReduceContext</code> to be wrapped
-   * @return a wrapped <code>Reducer.Context</code> for custom implementations
-   */
-  public Reducer<KEYIN, VALUEIN, KEYOUT, VALUEOUT>.Context 
-  getReducerContext(ReduceContext<KEYIN, VALUEIN, KEYOUT, VALUEOUT> reduceContext) {
-    return new Context(reduceContext);
-  }
-  
-  @InterfaceStability.Evolving
-  public class Context 
-      extends Reducer<KEYIN, VALUEIN, KEYOUT, VALUEOUT>.Context {
+	/**
+	 * A a wrapped {@link Reducer.Context} for custom implementations.
+	 * @param reduceContext <code>ReduceContext</code> to be wrapped
+	 * @return a wrapped <code>Reducer.Context</code> for custom implementations
+	 */
+	public Reducer<KEYIN, VALUEIN, KEYOUT, VALUEOUT>.Context
+	getReducerContext(ReduceContext<KEYIN, VALUEIN, KEYOUT, VALUEOUT> reduceContext) {
+		return new Context(reduceContext);
+	}
 
-    protected ReduceContext<KEYIN, VALUEIN, KEYOUT, VALUEOUT> reduceContext;
+	@InterfaceStability.Evolving
+	public class Context extends Reducer<KEYIN, VALUEIN, KEYOUT, VALUEOUT>.Context {
 
-    public Context(ReduceContext<KEYIN, VALUEIN, KEYOUT, VALUEOUT> reduceContext)
-    {
-      this.reduceContext = reduceContext; 
-    }
+		protected ReduceContext<KEYIN, VALUEIN, KEYOUT, VALUEOUT> reduceContext;
 
-    @Override
-    public KEYIN getCurrentKey() throws IOException, InterruptedException {
-      return reduceContext.getCurrentKey();
-    }
+		public Context(ReduceContext<KEYIN, VALUEIN, KEYOUT, VALUEOUT> reduceContext) {
+			this.reduceContext = reduceContext;
+		}
 
-    @Override
-    public VALUEIN getCurrentValue() throws IOException, InterruptedException {
-      return reduceContext.getCurrentValue();
-    }
+		@Override
+		public KEYIN getCurrentKey() throws IOException, InterruptedException {
+			return reduceContext.getCurrentKey();
+		}
 
-    @Override
-    public boolean nextKeyValue() throws IOException, InterruptedException {
-      return reduceContext.nextKeyValue();
-    }
+		@Override
+		public VALUEIN getCurrentValue() throws IOException, InterruptedException {
+			return reduceContext.getCurrentValue();
+		}
 
-    @Override
-    public Counter getCounter(Enum counterName) {
-      return reduceContext.getCounter(counterName);
-    }
+		@Override
+		public boolean nextKeyValue() throws IOException, InterruptedException {
+			return reduceContext.nextKeyValue();
+		}
 
-    @Override
-    public Counter getCounter(String groupName, String counterName) {
-      return reduceContext.getCounter(groupName, counterName);
-    }
+		@Override
+		public Counter getCounter(Enum counterName) {
+			return reduceContext.getCounter(counterName);
+		}
 
-    @Override
-    public OutputCommitter getOutputCommitter() {
-      return reduceContext.getOutputCommitter();
-    }
+		@Override
+		public Counter getCounter(String groupName, String counterName) {
+			return reduceContext.getCounter(groupName, counterName);
+		}
 
-    @Override
-    public void write(KEYOUT key, VALUEOUT value) throws IOException,
-        InterruptedException {
-      reduceContext.write(key, value);
-    }
+		@Override
+		public OutputCommitter getOutputCommitter() {
+			return reduceContext.getOutputCommitter();
+		}
 
-    @Override
-    public String getStatus() {
-      return reduceContext.getStatus();
-    }
+		@Override
+		public void write(KEYOUT key, VALUEOUT value) throws IOException,
+			InterruptedException {
+			reduceContext.write(key, value);
+		}
 
-    @Override
-    public TaskAttemptID getTaskAttemptID() {
-      return reduceContext.getTaskAttemptID();
-    }
+		@Override
+		public String getStatus() {
+			return reduceContext.getStatus();
+		}
 
-    @Override
-    public void setStatus(String msg) {
-      reduceContext.setStatus(msg);
-    }
+		@Override
+		public TaskAttemptID getTaskAttemptID() {
+			return reduceContext.getTaskAttemptID();
+		}
 
-    @Override
-    public Path[] getArchiveClassPaths() {
-      return reduceContext.getArchiveClassPaths();
-    }
+		@Override
+		public void setStatus(String msg) {
+			reduceContext.setStatus(msg);
+		}
 
-    @Override
-    public String[] getArchiveTimestamps() {
-      return reduceContext.getArchiveTimestamps();
-    }
+		@Override
+		public Path[] getArchiveClassPaths() {
+			return reduceContext.getArchiveClassPaths();
+		}
 
-    @Override
-    public URI[] getCacheArchives() throws IOException {
-      return reduceContext.getCacheArchives();
-    }
+		@Override
+		public String[] getArchiveTimestamps() {
+			return reduceContext.getArchiveTimestamps();
+		}
 
-    @Override
-    public URI[] getCacheFiles() throws IOException {
-      return reduceContext.getCacheFiles();
-    }
+		@Override
+		public URI[] getCacheArchives() throws IOException {
+			return reduceContext.getCacheArchives();
+		}
 
-    @Override
-    public Class<? extends Reducer<?, ?, ?, ?>> getCombinerClass()
-        throws ClassNotFoundException {
-      return reduceContext.getCombinerClass();
-    }
+		@Override
+		public URI[] getCacheFiles() throws IOException {
+			return reduceContext.getCacheFiles();
+		}
 
-    @Override
-    public Configuration getConfiguration() {
-      return reduceContext.getConfiguration();
-    }
+		@Override
+		public Class<? extends Reducer<?, ?, ?, ?>> getCombinerClass()
+			throws ClassNotFoundException {
+			return reduceContext.getCombinerClass();
+		}
 
-    @Override
-    public Path[] getFileClassPaths() {
-      return reduceContext.getFileClassPaths();
-    }
+		@Override
+		public Configuration getConfiguration() {
+			return reduceContext.getConfiguration();
+		}
 
-    @Override
-    public String[] getFileTimestamps() {
-      return reduceContext.getFileTimestamps();
-    }
+		@Override
+		public Path[] getFileClassPaths() {
+			return reduceContext.getFileClassPaths();
+		}
 
-    @Override
-    public RawComparator<?> getCombinerKeyGroupingComparator() {
-      return reduceContext.getCombinerKeyGroupingComparator();
-    }
+		@Override
+		public String[] getFileTimestamps() {
+			return reduceContext.getFileTimestamps();
+		}
 
-    @Override
-    public RawComparator<?> getGroupingComparator() {
-      return reduceContext.getGroupingComparator();
-    }
+		@Override
+		public RawComparator<?> getCombinerKeyGroupingComparator() {
+			return reduceContext.getCombinerKeyGroupingComparator();
+		}
 
-    @Override
-    public Class<? extends InputFormat<?, ?>> getInputFormatClass()
-        throws ClassNotFoundException {
-      return reduceContext.getInputFormatClass();
-    }
+		@Override
+		public RawComparator<?> getGroupingComparator() {
+			return reduceContext.getGroupingComparator();
+		}
 
-    @Override
-    public String getJar() {
-      return reduceContext.getJar();
-    }
+		@Override
+		public Class<? extends InputFormat<?, ?>> getInputFormatClass()
+			throws ClassNotFoundException {
+			return reduceContext.getInputFormatClass();
+		}
 
-    @Override
-    public JobID getJobID() {
-      return reduceContext.getJobID();
-    }
+		@Override
+		public String getJar() {
+			return reduceContext.getJar();
+		}
 
-    @Override
-    public String getJobName() {
-      return reduceContext.getJobName();
-    }
+		@Override
+		public JobID getJobID() {
+			return reduceContext.getJobID();
+		}
 
-    @Override
-    public boolean getJobSetupCleanupNeeded() {
-      return reduceContext.getJobSetupCleanupNeeded();
-    }
+		@Override
+		public String getJobName() {
+			return reduceContext.getJobName();
+		}
 
-    @Override
-    public boolean getTaskCleanupNeeded() {
-      return reduceContext.getTaskCleanupNeeded();
-    }
+		@Override
+		public long getDeadline() {
+			return reduceContext.getDeadline();
+		}
 
-    @Override
-    public Path[] getLocalCacheArchives() throws IOException {
-      return reduceContext.getLocalCacheArchives();
-    }
+		@Override
+		public long getArrivalTime() {
+			return reduceContext.getArrivalTime();
+		}
 
-    @Override
-    public Path[] getLocalCacheFiles() throws IOException {
-      return reduceContext.getLocalCacheFiles();
-    }
+		@Override
+		public boolean getJobSetupCleanupNeeded() {
+			return reduceContext.getJobSetupCleanupNeeded();
+		}
 
-    @Override
-    public Class<?> getMapOutputKeyClass() {
-      return reduceContext.getMapOutputKeyClass();
-    }
+		@Override
+		public boolean getTaskCleanupNeeded() {
+			return reduceContext.getTaskCleanupNeeded();
+		}
 
-    @Override
-    public Class<?> getMapOutputValueClass() {
-      return reduceContext.getMapOutputValueClass();
-    }
+		@Override
+		public Path[] getLocalCacheArchives() throws IOException {
+			return reduceContext.getLocalCacheArchives();
+		}
 
-    @Override
-    public Class<? extends Mapper<?, ?, ?, ?>> getMapperClass()
-        throws ClassNotFoundException {
-      return reduceContext.getMapperClass();
-    }
+		@Override
+		public Path[] getLocalCacheFiles() throws IOException {
+			return reduceContext.getLocalCacheFiles();
+		}
 
-    @Override
-    public int getMaxMapAttempts() {
-      return reduceContext.getMaxMapAttempts();
-    }
+		@Override
+		public Class<?> getMapOutputKeyClass() {
+			return reduceContext.getMapOutputKeyClass();
+		}
 
-    @Override
-    public int getMaxReduceAttempts() {
-      return reduceContext.getMaxReduceAttempts();
-    }
+		@Override
+		public Class<?> getMapOutputValueClass() {
+			return reduceContext.getMapOutputValueClass();
+		}
 
-    @Override
-    public int getNumReduceTasks() {
-      return reduceContext.getNumReduceTasks();
-    }
+		@Override
+		public Class<? extends Mapper<?, ?, ?, ?>> getMapperClass()
+			throws ClassNotFoundException {
+			return reduceContext.getMapperClass();
+		}
 
-    @Override
-    public Class<? extends OutputFormat<?, ?>> getOutputFormatClass()
-        throws ClassNotFoundException {
-      return reduceContext.getOutputFormatClass();
-    }
+		@Override
+		public int getMaxMapAttempts() {
+			return reduceContext.getMaxMapAttempts();
+		}
 
-    @Override
-    public Class<?> getOutputKeyClass() {
-      return reduceContext.getOutputKeyClass();
-    }
+		@Override
+		public int getMaxReduceAttempts() {
+			return reduceContext.getMaxReduceAttempts();
+		}
 
-    @Override
-    public Class<?> getOutputValueClass() {
-      return reduceContext.getOutputValueClass();
-    }
+		@Override
+		public int getNumReduceTasks() {
+			return reduceContext.getNumReduceTasks();
+		}
 
-    @Override
-    public Class<? extends Partitioner<?, ?>> getPartitionerClass()
-        throws ClassNotFoundException {
-      return reduceContext.getPartitionerClass();
-    }
+		@Override
+		public Class<? extends OutputFormat<?, ?>> getOutputFormatClass()
+			throws ClassNotFoundException {
+			return reduceContext.getOutputFormatClass();
+		}
 
-    @Override
-    public Class<? extends Reducer<?, ?, ?, ?>> getReducerClass()
-        throws ClassNotFoundException {
-      return reduceContext.getReducerClass();
-    }
+		@Override
+		public Class<?> getOutputKeyClass() {
+			return reduceContext.getOutputKeyClass();
+		}
 
-    @Override
-    public RawComparator<?> getSortComparator() {
-      return reduceContext.getSortComparator();
-    }
+		@Override
+		public Class<?> getOutputValueClass() {
+			return reduceContext.getOutputValueClass();
+		}
 
-    @Override
-    public boolean getSymlink() {
-      return reduceContext.getSymlink();
-    }
+		@Override
+		public Class<? extends Partitioner<?, ?>> getPartitionerClass()
+			throws ClassNotFoundException {
+			return reduceContext.getPartitionerClass();
+		}
 
-    @Override
-    public Path getWorkingDirectory() throws IOException {
-      return reduceContext.getWorkingDirectory();
-    }
+		@Override
+		public Class<? extends Reducer<?, ?, ?, ?>> getReducerClass()
+			throws ClassNotFoundException {
+			return reduceContext.getReducerClass();
+		}
 
-    @Override
-    public void progress() {
-      reduceContext.progress();
-    }
+		@Override
+		public RawComparator<?> getSortComparator() {
+			return reduceContext.getSortComparator();
+		}
 
-    @Override
-    public Iterable<VALUEIN> getValues() throws IOException,
-        InterruptedException {
-      return reduceContext.getValues();
-    }
+		@Override
+		public boolean getSymlink() {
+			return reduceContext.getSymlink();
+		}
 
-    @Override
-    public boolean nextKey() throws IOException, InterruptedException {
-      return reduceContext.nextKey();
-    }
-    
-    @Override
-    public boolean getProfileEnabled() {
-      return reduceContext.getProfileEnabled();
-    }
+		@Override
+		public Path getWorkingDirectory() throws IOException {
+			return reduceContext.getWorkingDirectory();
+		}
 
-    @Override
-    public String getProfileParams() {
-      return reduceContext.getProfileParams();
-    }
+		@Override
+		public void progress() {
+			reduceContext.progress();
+		}
 
-    @Override
-    public IntegerRanges getProfileTaskRange(boolean isMap) {
-      return reduceContext.getProfileTaskRange(isMap);
-    }
+		@Override
+		public Iterable<VALUEIN> getValues() throws IOException,
+			InterruptedException {
+			return reduceContext.getValues();
+		}
 
-    @Override
-    public String getUser() {
-      return reduceContext.getUser();
-    }
+		@Override
+		public boolean nextKey() throws IOException, InterruptedException {
+			return reduceContext.nextKey();
+		}
 
-    @Override
-    public Credentials getCredentials() {
-      return reduceContext.getCredentials();
-    }
-    
-    @Override
-    public float getProgress() {
-      return reduceContext.getProgress();
-    }
-  }
+		@Override
+		public boolean getProfileEnabled() {
+			return reduceContext.getProfileEnabled();
+		}
+
+		@Override
+		public String getProfileParams() {
+			return reduceContext.getProfileParams();
+		}
+
+		@Override
+		public IntegerRanges getProfileTaskRange(boolean isMap) {
+			return reduceContext.getProfileTaskRange(isMap);
+		}
+
+		@Override
+		public String getUser() {
+			return reduceContext.getUser();
+		}
+
+		@Override
+		public Credentials getCredentials() {
+			return reduceContext.getCredentials();
+		}
+
+		@Override
+		public float getProgress() {
+			return reduceContext.getProgress();
+		}
+	}
 }

@@ -1073,7 +1073,7 @@ public class ApplicationMaster {
 			containerVirtualCores);
 
 		ContainerRequest request = new ContainerRequest(capability, null, null,
-			pri);
+			pri, arrivalTime, deadline);
 		LOG.info("Requested container ask: " + request.toString());
 		return request;
 	}

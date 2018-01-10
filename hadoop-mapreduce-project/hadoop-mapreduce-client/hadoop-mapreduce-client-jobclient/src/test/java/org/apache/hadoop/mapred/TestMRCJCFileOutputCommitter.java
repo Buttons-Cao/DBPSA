@@ -70,7 +70,7 @@ public class TestMRCJCFileOutputCommitter extends TestCase {
   public void testCommitter() throws Exception {
     JobConf job = new JobConf();
     setConfForFileOutputCommitter(job);
-    JobContext jContext = new JobContextImpl(job, taskID.getJobID());
+    JobContext jContext = new JobContextImpl(job, taskID.getJobID(), job.getArrivalTime(), job.getDeadline());
     TaskAttemptContext tContext = new TaskAttemptContextImpl(job, taskID);
     FileOutputCommitter committer = new FileOutputCommitter();
     FileOutputFormat.setWorkOutputPath(job, 
@@ -111,7 +111,7 @@ public class TestMRCJCFileOutputCommitter extends TestCase {
   public void testAbort() throws IOException {
     JobConf job = new JobConf();
     setConfForFileOutputCommitter(job);
-    JobContext jContext = new JobContextImpl(job, taskID.getJobID());
+    JobContext jContext = new JobContextImpl(job, taskID.getJobID(), job.getArrivalTime(), job.getDeadline());
     TaskAttemptContext tContext = new TaskAttemptContextImpl(job, taskID);
     FileOutputCommitter committer = new FileOutputCommitter();
     FileOutputFormat.setWorkOutputPath(job, committer
@@ -166,7 +166,7 @@ public class TestMRCJCFileOutputCommitter extends TestCase {
     job.set(FileSystem.FS_DEFAULT_NAME_KEY, "faildel:///");
     job.setClass("fs.faildel.impl", FakeFileSystem.class, FileSystem.class);
     setConfForFileOutputCommitter(job);
-    JobContext jContext = new JobContextImpl(job, taskID.getJobID());
+    JobContext jContext = new JobContextImpl(job, taskID.getJobID(), job.getArrivalTime(), job.getDeadline());
     TaskAttemptContext tContext = new TaskAttemptContextImpl(job, taskID);
     FileOutputCommitter committer = new FileOutputCommitter();
     FileOutputFormat.setWorkOutputPath(job, committer

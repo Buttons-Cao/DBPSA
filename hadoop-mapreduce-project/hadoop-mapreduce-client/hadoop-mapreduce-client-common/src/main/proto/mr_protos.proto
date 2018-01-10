@@ -130,6 +130,7 @@ enum JobStateProto {
 }
 
 message JobReportProto {
+<<<<<<< HEAD
     optional JobIdProto job_id = 1;
     optional JobStateProto job_state = 2;
     optional float map_progress = 3;

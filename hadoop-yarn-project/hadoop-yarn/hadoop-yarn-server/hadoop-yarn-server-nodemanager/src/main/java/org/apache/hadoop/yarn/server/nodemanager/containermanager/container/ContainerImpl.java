@@ -41,6 +41,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.security.Credentials;
+import org.apache.hadoop.util.Time;
 import org.apache.hadoop.yarn.api.records.ContainerExitStatus;
 import org.apache.hadoop.yarn.api.records.ContainerId;
 import org.apache.hadoop.yarn.api.records.ContainerLaunchContext;
@@ -142,6 +143,11 @@ public class ContainerImpl implements Container {
 	 */
 	private boolean recoveredAsKilled = false;
 
+	private long appArrivalTime;
+	private long appDeadline;
+	private int numOfBeingPreempted;
+	private float preemptionPriority;
+
 	public ContainerImpl(Context context, Configuration conf, Dispatcher dispatcher,
 	                     NMStateStoreService stateStore, ContainerLaunchContext launchContext,
 	                     Credentials creds, NodeManagerMetrics metrics,
@@ -165,6 +171,11 @@ public class ContainerImpl implements Container {
 		this.context = context;
 
 		stateMachine = stateMachineFactory.make(this);
+
+		this.appArrivalTime = launchContext.getArrivalTime();
+		this.appDeadline = launchContext.getDeadline();
+		this.numOfBeingPreempted = launchContext.getNumOfBeingPreempted();
+		this.preemptionPriority = launchContext.getPreemptionPriority();
 	}
 
 	// constructor for a recovered container
@@ -180,6 +191,36 @@ public class ContainerImpl implements Container {
 		this.exitCode = exitCode;
 		this.recoveredAsKilled = wasKilled;
 		this.diagnostics.append(diagnostics);
+	}
+
+	public ContainerImpl(Context context, Configuration conf, Dispatcher dispatcher,
+	                     NMStateStoreService stateStore, ContainerLaunchContext launchContext,
+	                     Credentials creds, NodeManagerMetrics metrics,
+	                     ContainerTokenIdentifier containerTokenIdentifier, Set<Integer> cpuCores,
+	                     long appArrivalTime, long appDeadline, int numOfBeingPreempted, float preemptionPriority) {
+		this.daemonConf = conf;
+		this.dispatcher = dispatcher;
+		this.stateStore = stateStore;
+		this.launchContext = launchContext;
+		this.containerTokenIdentifier = containerTokenIdentifier;
+		this.containerId = containerTokenIdentifier.getContainerID();
+		this.resource = containerTokenIdentifier.getResource();
+		this.currentResource = resource;
+		this.diagnostics = new StringBuilder();
+		this.credentials = creds;
+		this.metrics = metrics;
+		user = containerTokenIdentifier.getApplicationSubmitter();
+		ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+		this.readLock = readWriteLock.readLock();
+		this.writeLock = readWriteLock.writeLock();
+		this.cpuCores = cpuCores;
+		this.context = context;
+		stateMachine = stateMachineFactory.make(this);
+
+		this.appArrivalTime = appArrivalTime;
+		this.appDeadline = appDeadline;
+		this.numOfBeingPreempted = numOfBeingPreempted;
+		this.preemptionPriority = preemptionPriority;
 	}
 
 	private static final ContainerDiagnosticsUpdateTransition UPDATE_DIAGNOSTICS_TRANSITION =
