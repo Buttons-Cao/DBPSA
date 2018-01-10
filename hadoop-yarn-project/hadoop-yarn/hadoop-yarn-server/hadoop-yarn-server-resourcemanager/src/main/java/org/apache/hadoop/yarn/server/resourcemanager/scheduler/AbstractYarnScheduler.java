@@ -77,7 +77,7 @@ public abstract class AbstractYarnScheduler
   private static final Log LOG = LogFactory.getLog(AbstractYarnScheduler.class);
 
   // Nodes in the cluster, indexed by NodeId
-  protected Map<NodeId, N> nodes = new ConcurrentHashMap<NodeId, N>();
+  protected Map<NodeId, N> nodes = new ConcurrentHashMap<>();
 
   // Whole capacity of the cluster
   protected Resource clusterResource = Resource.newInstance(0, 0);

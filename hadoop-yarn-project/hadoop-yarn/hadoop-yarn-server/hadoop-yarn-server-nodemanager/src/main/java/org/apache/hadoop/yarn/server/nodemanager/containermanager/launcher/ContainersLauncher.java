@@ -54,7 +54,6 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
  */
 public class ContainersLauncher extends AbstractService
     implements EventHandler<ContainersLauncherEvent> {
-	//然而containerLaunch又是干嘛的呢
 
 	private static final Log LOG = LogFactory.getLog(ContainersLauncher.class);
 
