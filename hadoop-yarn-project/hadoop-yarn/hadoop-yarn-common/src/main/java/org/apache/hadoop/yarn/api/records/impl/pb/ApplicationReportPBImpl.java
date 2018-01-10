@@ -572,18 +572,6 @@ public class ApplicationReportPBImpl extends ApplicationReport {
 		return ((TokenPBImpl) t).getProto();
 	}
 
-	@Override
-	public long getArrivalTime() {
-		ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
-		return p.getArrivalTime();
-	}
-
-	@Override
-	public long getDeadline() {
-		ApplicationReportProtoOrBuilder p = viaProto ? proto : builder;
-		return p.getDeadline();
-	}
-
 	public void setArrivalTime(long arrivalTime) {
 		maybeInitBuilder();
 		builder.setArrivalTime((arrivalTime));
