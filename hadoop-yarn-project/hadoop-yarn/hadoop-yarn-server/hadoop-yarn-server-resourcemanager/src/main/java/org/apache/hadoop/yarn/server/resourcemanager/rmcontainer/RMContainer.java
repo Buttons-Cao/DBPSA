@@ -117,6 +117,8 @@ public interface RMContainer extends EventHandler<RMContainerEvent> {
 
 	void setNumOfBeingPreemted(int numOfBeingPreemted);
 
+	void updateNumOfBeingPreemted();
+
 	void setPreemptionPriority(float preemptionPriority);
 
 }

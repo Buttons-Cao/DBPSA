@@ -274,14 +274,6 @@ public class ContainerPBImpl extends Container {
 
 	@Override
 	public void updateNumOfBeingPreempted(){
-		if (this.numOfBeingPreempted >= 0) {
-			numOfBeingPreempted++;
-		}
-		ContainerProtoOrBuilder p = viaProto ? proto : builder;
-		if (!p.hasNumOfBeingPreempted()) {
-			this.numOfBeingPreempted = p.getNumOfBeingPreempted();
-		}
-		this.numOfBeingPreempted = convertFromProtoFormat(p.getNumOfBeingPreempted());
 		numOfBeingPreempted++;
 	}
 

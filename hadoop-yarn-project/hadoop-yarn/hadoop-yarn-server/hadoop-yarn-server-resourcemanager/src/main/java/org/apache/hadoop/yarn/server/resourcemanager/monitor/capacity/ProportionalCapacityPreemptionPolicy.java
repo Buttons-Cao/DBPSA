@@ -34,6 +34,7 @@ import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.util.Time;
 import org.apache.hadoop.yarn.api.records.ApplicationAttemptId;
 import org.apache.hadoop.yarn.api.records.NodeId;
 import org.apache.hadoop.yarn.api.records.Priority;
@@ -296,7 +297,7 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 				// if we tried to preempt this for more than maxWaitTime
 				RMContainer container = cr.getKey();
 				Resource resource = cr.getValue();
-				//判断要被抢占的容器等待了多长时间了（这段时间它在保存自己执行的上下文），到了系统规定的等待时间就可以挂起了
+
 				if (preempted.get(container) != null &&
 					preempted.get(container) + maxWaitTime < clock.getTime()) {
 					// suspend it
@@ -310,6 +311,15 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 						if (isNaive) {
 							dispatcher.handle(new ContainerPreemptEvent(e.getKey(), container,
 								ContainerPreemptEventType.SUSPEND_CONTAINER, container.getContainer().getResource()));
+							// ------------------------- update preemptionPriority ---------------------------
+							container.updateNumOfBeingPreemted();
+							int nbp = container.getnumOfBeingPreempted();
+							float oldPreemptionPriority = container.getPreemptionPriority();
+							container.setPreemptionPriority(nbp +
+								rc.divide(clusterResources, container.getCurrentUsedResource(), clusterResources) +
+								(container.getDeadline() - container.getArrivalTime()) / (container.getDeadline() - Time.now()));
+							// -------------------------------------------------------------------------------
+
 							LOG.info("get container " + container.getContainerId() + " to suspend resource is "
 								+ resource);
 
@@ -767,7 +777,7 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 						LOG.info("Determined to preempt applicatin:" + fc.getApplicationId() + ", " + resToObtain.toString());
 						preemptMap.put(
 							fc.getApplicationAttemptId(),
-							preemptFromAppUsingResourceToSort(fc, clusterResource, resToObtain,
+							preemptFromAppUsingPreemptionPriorityToSort(fc, clusterResource, resToObtain,
 								skippedAMContainerlist, skippedAMSize));
 					}
 

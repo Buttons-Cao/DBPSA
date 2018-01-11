@@ -294,7 +294,12 @@ public class RMContainerImpl implements RMContainer {
 
 	@Override
 	public void setNumOfBeingPreemted(int numOfBeingPreemted) {
+		container.updateNumOfBeingPreempted();
+	}
 
+	@Override
+	public void updateNumOfBeingPreemted() {
+		container.updateNumOfBeingPreempted();
 	}
 
 	@Override
