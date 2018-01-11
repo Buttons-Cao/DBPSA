@@ -30,15 +30,13 @@ import java.util.NavigableSet;
 import java.util.PriorityQueue;
 import java.util.Set;
 
+import javafx.application.Application;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.util.Time;
-import org.apache.hadoop.yarn.api.records.ApplicationAttemptId;
-import org.apache.hadoop.yarn.api.records.NodeId;
-import org.apache.hadoop.yarn.api.records.Priority;
-import org.apache.hadoop.yarn.api.records.Resource;
+import org.apache.hadoop.yarn.api.records.*;
 import org.apache.hadoop.yarn.event.EventHandler;
 import org.apache.hadoop.yarn.exceptions.YarnRuntimeException;
 import org.apache.hadoop.yarn.server.resourcemanager.RMContext;
@@ -311,6 +309,7 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 						if (isNaive) {
 							dispatcher.handle(new ContainerPreemptEvent(e.getKey(), container,
 								ContainerPreemptEventType.SUSPEND_CONTAINER, container.getContainer().getResource()));
+
 							// ------------------------- update preemptionPriority ---------------------------
 							container.updateNumOfBeingPreemted();
 							int nbp = container.getnumOfBeingPreempted();
@@ -748,11 +747,19 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 				if (resToObtain.getMemory() > 0) {
 					LOG.info("resToObtain memory: " + resToObtain.getMemory());
 				}
+				// TODO: determine value of n
+				int n = 0;
+				for(FiCaSchedulerApp app: qT.leafQueue.getApplications()){
+					for (RMContainer container: app.getLiveContainers()){
+						n++;
+					}
+				}
+				Resource eachToObtain = Resources.multiply(resToObtain, 1/n);
 				// lock the leafqueue while we scan applications and unreserve
 				synchronized (qT.leafQueue) {
-					//what is the descending order
+					// replace resToObtain by eachToObtain
 					NavigableSet<FiCaSchedulerApp> ns =
-						(NavigableSet<FiCaSchedulerApp>) qT.leafQueue.getApplications(); //------------要改的是这个循环的顺序（？）
+						(NavigableSet<FiCaSchedulerApp>) qT.leafQueue.getApplications();
 					List<FiCaSchedulerApp> appList = new ArrayList<>(ns);
 					Collections.sort(appList, new Comparator<FiCaSchedulerApp>() {
 						@Override
@@ -761,7 +768,7 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 						}
 					});
 					Iterator<FiCaSchedulerApp> desc = ns.descendingIterator();
-					qT.actuallyPreempted = Resources.clone(resToObtain);
+					qT.actuallyPreempted = Resources.clone(eachToObtain);
 					while (desc.hasNext()) {
 						FiCaSchedulerApp fc = desc.next();
 						/*
@@ -774,10 +781,10 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 						}
 						Resource toPreempt = Resources.multiply(fc.getHeadroom(), resourceScaleFactor);
 						*/
-						LOG.info("Determined to preempt applicatin:" + fc.getApplicationId() + ", " + resToObtain.toString());
+						LOG.info("Determined to preempt applicatin:" + fc.getApplicationId() + ", " + eachToObtain.toString());
 						preemptMap.put(
 							fc.getApplicationAttemptId(),
-							preemptFromAppUsingPreemptionPriorityToSort(fc, clusterResource, resToObtain,
+							preemptFromAppUsingPreemptionPriorityToSort(fc, clusterResource, eachToObtain,
 								skippedAMContainerlist, skippedAMSize));
 					}
 
