@@ -29,9 +29,6 @@ import java.util.Map;
 import java.util.NavigableSet;
 import java.util.PriorityQueue;
 import java.util.Set;
-
-import javafx.application.Application;
-import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
