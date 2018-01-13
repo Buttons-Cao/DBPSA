@@ -312,7 +312,7 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 							int nbp = container.getnumOfBeingPreempted();
 							float oldPreemptionPriority = container.getPreemptionPriority();
 							container.setPreemptionPriority(nbp +
-								rc.divide(clusterResources, container.getCurrentUsedResource(), clusterResources) +
+								rc.divide(clusterResources, clusterResources, container.getCurrentUsedResource()) +
 								(container.getDeadline() - container.getArrivalTime()) / (container.getDeadline() - Time.now()));
 							// -------------------------------------------------------------------------------
 
