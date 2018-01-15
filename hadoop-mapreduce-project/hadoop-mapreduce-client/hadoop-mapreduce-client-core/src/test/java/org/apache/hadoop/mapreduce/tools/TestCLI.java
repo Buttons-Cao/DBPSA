@@ -36,6 +36,7 @@ import static org.mockito.Mockito.doReturn;
 public class TestCLI {
 	private static String jobIdStr = "job_1015298225799_0015";
 
+
 	@Test
 	public void testListAttemptIdsWithValidInput() throws Exception {
 		JobID jobId = JobID.forName(jobIdStr);
@@ -144,7 +145,7 @@ public class TestCLI {
 		long arrivalTime = Time.now();
 		JobStatus status = new JobStatus(null, 0, 0, 0, 0, jobState,
 			JobPriority.HIGH, null, null, null, null, arrivalTime,
-			arrivalTime+ Long.parseLong(MRJobConfig.DEFAULT_JOB_DEADLINE));
+			Long.parseLong(MRJobConfig.DEFAULT_JOB_DEADLINE));
 		when(mockJob.getStatus()).thenReturn(status);
 		return mockJob;
 	}

@@ -188,7 +188,7 @@ public class TestJobEndNotifier extends TestCase {
 		long arrivalTime = Time.now();
 		return new JobStatus(
 			JobID.forName(jobId), 0.5f, 0.0f,
-			state, "root", "TestJobEndNotifier", null, null, arrivalTime, arrivalTime + Long.parseLong(MRJobConfig.DEFAULT_JOB_DEADLINE));
+			state, "root", "TestJobEndNotifier", null, null, arrivalTime, Long.parseLong(MRJobConfig.DEFAULT_JOB_DEADLINE));
 	}
 
 	private static JobConf createTestJobConf(

@@ -1322,7 +1322,7 @@ public class TestClientRMService {
     Clock clock = new UTCClock();
     long arrival = clock.getTime();
     long duration = 60000;
-    long deadline = (long) (arrival + 1.05 * duration);
+    long deadline = (long)(1.05 * duration);
     ReservationSubmissionRequest sRequest =
         createSimpleReservationRequest(4, arrival, deadline, duration);
     ReservationSubmissionResponse sResponse = null;

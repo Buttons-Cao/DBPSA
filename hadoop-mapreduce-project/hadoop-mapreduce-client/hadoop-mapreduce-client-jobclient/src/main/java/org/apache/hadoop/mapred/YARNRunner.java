@@ -287,7 +287,7 @@ public class YARNRunner implements ClientProtocol {
 		long arrivalTime = Time.now();
 		ApplicationSubmissionContext appContext =
 			createApplicationSubmissionContext(conf, jobSubmitDir, ts, arrivalTime,
-				arrivalTime + Long.parseLong(MRJobConfig.JOB_DEADLINE));
+				Long.parseLong(MRJobConfig.JOB_DEADLINE));
 
 		// Submit to ResourceManager
 		try {

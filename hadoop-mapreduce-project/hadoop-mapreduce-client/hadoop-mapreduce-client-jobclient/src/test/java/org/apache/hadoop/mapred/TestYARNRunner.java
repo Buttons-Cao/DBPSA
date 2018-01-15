@@ -172,7 +172,7 @@ public class TestYARNRunner extends TestCase {
 		clientDelegate = mock(ClientServiceDelegate.class);
 		when(clientDelegate.getJobStatus(any(JobID.class))).thenReturn(new
 			org.apache.hadoop.mapreduce.JobStatus(jobId, 0f, 0f, 0f, 0f,
-			State.PREP, JobPriority.HIGH, "tmp", "tmp", "tmp", "tmp", Time.now(), Time.now()+Long.parseLong(MRJobConfig.DEFAULT_JOB_DEADLINE)));
+			State.PREP, JobPriority.HIGH, "tmp", "tmp", "tmp", "tmp", Time.now(), Long.parseLong(MRJobConfig.DEFAULT_JOB_DEADLINE)));
 		when(clientDelegate.killJob(any(JobID.class))).thenReturn(true);
 		doAnswer(
 			new Answer<ClientServiceDelegate>() {
@@ -187,7 +187,7 @@ public class TestYARNRunner extends TestCase {
 		verify(resourceMgrDelegate).killApplication(appId);
 		when(clientDelegate.getJobStatus(any(JobID.class))).thenReturn(new
 			org.apache.hadoop.mapreduce.JobStatus(jobId, 0f, 0f, 0f, 0f,
-			State.RUNNING, JobPriority.HIGH, "tmp", "tmp", "tmp", "tmp", Time.now(), Time.now()+Long.parseLong(MRJobConfig.DEFAULT_JOB_DEADLINE)));
+			State.RUNNING, JobPriority.HIGH, "tmp", "tmp", "tmp", "tmp", Time.now(), Long.parseLong(MRJobConfig.DEFAULT_JOB_DEADLINE)));
 		yarnRunner.killJob(jobId);
 		verify(clientDelegate).killJob(jobId);
 
@@ -220,7 +220,7 @@ public class TestYARNRunner extends TestCase {
 		).when(clientCache).getClient(any(JobID.class));
 		when(clientDelegate.getJobStatus(any(JobID.class))).thenReturn(new
 			org.apache.hadoop.mapreduce.JobStatus(jobId, 0f, 0f, 0f, 0f,
-			State.RUNNING, JobPriority.HIGH, "tmp", "tmp", "tmp", "tmp", Time.now(), Time.now()+Long.parseLong(MRJobConfig.DEFAULT_JOB_DEADLINE)));
+			State.RUNNING, JobPriority.HIGH, "tmp", "tmp", "tmp", "tmp", Time.now(), Long.parseLong(MRJobConfig.DEFAULT_JOB_DEADLINE)));
 		long startTimeMillis = System.currentTimeMillis();
 		yarnRunner.killJob(jobId);
 		assertTrue("killJob should have waited at least " + timeToWaitBeforeHardKill

@@ -578,9 +578,12 @@ public class ApplicationSubmissionContextPBImpl extends ApplicationSubmissionCon
 
 	@Override
 	public void setDeadline(long deadline) {
+		this.deadline = deadline;
 	}
 
+	@Override
 	public void setArriavalTime(long arrivalTime) {
+		this.arrivalTime = arrivalTime;
 	}
 
 	private ReservationIdPBImpl convertFromProtoFormat(ReservationIdProto p) {

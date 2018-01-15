@@ -310,10 +310,12 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 							// ------------------------- update preemptionPriority ---------------------------
 							container.updateNumOfBeingPreemted();
 							int nbp = container.getnumOfBeingPreempted();
-							float oldPreemptionPriority = container.getPreemptionPriority();
+							//float oldPreemptionPriority = container.getPreemptionPriority();
+							long ddl = container.getDeadline() + container.getArrivalTime();
+							int fte = ddl > Time.now()? 1: 0;
 							container.setPreemptionPriority(nbp +
 								rc.divide(clusterResources, container.getCurrentUsedResource(), clusterResources) +
-								(container.getDeadline() - container.getArrivalTime()) / (container.getDeadline() - Time.now()));
+								fte + (ddl)/ Math.abs((ddl - Time.now()));
 							// -------------------------------------------------------------------------------
 
 							LOG.info("get container " + container.getContainerId() + " to suspend resource is "

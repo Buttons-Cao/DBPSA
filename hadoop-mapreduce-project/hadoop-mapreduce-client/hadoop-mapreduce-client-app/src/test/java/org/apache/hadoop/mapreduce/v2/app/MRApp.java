@@ -230,7 +230,7 @@ public class MRApp extends MRAppMaster {
 	             boolean cleanOnStart, int startCount, Clock clock, boolean unregistered,
 	             String assignedQueue) {
 		super(appAttemptId, amContainerId, NM_HOST, NM_PORT, NM_HTTP_PORT, clock,
-			Time.now(), Time.now() + Long.parseLong(MRJobConfig.DEFAULT_JOB_DEADLINE));
+			Time.now(), Long.parseLong(MRJobConfig.DEFAULT_JOB_DEADLINE));
 		this.testWorkDir = new File("target", testName);
 		testAbsPath = new Path(testWorkDir.getAbsolutePath());
 		LOG.info("PathUsed: " + testAbsPath);
@@ -734,7 +734,7 @@ public class MRApp extends MRAppMaster {
 				new JobTokenSecretManager(), new Credentials(), clock,
 				getCompletedTaskFromPreviousRun(), metrics, committer,
 				newApiCommitter, user, System.currentTimeMillis(), getAllAMInfos(),
-				appContext, forcedState, diagnostic, Time.now()+Long.parseLong(MRJobConfig.DEFAULT_JOB_DEADLINE));
+				appContext, forcedState, diagnostic, Long.parseLong(MRJobConfig.DEFAULT_JOB_DEADLINE));
 
 			// This "this leak" is okay because the retained pointer is in an
 			//  instance variable.
