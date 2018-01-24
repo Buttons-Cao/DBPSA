@@ -1479,9 +1479,16 @@ public class ContainerImpl implements Container {
 					+ oldState + "], eventType: [" + event.getType() + "]", e);
 			}
 			if (oldState != newState) {
-				LOG.info("Container " + containerID + " transitioned from "
-					+ oldState
-					+ " to " + newState);
+				if (event.getType() == ContainerEventType.CONTAINER_EXITED_WITH_FAILURE ||
+					event.getType() == ContainerEventType.KILL_CONTAINER ||) {
+					LOG.info("Container " + containerID + " transitioned from "
+						+ oldState
+						+ " to " + newState +  ", preempted: " + numOfBeingPreempted + " times.");
+				} else {
+					LOG.info("Container " + containerID + " transitioned from "
+						+ oldState
+						+ " to " + newState);
+				}
 			}
 		} finally {
 			this.writeLock.unlock();

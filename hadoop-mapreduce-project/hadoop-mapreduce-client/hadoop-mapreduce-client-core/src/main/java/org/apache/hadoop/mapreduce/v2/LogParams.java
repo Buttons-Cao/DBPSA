@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,48 +20,49 @@ package org.apache.hadoop.mapreduce.v2;
 
 public class LogParams {
 
-  private String containerId;
-  private String applicationId;
-  private String nodeId;
-  private String owner;
+	private String containerId;
+	private String applicationId;
+	private String nodeId;
+	private String owner;
 
-  public LogParams(String containerIdStr, String applicationIdStr,
-      String nodeIdStr, String owner) {
-    this.containerId = containerIdStr;
-    this.applicationId = applicationIdStr;
-    this.nodeId = nodeIdStr;
-    this.owner = owner;
-  }
 
-  public String getContainerId() {
-    return containerId;
-  }
+	public LogParams(String containerIdStr, String applicationIdStr,
+	                 String nodeIdStr, String owner) {
+		this.containerId = containerIdStr;
+		this.applicationId = applicationIdStr;
+		this.nodeId = nodeIdStr;
+		this.owner = owner;
+	}
 
-  public void setContainerId(String containerId) {
-    this.containerId = containerId;
-  }
+	public String getContainerId() {
+		return containerId;
+	}
 
-  public String getApplicationId() {
-    return applicationId;
-  }
+	public void setContainerId(String containerId) {
+		this.containerId = containerId;
+	}
 
-  public void setApplicationId(String applicationId) {
-    this.applicationId = applicationId;
-  }
+	public String getApplicationId() {
+		return applicationId;
+	}
 
-  public String getNodeId() {
-    return nodeId;
-  }
+	public void setApplicationId(String applicationId) {
+		this.applicationId = applicationId;
+	}
 
-  public void setNodeId(String nodeId) {
-    this.nodeId = nodeId;
-  }
+	public String getNodeId() {
+		return nodeId;
+	}
 
-  public String getOwner() {
-    return this.owner;
-  }
+	public void setNodeId(String nodeId) {
+		this.nodeId = nodeId;
+	}
 
-  public String setOwner(String owner) {
-    return this.owner;
-  }
+	public String getOwner() {
+		return this.owner;
+	}
+
+	public String setOwner(String owner) {
+		return this.owner;
+	}
 }

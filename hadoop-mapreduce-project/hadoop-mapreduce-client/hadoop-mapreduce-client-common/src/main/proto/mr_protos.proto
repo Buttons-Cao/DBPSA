@@ -117,6 +117,7 @@ message TaskAttemptReportProto {
     optional int32 node_manager_port = 13;
     optional int32 node_manager_http_port = 14;
     optional hadoop.yarn.ContainerIdProto container_id = 15;
+
 }
 
 enum JobStateProto {
