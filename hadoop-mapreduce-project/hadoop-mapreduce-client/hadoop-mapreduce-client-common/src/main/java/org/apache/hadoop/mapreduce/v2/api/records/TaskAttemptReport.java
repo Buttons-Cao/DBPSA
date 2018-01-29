@@ -54,8 +54,6 @@ public interface TaskAttemptReport {
 
 	public abstract ContainerId getContainerId();
 
-	int getNumOfBeingPreempted();
-
 	public abstract void setTaskAttemptId(TaskAttemptId taskAttemptId);
 
 	public abstract void setTaskAttemptState(TaskAttemptState taskAttemptState);

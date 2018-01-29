@@ -327,19 +327,6 @@ public class TaskAttemptReportPBImpl extends ProtoBase<TaskAttemptReportProto> i
 	}
 
 	@Override
-	public int getNumOfBeingPreempted(){
-		TaskAttemptReportProtoOrBuilder p = viaProto ? proto : builder;
-		if (numOfBeingPreempted > 0) {
-			return numOfBeingPreempted;
-		} // Else via proto
-		if (!p.hasNumOfBeingPreempted()) {
-			return 0;
-		}
-		numOfBeingPreempted = p.getNumOfBeingPreempted();
-		return numOfBeingPreempted;
-	}
-
-	@Override
 	public void setContainerId(ContainerId containerId) {
 		maybeInitBuilder();
 		if (containerId == null) {
