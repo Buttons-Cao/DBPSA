@@ -748,8 +748,8 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 				}
 
 				//primarilyPreempte(clusterResource, skippedAMContainerlist, skippedAMSize, qT, resToObtain, preemptMap);
-				averagingPreempte(clusterResource, skippedAMContainerlist, skippedAMSize, qT, resToObtain, preemptMap);
-				//ratioPreempte(clusterResource, skippedAMContainerlist, skippedAMSize, qT, resToObtain, preemptMap);
+				//averagingPreempte(clusterResource, skippedAMContainerlist, skippedAMSize, qT, resToObtain, preemptMap);
+				ratioPreempte(clusterResource, skippedAMContainerlist, skippedAMSize, qT, resToObtain, preemptMap);
 				//stepPreempte(clusterResource, skippedAMContainerlist, skippedAMSize, qT, resToObtain, preemptMap, 0.02);
 			}
 		}
