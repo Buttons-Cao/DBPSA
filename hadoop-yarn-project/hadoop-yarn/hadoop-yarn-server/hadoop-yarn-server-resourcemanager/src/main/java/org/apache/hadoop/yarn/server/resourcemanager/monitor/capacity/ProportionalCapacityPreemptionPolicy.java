@@ -746,66 +746,226 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 				if (resToObtain.getMemory() > 0) {
 					LOG.info("resToObtain memory: " + resToObtain.getMemory());
 				}
-				// TODO: determine value of n
-				int n = 0;
-				for(FiCaSchedulerApp app: qT.leafQueue.getApplications()){
-					for (RMContainer container: app.getLiveContainers()){
-						n++;
-					}
-				}
-				Resource eachToObtain = Resources.multiply(resToObtain, 1/n);
-				// lock the leafqueue while we scan applications and unreserve
-				synchronized (qT.leafQueue) {
-					// replace resToObtain by eachToObtain
-					NavigableSet<FiCaSchedulerApp> ns =
-						(NavigableSet<FiCaSchedulerApp>) qT.leafQueue.getApplications();
-					List<FiCaSchedulerApp> appList = new ArrayList<>(ns);
-					Collections.sort(appList, new Comparator<FiCaSchedulerApp>() {
-						@Override
-						public int compare(FiCaSchedulerApp o1, FiCaSchedulerApp o2) {
-							return rc.compare(clusterResource, o1.getHeadroom(), o2.getHeadroom());
-						}
-					});
-					Iterator<FiCaSchedulerApp> desc = ns.descendingIterator();
-					qT.actuallyPreempted = Resources.clone(eachToObtain);
-					while (desc.hasNext()) {
-						FiCaSchedulerApp fc = desc.next();
-						/*
-						// 让每个app都均摊一部分需要被抢占的资源，这样可以最大限度地保证app不会因缺少资源而工作受阻。
-						double resourceScaleFactor = (double) Resources.divide(rc, clusterResource, resToObtain, clusterResource);
-						Resource totalRes = Resource.newInstance(0, 0);
-						for (Priority priority: fc.getPriorities()
-						     ) {
-							Resources.addTo(totalRes, fc.getResource(priority));
-						}
-						Resource toPreempt = Resources.multiply(fc.getHeadroom(), resourceScaleFactor);
-						*/
-						LOG.info("Determined to preempt applicatin:" + fc.getApplicationId() + ", " + eachToObtain.toString());
-						preemptMap.put(
-							fc.getApplicationAttemptId(),
-							preemptFromAppUsingPreemptionPriorityToSort(fc, clusterResource, eachToObtain,
-								skippedAMContainerlist, skippedAMSize));
-					}
 
-					//we allow preempt AM for kill based approach
-					if (false) {
-						//we will never preempt am resource
-						Resource maxAMCapacityForThisQueue = Resources.multiply(
-							Resources.multiply(clusterResource,
-								qT.leafQueue.getAbsoluteCapacity()),
-							qT.leafQueue.getMaxAMResourcePerQueuePercent());
-
-						//Can try preempting AMContainers (still saving atmost
-						// maxAMCapacityForThisQueue AMResource's) if more resources are
-						// required to be preempted from this Queue.
-						preemptAMContainers(clusterResource, preemptMap,
-							skippedAMContainerlist, resToObtain, skippedAMSize,
-							maxAMCapacityForThisQueue);
-					}
-				}
+				primarilyPreempte(clusterResource, skippedAMContainerlist, skippedAMSize, qT, resToObtain, preemptMap);
+				//averagingPreempte(clusterResource, skippedAMContainerlist, skippedAMSize, qT, resToObtain, preemptMap);
+				//ratioPreempte(clusterResource, skippedAMContainerlist, skippedAMSize, qT, resToObtain, preemptMap);
+				//stepPreempte(clusterResource, skippedAMContainerlist, skippedAMSize, qT, resToObtain, preemptMap, 0.02);
 			}
 		}
 		return preemptMap;
+	}
+
+	private void stepPreempte(final Resource clusterResource, List<RMContainer> skippedAMContainerlist, Resource skippedAMSize,
+	                          TempQueue qT, Resource resToObtain, Map<ApplicationAttemptId, Map<RMContainer, Resource>> preemptMap, double factor) {
+		// lock the leafqueue while we scan applications and unreserve
+		synchronized (qT.leafQueue) {
+			NavigableSet<FiCaSchedulerApp> ns =
+				(NavigableSet<FiCaSchedulerApp>) qT.leafQueue.getApplications();
+			List<FiCaSchedulerApp> appList = new ArrayList<>(ns);
+			Collections.sort(appList, new Comparator<FiCaSchedulerApp>() {
+				@Override
+				public int compare(FiCaSchedulerApp o1, FiCaSchedulerApp o2) {
+					return rc.compare(clusterResource, o1.getHeadroom(), o2.getHeadroom());
+				}
+			});
+			qT.actuallyPreempted = Resources.clone(resToObtain);
+
+			Resource tmp = Resource.newInstance(0, 0);
+			while (Resources.lessThan(rc, clusterResource, Resources.none(), resToObtain)){
+
+				Iterator<FiCaSchedulerApp> desc = ns.descendingIterator();
+				while (desc.hasNext()){
+					FiCaSchedulerApp fc = desc.next();
+					FiCaSchedulerApp app = (FiCaSchedulerApp)desc;
+					for(RMContainer container: app.getLiveContainers()){
+						Resources.addTo(tmp, container.getCurrentUsedResource());
+					}
+					if (Resources.lessThanOrEqual(rc, clusterResource, tmp,
+						Resources.none())) {
+						break;
+					}
+					LOG.info("now try to preempt applicatin:"+fc.getApplicationId());
+					preemptMap.put(
+						fc.getApplicationAttemptId(),
+						preemptFromAppUsingPreemptionPriorityToSort(fc, clusterResource, Resources.multiply(tmp, factor),
+							skippedAMContainerlist, skippedAMSize));
+					Resources.mins(rc, clusterResource, resToObtain, tmp);
+					if (Resources.lessThanOrEqual(rc, clusterResource, resToObtain,
+						Resources.none())) {
+						break;
+					}
+					tmp.setVirtualCores(0);
+					tmp.setMemory(0);
+				}
+			}
+			//we allow preempt AM for kill based approach
+			if (false) {
+				//we will never preempt am resource
+				Resource maxAMCapacityForThisQueue = Resources.multiply(
+					Resources.multiply(clusterResource,
+						qT.leafQueue.getAbsoluteCapacity()),
+					qT.leafQueue.getMaxAMResourcePerQueuePercent());
+
+				//Can try preempting AMContainers (still saving atmost
+				// maxAMCapacityForThisQueue AMResource's) if more resources are
+				// required to be preempted from this Queue.
+				preemptAMContainers(clusterResource, preemptMap,
+					skippedAMContainerlist, resToObtain, skippedAMSize,
+					maxAMCapacityForThisQueue);
+			}
+		}
+	}
+
+	private void primarilyPreempte(final Resource clusterResource, List<RMContainer> skippedAMContainerlist, Resource skippedAMSize, TempQueue qT, Resource resToObtain, Map<ApplicationAttemptId, Map<RMContainer, Resource>> preemptMap) {
+		// lock the leafqueue while we scan applications and unreserve
+		synchronized (qT.leafQueue) {
+			NavigableSet<FiCaSchedulerApp> ns =
+				(NavigableSet<FiCaSchedulerApp>) qT.leafQueue.getApplications();
+			List<FiCaSchedulerApp> appList = new ArrayList<>(ns);
+			Collections.sort(appList, new Comparator<FiCaSchedulerApp>() {
+				@Override
+				public int compare(FiCaSchedulerApp o1, FiCaSchedulerApp o2) {
+					return rc.compare(clusterResource, o1.getHeadroom(), o2.getHeadroom());
+				}
+			});
+			Iterator<FiCaSchedulerApp> desc = ns.descendingIterator();
+			qT.actuallyPreempted = Resources.clone(resToObtain);
+			while (desc.hasNext()) {
+				FiCaSchedulerApp fc = desc.next();
+				if (Resources.lessThanOrEqual(rc, clusterResource, resToObtain,
+					Resources.none())) {
+					break;
+				}
+				LOG.info("now try to preempt applicatin:"+fc.getApplicationId());
+				preemptMap.put(
+					fc.getApplicationAttemptId(),
+					preemptFromAppUsingPreemptionPriorityToSort(fc, clusterResource, resToObtain,
+						skippedAMContainerlist, skippedAMSize));
+			}
+			//we allow preempt AM for kill based approach
+			if (false) {
+				//we will never preempt am resource
+				Resource maxAMCapacityForThisQueue = Resources.multiply(
+					Resources.multiply(clusterResource,
+						qT.leafQueue.getAbsoluteCapacity()),
+					qT.leafQueue.getMaxAMResourcePerQueuePercent());
+
+				//Can try preempting AMContainers (still saving atmost
+				// maxAMCapacityForThisQueue AMResource's) if more resources are
+				// required to be preempted from this Queue.
+				preemptAMContainers(clusterResource, preemptMap,
+					skippedAMContainerlist, resToObtain, skippedAMSize,
+					maxAMCapacityForThisQueue);
+			}
+		}
+	}
+
+	private void averagingPreempte(final Resource clusterResource, List<RMContainer> skippedAMContainerlist, Resource skippedAMSize,
+	                               TempQueue qT, Resource resToObtain, Map<ApplicationAttemptId, Map<RMContainer, Resource>> preemptMap) {
+		int n = qT.leafQueue.getApplications().size();
+		Resource eachToObtain = Resources.multiply(resToObtain, 1/n);
+		// lock the leafqueue while we scan applications and unreserve
+		synchronized (qT.leafQueue) {
+			// replace resToObtain by eachToObtain
+			NavigableSet<FiCaSchedulerApp> ns =
+				(NavigableSet<FiCaSchedulerApp>) qT.leafQueue.getApplications();
+			List<FiCaSchedulerApp> appList = new ArrayList<>(ns);
+			Collections.sort(appList, new Comparator<FiCaSchedulerApp>() {
+				@Override
+				public int compare(FiCaSchedulerApp o1, FiCaSchedulerApp o2) {
+					return rc.compare(clusterResource, o1.getHeadroom(), o2.getHeadroom());
+				}
+			});
+			Iterator<FiCaSchedulerApp> desc = ns.descendingIterator();
+			qT.actuallyPreempted = Resources.clone(resToObtain);
+			while (desc.hasNext()) {
+				FiCaSchedulerApp fc = desc.next();
+				// 让每个app都均摊一部分需要被抢占的资源，这样可以最大限度地保证app不会因缺少资源而工作受阻。
+				LOG.info("Determined to preempt applicatin:" + fc.getApplicationId() + ", " + eachToObtain.toString());
+				preemptMap.put(
+					fc.getApplicationAttemptId(),
+					preemptFromAppUsingPreemptionPriorityToSort(fc, clusterResource, eachToObtain,
+						skippedAMContainerlist, skippedAMSize));
+				eachToObtain = Resources.multiply(resToObtain, 1/n);
+			}
+			if (false) {
+				//we will never preempt am resource
+				Resource maxAMCapacityForThisQueue = Resources.multiply(
+					Resources.multiply(clusterResource,
+						qT.leafQueue.getAbsoluteCapacity()),
+					qT.leafQueue.getMaxAMResourcePerQueuePercent());
+
+				//Can try preempting AMContainers (still saving atmost
+				// maxAMCapacityForThisQueue AMResource's) if more resources are
+				// required to be preempted from this Queue.
+				preemptAMContainers(clusterResource, preemptMap,
+					skippedAMContainerlist, resToObtain, skippedAMSize,
+					maxAMCapacityForThisQueue);
+			}
+		}
+	}
+
+	private void ratioPreempte(final Resource clusterResource, List<RMContainer> skippedAMContainerlist,
+	                           Resource skippedAMSize, TempQueue qT, Resource resToObtain, Map<ApplicationAttemptId,
+		Map<RMContainer, Resource>> preemptMap) {
+
+		Resource totalResource = Resource.newInstance(0, 0);
+
+		for(FiCaSchedulerApp app: qT.leafQueue.getApplications()){
+			for(RMContainer container: app.getLiveContainers()){
+				Resources.addTo(totalResource, container.getCurrentUsedResource());
+			}
+		}
+		float ratio = Resources.divide(rc, clusterResource, resToObtain, totalResource);
+		totalResource.setVirtualCores(0);
+		totalResource.setMemory(0);
+		Resource eachToObtain = Resource.newInstance(0, 0);
+		// lock the leafqueue while we scan applications and unreserve
+		synchronized (qT.leafQueue) {
+			// replace resToObtain by eachToObtain
+			NavigableSet<FiCaSchedulerApp> ns =
+				(NavigableSet<FiCaSchedulerApp>) qT.leafQueue.getApplications();
+			List<FiCaSchedulerApp> appList = new ArrayList<>(ns);
+			Collections.sort(appList, new Comparator<FiCaSchedulerApp>() {
+				@Override
+				public int compare(FiCaSchedulerApp o1, FiCaSchedulerApp o2) {
+					return rc.compare(clusterResource, o1.getHeadroom(), o2.getHeadroom());
+				}
+			});
+			Iterator<FiCaSchedulerApp> desc = ns.descendingIterator();
+			qT.actuallyPreempted = Resources.clone(resToObtain);
+			while (desc.hasNext()) {
+				FiCaSchedulerApp fc = desc.next();
+				FiCaSchedulerApp app = (FiCaSchedulerApp)desc;
+				for (RMContainer container: app.getLiveContainers()){
+					Resources.addTo(totalResource, container.getCurrentUsedResource());
+				}
+				eachToObtain = Resources.multiply(totalResource, ratio);
+				totalResource.setMemory(0);
+				totalResource.setVirtualCores(0);
+				// 让每个app都均摊一部分需要被抢占的资源，这样可以最大限度地保证app不会因缺少资源而工作受阻。
+				LOG.info("Determined to preempt applicatin:" + fc.getApplicationId() + ", " + eachToObtain.toString());
+				preemptMap.put(
+					fc.getApplicationAttemptId(),
+					preemptFromAppUsingPreemptionPriorityToSort(fc, clusterResource, eachToObtain,
+						skippedAMContainerlist, skippedAMSize));
+			}
+			if (false) {
+				//we will never preempt am resource
+				Resource maxAMCapacityForThisQueue = Resources.multiply(
+					Resources.multiply(clusterResource,
+						qT.leafQueue.getAbsoluteCapacity()),
+					qT.leafQueue.getMaxAMResourcePerQueuePercent());
+
+				//Can try preempting AMContainers (still saving atmost
+				// maxAMCapacityForThisQueue AMResource's) if more resources are
+				// required to be preempted from this Queue.
+				preemptAMContainers(clusterResource, preemptMap,
+					skippedAMContainerlist, resToObtain, skippedAMSize,
+					maxAMCapacityForThisQueue);
+			}
+		}
 	}
 
 	/**
