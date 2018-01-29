@@ -1480,7 +1480,7 @@ public class ContainerImpl implements Container {
 			}
 			if (oldState != newState) {
 				if (event.getType() == ContainerEventType.CONTAINER_EXITED_WITH_FAILURE ||
-					event.getType() == ContainerEventType.KILL_CONTAINER ||) {
+					event.getType() == ContainerEventType.KILL_CONTAINER) {
 					LOG.info("Container " + containerID + " transitioned from "
 						+ oldState
 						+ " to " + newState +  ", preempted: " + numOfBeingPreempted + " times.");
