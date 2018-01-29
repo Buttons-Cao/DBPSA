@@ -747,8 +747,8 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 					LOG.info("resToObtain memory: " + resToObtain.getMemory());
 				}
 
-				primarilyPreempte(clusterResource, skippedAMContainerlist, skippedAMSize, qT, resToObtain, preemptMap);
-				//averagingPreempte(clusterResource, skippedAMContainerlist, skippedAMSize, qT, resToObtain, preemptMap);
+				//primarilyPreempte(clusterResource, skippedAMContainerlist, skippedAMSize, qT, resToObtain, preemptMap);
+				averagingPreempte(clusterResource, skippedAMContainerlist, skippedAMSize, qT, resToObtain, preemptMap);
 				//ratioPreempte(clusterResource, skippedAMContainerlist, skippedAMSize, qT, resToObtain, preemptMap);
 				//stepPreempte(clusterResource, skippedAMContainerlist, skippedAMSize, qT, resToObtain, preemptMap, 0.02);
 			}
