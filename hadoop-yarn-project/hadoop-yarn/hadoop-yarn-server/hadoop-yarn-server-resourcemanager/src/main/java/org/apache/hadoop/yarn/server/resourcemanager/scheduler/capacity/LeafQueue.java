@@ -1656,11 +1656,12 @@ public class LeafQueue extends AbstractCSQueue {
 		//节点上有资源
 		assert Resources.greaterThan(
 			resourceCalculator, clusterResource, available, Resources.none());
-
+		Container container = null;
 		// Create the container if necessary
-		Container container =
-			getContainer(rmContainer, application, node, capability, priority, rmContainer.getArrivalTime(), rmContainer.getDeadline(),
-				rmContainer.getnumOfBeingPreempted(), rmContainer.getPreemptionPriority());
+		if (rmContainer!=null){
+			container = getContainer(rmContainer, application, node, capability, priority, rmContainer.getArrivalTime(),
+				rmContainer.getDeadline(), rmContainer.getnumOfBeingPreempted(), rmContainer.getPreemptionPriority());
+		}
 
 		// something went wrong getting/creating the container
 		if (container == null) {
