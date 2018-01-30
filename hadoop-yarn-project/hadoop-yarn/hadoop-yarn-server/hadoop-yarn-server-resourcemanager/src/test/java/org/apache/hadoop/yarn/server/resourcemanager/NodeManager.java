@@ -1,20 +1,20 @@
 /**
-* Licensed to the Apache Software Foundation (ASF) under one
-* or more contributor license agreements.  See the NOTICE file
-* distributed with this work for additional information
-* regarding copyright ownership.  The ASF licenses this file
-* to you under the Apache License, Version 2.0 (the
-* "License"); you may not use this file except in compliance
-* with the License.  You may obtain a copy of the License at
-*
-*     http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package org.apache.hadoop.yarn.server.resourcemanager;
 
@@ -62,256 +62,259 @@ import org.apache.hadoop.yarn.util.resource.Resources;
 
 @Private
 public class NodeManager implements ContainerManagementProtocol {
-  private static final Log LOG = LogFactory.getLog(NodeManager.class);
-  private static final RecordFactory recordFactory = RecordFactoryProvider.getRecordFactory(null);
-  
-  final private String containerManagerAddress;
-  final private String nodeHttpAddress;
-  final private String rackName;
-  final private NodeId nodeId;
-  final private Resource capability;
-  final private ResourceManager resourceManager;
-  Resource available = recordFactory.newRecordInstance(Resource.class);
-  Resource used = recordFactory.newRecordInstance(Resource.class);
+	private static final Log LOG = LogFactory.getLog(NodeManager.class);
+	private static final RecordFactory recordFactory = RecordFactoryProvider.getRecordFactory(null);
 
-  final ResourceTrackerService resourceTrackerService;
-  final Map<ApplicationId, List<Container>> containers = 
-    new HashMap<ApplicationId, List<Container>>();
-  
-  final Map<Container, ContainerStatus> containerStatusMap =
-      new HashMap<Container, ContainerStatus>();
-  
-  public NodeManager(String hostName, int containerManagerPort, int httpPort,
-      String rackName, Resource capability,
-      ResourceManager resourceManager)
-      throws IOException, YarnException {
-    this.containerManagerAddress = hostName + ":" + containerManagerPort;
-    this.nodeHttpAddress = hostName + ":" + httpPort;
-    this.rackName = rackName;
-    this.resourceTrackerService = resourceManager.getResourceTrackerService();
-    this.capability = capability;
-    Resources.addTo(available, capability);
-    this.nodeId = NodeId.newInstance(hostName, containerManagerPort);
-    RegisterNodeManagerRequest request = recordFactory
-        .newRecordInstance(RegisterNodeManagerRequest.class);
-    request.setHttpPort(httpPort);
-    request.setResource(capability);
-    request.setNodeId(this.nodeId);
-    request.setNMVersion(YarnVersionInfo.getVersion());
-    resourceTrackerService.registerNodeManager(request);
-    this.resourceManager = resourceManager;
-    resourceManager.getResourceScheduler().getNodeReport(this.nodeId);
-  }
-  
-  public String getHostName() {
-    return containerManagerAddress;
-  }
+	final private String containerManagerAddress;
+	final private String nodeHttpAddress;
+	final private String rackName;
+	final private NodeId nodeId;
+	final private Resource capability;
+	final private ResourceManager resourceManager;
+	Resource available = recordFactory.newRecordInstance(Resource.class);
+	Resource used = recordFactory.newRecordInstance(Resource.class);
 
-  public String getRackName() {
-    return rackName;
-  }
+	final ResourceTrackerService resourceTrackerService;
+	final Map<ApplicationId, List<Container>> containers =
+		new HashMap<ApplicationId, List<Container>>();
 
-  public NodeId getNodeId() {
-    return nodeId;
-  }
+	final Map<Container, ContainerStatus> containerStatusMap =
+		new HashMap<Container, ContainerStatus>();
 
-  public Resource getCapability() {
-    return capability;
-  }
+	public NodeManager(String hostName, int containerManagerPort, int httpPort,
+	                   String rackName, Resource capability,
+	                   ResourceManager resourceManager)
+		throws IOException, YarnException {
+		this.containerManagerAddress = hostName + ":" + containerManagerPort;
+		this.nodeHttpAddress = hostName + ":" + httpPort;
+		this.rackName = rackName;
+		this.resourceTrackerService = resourceManager.getResourceTrackerService();
+		this.capability = capability;
+		Resources.addTo(available, capability);
+		this.nodeId = NodeId.newInstance(hostName, containerManagerPort);
+		RegisterNodeManagerRequest request = recordFactory
+			.newRecordInstance(RegisterNodeManagerRequest.class);
+		request.setHttpPort(httpPort);
+		request.setResource(capability);
+		request.setNodeId(this.nodeId);
+		request.setNMVersion(YarnVersionInfo.getVersion());
+		resourceTrackerService.registerNodeManager(request);
+		this.resourceManager = resourceManager;
+		resourceManager.getResourceScheduler().getNodeReport(this.nodeId);
+	}
 
-  public Resource getAvailable() {
-    return available;
-  }
-  
-  public Resource getUsed() {
-    return used;
-  }
-  
-  int responseID = 0;
-  
-  private List<ContainerStatus> getContainerStatuses(Map<ApplicationId, List<Container>> containers) {
-    List<ContainerStatus> containerStatuses = new ArrayList<ContainerStatus>();
-    for (List<Container> appContainers : containers.values()) {
-      for (Container container : appContainers) {
-        containerStatuses.add(containerStatusMap.get(container));
-      }
-    }
-    return containerStatuses;
-  }
-  public void heartbeat() throws IOException, YarnException {
-    NodeStatus nodeStatus = 
-      org.apache.hadoop.yarn.server.resourcemanager.NodeManager.createNodeStatus(
-          nodeId, getContainerStatuses(containers));
-    nodeStatus.setResponseId(responseID);
-    NodeHeartbeatRequest request = recordFactory
-        .newRecordInstance(NodeHeartbeatRequest.class);
-    request.setNodeStatus(nodeStatus);
-    NodeHeartbeatResponse response = resourceTrackerService
-        .nodeHeartbeat(request);
-    responseID = response.getResponseId();
-  }
+	public String getHostName() {
+		return containerManagerAddress;
+	}
 
-  @Override
-  synchronized public StartContainersResponse startContainers(
-      StartContainersRequest requests) 
-  throws YarnException {
-	  
-	 LOG.info("enter startContainers ");
+	public String getRackName() {
+		return rackName;
+	}
 
-    for (StartContainerRequest request : requests.getStartContainerRequests()) {
-      Token containerToken = request.getContainerToken();
-      ContainerTokenIdentifier tokenId = null;
+	public NodeId getNodeId() {
+		return nodeId;
+	}
 
-      try {
-        tokenId = BuilderUtils.newContainerTokenIdentifier(containerToken);
-      } catch (IOException e) {
-        throw RPCUtil.getRemoteException(e);
-      }
+	public Resource getCapability() {
+		return capability;
+	}
 
-      ContainerId containerID = tokenId.getContainerID();
-      ApplicationId applicationId =
-          containerID.getApplicationAttemptId().getApplicationId();
+	public Resource getAvailable() {
+		return available;
+	}
 
-      List<Container> applicationContainers = containers.get(applicationId);
-      if (applicationContainers == null) {
-        applicationContainers = new ArrayList<Container>();
-        containers.put(applicationId, applicationContainers);
-      }
+	public Resource getUsed() {
+		return used;
+	}
 
-      // Sanity check
-      for (Container container : applicationContainers) {
-        if (container.getId().compareTo(containerID) == 0) {
-          throw new IllegalStateException("Container " + containerID
-              + " already setup on node " + containerManagerAddress);
-        }
-      }
+	int responseID = 0;
 
-      Container container =
-          BuilderUtils.newContainer(containerID, this.nodeId, nodeHttpAddress,
-            tokenId.getResource(), null, null // DKDC - Doesn't matter
-            );
-      
-      LOG.info("Nodemanager get container resource   "+tokenId.getResource());
+	private List<ContainerStatus> getContainerStatuses(Map<ApplicationId, List<Container>> containers) {
+		List<ContainerStatus> containerStatuses = new ArrayList<ContainerStatus>();
+		for (List<Container> appContainers : containers.values()) {
+			for (Container container : appContainers) {
+				containerStatuses.add(containerStatusMap.get(container));
+			}
+		}
+		return containerStatuses;
+	}
 
-      ContainerStatus containerStatus =
-          BuilderUtils.newContainerStatus(container.getId(),
-            ContainerState.NEW, "", -1000);
-      
-      applicationContainers.add(container);
-      containerStatusMap.put(container, containerStatus);
-      Resources.subtractFrom(available, tokenId.getResource());
-      Resources.addTo(used, tokenId.getResource());
+	public void heartbeat() throws IOException, YarnException {
+		NodeStatus nodeStatus =
+			org.apache.hadoop.yarn.server.resourcemanager.NodeManager.createNodeStatus(
+				nodeId, getContainerStatuses(containers));
+		nodeStatus.setResponseId(responseID);
+		NodeHeartbeatRequest request = recordFactory
+			.newRecordInstance(NodeHeartbeatRequest.class);
+		request.setNodeStatus(nodeStatus);
+		NodeHeartbeatResponse response = resourceTrackerService
+			.nodeHeartbeat(request);
+		responseID = response.getResponseId();
+	}
 
-      //if (LOG.isDebugEnabled()) {
-      {
-        LOG.info("startContainer:" + " node=" + containerManagerAddress
-            + " application=" + applicationId + " container=" + container
-            + " available=" + available + " used=" + used);
-      }
+	@Override
+	synchronized public StartContainersResponse startContainers(
+		StartContainersRequest requests)
+		throws YarnException {
 
-    }
-    StartContainersResponse response =
-        StartContainersResponse.newInstance(null, null, null);
-    return response;
-  }
+		LOG.info("enter startContainers ");
 
-  synchronized public void checkResourceUsage() {
-    LOG.info("Checking resource usage for " + containerManagerAddress);
-    Assert.assertEquals(available.getMemory(), 
-        resourceManager.getResourceScheduler().getNodeReport(
-            this.nodeId).getAvailableResource().getMemory());
-    Assert.assertEquals(used.getMemory(), 
-        resourceManager.getResourceScheduler().getNodeReport(
-            this.nodeId).getUsedResource().getMemory());
-  }
-  
-  @Override
-  synchronized public StopContainersResponse stopContainers(StopContainersRequest request) 
-  throws YarnException {
-    for (ContainerId containerID : request.getContainerIds()) {
-      String applicationId =
-          String.valueOf(containerID.getApplicationAttemptId()
-            .getApplicationId().getId());
-      // Mark the container as COMPLETE
-      List<Container> applicationContainers = containers.get(containerID.getApplicationAttemptId()
-              .getApplicationId());
-      for (Container c : applicationContainers) {
-        if (c.getId().compareTo(containerID) == 0) {
-          ContainerStatus containerStatus = containerStatusMap.get(c);
-          containerStatus.setState(ContainerState.COMPLETE);
-          containerStatusMap.put(c, containerStatus);
-        }
-      }
+		for (StartContainerRequest request : requests.getStartContainerRequests()) {
+			Token containerToken = request.getContainerToken();
+			ContainerTokenIdentifier tokenId = null;
 
-      // Send a heartbeat
-      try {
-        heartbeat();
-      } catch (IOException ioe) {
-        throw RPCUtil.getRemoteException(ioe);
-      }
+			try {
+				tokenId = BuilderUtils.newContainerTokenIdentifier(containerToken);
+			} catch (IOException e) {
+				throw RPCUtil.getRemoteException(e);
+			}
 
-      // Remove container and update status
-      int ctr = 0;
-      Container container = null;
-      for (Iterator<Container> i = applicationContainers.iterator(); i
-        .hasNext();) {
-        container = i.next();
-        if (container.getId().compareTo(containerID) == 0) {
-          i.remove();
-          ++ctr;
-        }
-      }
+			ContainerId containerID = tokenId.getContainerID();
+			ApplicationId applicationId =
+				containerID.getApplicationAttemptId().getApplicationId();
 
-      if (ctr != 1) {
-        throw new IllegalStateException("Container " + containerID
-            + " stopped " + ctr + " times!");
-      }
+			List<Container> applicationContainers = containers.get(applicationId);
+			if (applicationContainers == null) {
+				applicationContainers = new ArrayList<Container>();
+				containers.put(applicationId, applicationContainers);
+			}
 
-      Resources.addTo(available, container.getResource());
-      Resources.subtractFrom(used, container.getResource());
+			// Sanity check
+			for (Container container : applicationContainers) {
+				if (container.getId().compareTo(containerID) == 0) {
+					throw new IllegalStateException("Container " + containerID
+						+ " already setup on node " + containerManagerAddress);
+				}
+			}
 
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("stopContainer:" + " node=" + containerManagerAddress
-            + " application=" + applicationId + " container=" + containerID
-            + " available=" + available + " used=" + used);
-      }
-    }
-    return StopContainersResponse.newInstance(null,null);
-  }
+			Container container =
+				BuilderUtils.newContainer(containerID, this.nodeId, nodeHttpAddress,
+					tokenId.getResource(), null, null , request.getContainerLaunchContext().getArrivalTime(),
+					request.getContainerLaunchContext().getDeadline(), request.getContainerLaunchContext().getNumOfBeingPreempted(),
+					request.getContainerLaunchContext().getPreemptionPriority()
+				);// DKDC - Doesn't matter
 
-  @Override
-  synchronized public GetContainerStatusesResponse getContainerStatuses(
-      GetContainerStatusesRequest request) throws YarnException {
-    List<ContainerStatus> statuses = new ArrayList<ContainerStatus>();
-    for (ContainerId containerId : request.getContainerIds()) {
-      List<Container> appContainers =
-          containers.get(containerId.getApplicationAttemptId()
-            .getApplicationId());
-      Container container = null;
-      for (Container c : appContainers) {
-        if (c.getId().equals(containerId)) {
-          container = c;
-        }
-      }
-      if (container != null
-          && containerStatusMap.get(container).getState() != null) {
-        statuses.add(containerStatusMap.get(container));
-      }
-    }
-    return GetContainerStatusesResponse.newInstance(statuses, null);
-  }
+			LOG.info("Nodemanager get container resource   " + tokenId.getResource());
 
-  public static org.apache.hadoop.yarn.server.api.records.NodeStatus 
-  createNodeStatus(NodeId nodeId, List<ContainerStatus> containers) {
-    RecordFactory recordFactory = RecordFactoryProvider.getRecordFactory(null);
-    org.apache.hadoop.yarn.server.api.records.NodeStatus nodeStatus = 
-        recordFactory.newRecordInstance(org.apache.hadoop.yarn.server.api.records.NodeStatus.class);
-    nodeStatus.setNodeId(nodeId);
-    nodeStatus.setContainersStatuses(containers);
-    NodeHealthStatus nodeHealthStatus = 
-      recordFactory.newRecordInstance(NodeHealthStatus.class);
-    nodeHealthStatus.setIsNodeHealthy(true);
-    nodeStatus.setNodeHealthStatus(nodeHealthStatus);
-    return nodeStatus;
-  }
+			ContainerStatus containerStatus =
+				BuilderUtils.newContainerStatus(container.getId(),
+					ContainerState.NEW, "", -1000);
+
+			applicationContainers.add(container);
+			containerStatusMap.put(container, containerStatus);
+			Resources.subtractFrom(available, tokenId.getResource());
+			Resources.addTo(used, tokenId.getResource());
+
+			//if (LOG.isDebugEnabled()) {
+			{
+				LOG.info("startContainer:" + " node=" + containerManagerAddress
+					+ " application=" + applicationId + " container=" + container
+					+ " available=" + available + " used=" + used);
+			}
+
+		}
+		StartContainersResponse response =
+			StartContainersResponse.newInstance(null, null, null);
+		return response;
+	}
+
+	synchronized public void checkResourceUsage() {
+		LOG.info("Checking resource usage for " + containerManagerAddress);
+		Assert.assertEquals(available.getMemory(),
+			resourceManager.getResourceScheduler().getNodeReport(
+				this.nodeId).getAvailableResource().getMemory());
+		Assert.assertEquals(used.getMemory(),
+			resourceManager.getResourceScheduler().getNodeReport(
+				this.nodeId).getUsedResource().getMemory());
+	}
+
+	@Override
+	synchronized public StopContainersResponse stopContainers(StopContainersRequest request)
+		throws YarnException {
+		for (ContainerId containerID : request.getContainerIds()) {
+			String applicationId =
+				String.valueOf(containerID.getApplicationAttemptId()
+					.getApplicationId().getId());
+			// Mark the container as COMPLETE
+			List<Container> applicationContainers = containers.get(containerID.getApplicationAttemptId()
+				.getApplicationId());
+			for (Container c : applicationContainers) {
+				if (c.getId().compareTo(containerID) == 0) {
+					ContainerStatus containerStatus = containerStatusMap.get(c);
+					containerStatus.setState(ContainerState.COMPLETE);
+					containerStatusMap.put(c, containerStatus);
+				}
+			}
+
+			// Send a heartbeat
+			try {
+				heartbeat();
+			} catch (IOException ioe) {
+				throw RPCUtil.getRemoteException(ioe);
+			}
+
+			// Remove container and update status
+			int ctr = 0;
+			Container container = null;
+			for (Iterator<Container> i = applicationContainers.iterator(); i
+				.hasNext(); ) {
+				container = i.next();
+				if (container.getId().compareTo(containerID) == 0) {
+					i.remove();
+					++ctr;
+				}
+			}
+
+			if (ctr != 1) {
+				throw new IllegalStateException("Container " + containerID
+					+ " stopped " + ctr + " times!");
+			}
+
+			Resources.addTo(available, container.getResource());
+			Resources.subtractFrom(used, container.getResource());
+
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("stopContainer:" + " node=" + containerManagerAddress
+					+ " application=" + applicationId + " container=" + containerID
+					+ " available=" + available + " used=" + used);
+			}
+		}
+		return StopContainersResponse.newInstance(null, null);
+	}
+
+	@Override
+	synchronized public GetContainerStatusesResponse getContainerStatuses(
+		GetContainerStatusesRequest request) throws YarnException {
+		List<ContainerStatus> statuses = new ArrayList<ContainerStatus>();
+		for (ContainerId containerId : request.getContainerIds()) {
+			List<Container> appContainers =
+				containers.get(containerId.getApplicationAttemptId()
+					.getApplicationId());
+			Container container = null;
+			for (Container c : appContainers) {
+				if (c.getId().equals(containerId)) {
+					container = c;
+				}
+			}
+			if (container != null
+				&& containerStatusMap.get(container).getState() != null) {
+				statuses.add(containerStatusMap.get(container));
+			}
+		}
+		return GetContainerStatusesResponse.newInstance(statuses, null);
+	}
+
+	public static org.apache.hadoop.yarn.server.api.records.NodeStatus
+	createNodeStatus(NodeId nodeId, List<ContainerStatus> containers) {
+		RecordFactory recordFactory = RecordFactoryProvider.getRecordFactory(null);
+		org.apache.hadoop.yarn.server.api.records.NodeStatus nodeStatus =
+			recordFactory.newRecordInstance(org.apache.hadoop.yarn.server.api.records.NodeStatus.class);
+		nodeStatus.setNodeId(nodeId);
+		nodeStatus.setContainersStatuses(containers);
+		NodeHealthStatus nodeHealthStatus =
+			recordFactory.newRecordInstance(NodeHealthStatus.class);
+		nodeHealthStatus.setIsNodeHealthy(true);
+		nodeStatus.setNodeHealthStatus(nodeHealthStatus);
+		return nodeStatus;
+	}
 }

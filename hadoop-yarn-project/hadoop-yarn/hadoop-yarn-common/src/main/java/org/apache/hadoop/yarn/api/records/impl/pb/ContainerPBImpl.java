@@ -65,6 +65,10 @@ public class ContainerPBImpl extends Container {
 		this.appArrivalTime = proto.getAppArrivalTime();
 	}
 
+	public ContainerPBImpl() {
+		builder = ContainerProto.newBuilder();
+	}
+
 	public ContainerProto getProto() {
 
 		mergeLocalToProto();
@@ -314,6 +318,21 @@ public class ContainerPBImpl extends Container {
 		}
 		this.appArrivalTime = convertFromProtoFormat(p.getAppArrivalTime());
 		return this.appArrivalTime;
+	}
+
+	@Override
+	public void setAppArrivalTime(long t) {
+		appArrivalTime = t;
+	}
+
+	@Override
+	public void setDeadline(long t) {
+		deadline = t;
+	}
+
+	@Override
+	public void setNumOfBeingPreempted(int n) {
+		numOfBeingPreempted = n;
 	}
 
 	@Override

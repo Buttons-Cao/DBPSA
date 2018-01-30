@@ -33,6 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.util.Time;
 import org.apache.hadoop.yarn.api.records.ApplicationAttemptId;
 import org.apache.hadoop.yarn.api.records.ApplicationId;
 import org.apache.hadoop.yarn.api.records.Container;
@@ -92,7 +93,7 @@ public class TestRMContainerImpl {
     Priority priority = BuilderUtils.newPriority(5);
 
     Container container = BuilderUtils.newContainer(containerId, nodeId,
-        "host:3465", resource, priority, null);
+        "host:3465", resource, priority, null, Time.now(), 1234564, 0, 0);
     ConcurrentMap<ApplicationId, RMApp> rmApps =
         spy(new ConcurrentHashMap<ApplicationId, RMApp>());
     RMApp rmApp = mock(RMApp.class);
@@ -188,7 +189,7 @@ public class TestRMContainerImpl {
     Priority priority = BuilderUtils.newPriority(5);
 
     Container container = BuilderUtils.newContainer(containerId, nodeId,
-        "host:3465", resource, priority, null);
+        "host:3465", resource, priority, null, Time.now(), 1234564, 0, 0);
 
     RMApplicationHistoryWriter writer = mock(RMApplicationHistoryWriter.class);
     SystemMetricsPublisher publisher = mock(SystemMetricsPublisher.class);

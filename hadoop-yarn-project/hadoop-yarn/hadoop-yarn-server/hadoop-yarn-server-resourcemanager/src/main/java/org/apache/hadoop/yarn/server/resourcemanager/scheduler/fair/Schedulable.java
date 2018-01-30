@@ -89,7 +89,8 @@ public interface Schedulable {
    * Assign a container on this node if possible, and return the amount of
    * resources assigned.
    */
-  public Resource assignContainer(FSSchedulerNode node);
+  public Resource assignContainer(FSSchedulerNode node, long AppArrivalTime, long deadline,
+                                  int numOfBeingPreempted, float preemptionPriority);
 
   /**
    * Preempt a container from this Schedulable if possible.
