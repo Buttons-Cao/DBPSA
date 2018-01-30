@@ -792,9 +792,9 @@ public class FSAppAttempt extends SchedulerApplicationAttempt
 	}
 
 	@Override
-	public Resource assignContainer(FSSchedulerNode node, long AppArrivalTime, long deadline,
-	                                int numOfBeingPreempted, float preemptionPriority) {
-		return assignContainer(node, false, AppArrivalTime, deadline, numOfBeingPreempted, preemptionPriority);
+	public Resource assignContainer(FSSchedulerNode node) {
+		return assignContainer(node, false, rmContext.getArrivalTime(), rmContext.getDeadline(), rmContext.getnumOfBeingPreempted(),
+			rmContext.getPreemptionPriority());
 	}
 
 	/**
