@@ -657,8 +657,7 @@ public class FSAppAttempt extends SchedulerApplicationAttempt
 	 * @param node
 	 *     Node that the application has an existing reservation on
 	 */
-	public Resource assignReservedContainer(FSSchedulerNode node, long AppArrivalTime, long deadline,
-	                                        int numOfBeingPreempted, float preemptionPriority) {
+	public Resource assignReservedContainer(FSSchedulerNode node) {
 		RMContainer rmContainer = node.getReservedContainer();
 		Priority priority = rmContainer.getReservedPriority();
 
@@ -675,8 +674,8 @@ public class FSAppAttempt extends SchedulerApplicationAttempt
 			node.getAvailableResource())) {
 			return Resources.none();
 		}
-
-		return assignContainer(node, true, AppArrivalTime, deadline, numOfBeingPreempted, preemptionPriority);
+		return assignContainer(node, true,rmContainer.getArrivalTime(), rmContainer.getDeadline(), rmContainer.getnumOfBeingPreempted(),
+			rmContainer.getPreemptionPriority());
 	}
 
 
