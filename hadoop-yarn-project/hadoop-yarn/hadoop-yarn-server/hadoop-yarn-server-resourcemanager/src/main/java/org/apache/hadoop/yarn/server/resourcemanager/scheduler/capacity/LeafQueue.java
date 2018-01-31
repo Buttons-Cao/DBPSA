@@ -1520,11 +1520,11 @@ public class LeafQueue extends AbstractCSQueue {
 
 	private Container getContainer(RMContainer rmContainer,
 	                               FiCaSchedulerApp application, FiCaSchedulerNode node,
-	                               Resource capability, Priority priority, long AppArrivalTime, long deadline,
-	                               int numOfBeingPreempted, float preemptionPriority) {
+	                               Resource capability, Priority priority) {
 		//是否是reserve 的情况
 		return (rmContainer != null) ? rmContainer.getContainer() :
-			createContainer(application, node, capability, priority, AppArrivalTime, deadline, numOfBeingPreempted, preemptionPriority);
+			createContainer(application, node, capability, priority, rmContainer.getArrivalTime(), rmContainer.getDeadline(),
+					rmContainer.getnumOfBeingPreempted(), rmContainer.getPreemptionPriority());
 	}
 
 	Container createContainer(FiCaSchedulerApp application, FiCaSchedulerNode node,
