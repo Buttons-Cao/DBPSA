@@ -1659,8 +1659,7 @@ public class LeafQueue extends AbstractCSQueue {
 		Container container = null;
 		// Create the container if necessary
 		if (rmContainer!=null){
-			container = getContainer(rmContainer, application, node, capability, priority, rmContainer.getArrivalTime(),
-				rmContainer.getDeadline(), rmContainer.getnumOfBeingPreempted(), rmContainer.getPreemptionPriority());
+			container = getContainer(rmContainer, application, node, capability, priority);
 		}
 
 		// something went wrong getting/creating the container
