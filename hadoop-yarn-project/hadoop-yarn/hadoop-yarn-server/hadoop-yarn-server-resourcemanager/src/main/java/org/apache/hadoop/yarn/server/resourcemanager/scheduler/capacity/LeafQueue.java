@@ -1661,7 +1661,10 @@ public class LeafQueue extends AbstractCSQueue {
 		Container container = null;
 		// Create the container if necessary
 		if (rmContainer!=null){
+			LOG.info("rmContainer is not null");
 			container = getContainer(rmContainer, application, node, capability, priority);
+		} else{
+			LOG.warn("rmContainer is null!");
 		}
 
 		// something went wrong getting/creating the container
