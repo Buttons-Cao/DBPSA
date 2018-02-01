@@ -1425,6 +1425,7 @@ public class LeafQueue extends AbstractCSQueue {
 	                                           ResourceLimits currentResoureLimits) {
 		if (canAssign(application, priority, node, NodeType.NODE_LOCAL,
 			reservedContainer)) {
+			LOG.info("into assignNodeLocalContainers...");
 			return assignContainer(clusterResource, node, application, priority,
 				nodeLocalResourceRequest, NodeType.NODE_LOCAL, reservedContainer,
 				allocatedContainer, currentResoureLimits);
@@ -1440,6 +1441,7 @@ public class LeafQueue extends AbstractCSQueue {
 	                                           ResourceLimits currentResoureLimits) {
 		if (canAssign(application, priority, node, NodeType.RACK_LOCAL,
 			reservedContainer)) {
+			LOG.info("into assignRackLocalContainers...");
 			return assignContainer(clusterResource, node, application, priority,
 				rackLocalResourceRequest, NodeType.RACK_LOCAL, reservedContainer,
 				allocatedContainer, currentResoureLimits);
@@ -1455,6 +1457,7 @@ public class LeafQueue extends AbstractCSQueue {
 	                                           ResourceLimits currentResoureLimits) {
 		if (canAssign(application, priority, node, NodeType.OFF_SWITCH,
 			reservedContainer)) {
+			LOG.info("into assignOffSwitchContainers...");
 			return assignContainer(clusterResource, node, application, priority,
 				offSwitchResourceRequest, NodeType.OFF_SWITCH, reservedContainer,
 				allocatedContainer, currentResoureLimits);
