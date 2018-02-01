@@ -1522,7 +1522,7 @@ public class LeafQueue extends AbstractCSQueue {
 	                               FiCaSchedulerApp application, FiCaSchedulerNode node,
 	                               Resource capability, Priority priority) {
 		//是否是reserve 的情况
-		System.out.println("getting container: "+ rmContainer.getContainer().getId());
+		LOG.info("getting container: "+ rmContainer.getContainer().getId());
 		return (rmContainer != null) ? rmContainer.getContainer() :
 			createContainer(application, node, capability, priority, rmContainer.getArrivalTime(), rmContainer.getDeadline(),
 					rmContainer.getnumOfBeingPreempted(), rmContainer.getPreemptionPriority());
@@ -1533,7 +1533,7 @@ public class LeafQueue extends AbstractCSQueue {
 	                          int numOfBeingPreempted, float preemptionPriority) {
 
 		NodeId nodeId = node.getRMNode().getNodeID();
-		System.out.println("creating container on node "+nodeId);
+		LOG.info("creating container on node "+nodeId);
 		ContainerId containerId = BuilderUtils.newContainerId(application
 			.getApplicationAttemptId(), application.getNewContainerId());
 
@@ -1542,7 +1542,7 @@ public class LeafQueue extends AbstractCSQueue {
 			BuilderUtils.newContainer(containerId, nodeId, node.getRMNode()
 				.getHttpAddress(), capability, priority, null, AppArrivalTime, deadline,
 		numOfBeingPreempted, preemptionPriority);
-		System.out.println("creating container complete...");
+		LOG.info("creating container complete...");
 		return container;
 	}
 
