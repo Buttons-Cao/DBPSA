@@ -948,6 +948,7 @@ public class LeafQueue extends AbstractCSQueue {
 					application.addSchedulingOpportunity(priority);
 
 					// Try to schedule
+					LOG.info("into assignContainers");
 					CSAssignment assignment =
 						assignContainersOnNode(clusterResource, node, application, priority,
 							null, currentResourceLimits);
@@ -1011,6 +1012,7 @@ public class LeafQueue extends AbstractCSQueue {
 		}
 
 		// Try to assign if we have sufficient resources
+		LOG.info("into assignReservedContainers");
 		assignContainersOnNode(clusterResource, node, application, priority,
 			rmContainer, new ResourceLimits(Resources.none()));
 
@@ -1294,7 +1296,7 @@ public class LeafQueue extends AbstractCSQueue {
 
 		NodeType requestType = null;
 		MutableObject allocatedContainer = new MutableObject();
-
+		if (reservedContainer==null) LOG.info("reservedContainer is null pointer");
 		//注意这里的优先级，先分配node local的，再分配rack local的最后分配rack off的
 		// Data-local
 		ResourceRequest nodeLocalResourceRequest =
@@ -1457,7 +1459,6 @@ public class LeafQueue extends AbstractCSQueue {
 	                                           ResourceLimits currentResoureLimits) {
 		if (canAssign(application, priority, node, NodeType.OFF_SWITCH,
 			reservedContainer)) {
-			LOG.info("into assignOffSwitchContainers...");
 			if(reservedContainer==null) LOG.warn("null pointer the reservedContaienr is...");
 			return assignContainer(clusterResource, node, application, priority,
 				offSwitchResourceRequest, NodeType.OFF_SWITCH, reservedContainer,
@@ -1667,8 +1668,6 @@ public class LeafQueue extends AbstractCSQueue {
 		if (rmContainer!=null){
 			LOG.info("rmContainer is not null");
 			container = getContainer(rmContainer, application, node, capability, priority);
-		} else{
-			LOG.warn("rmContainer is null!");
 		}
 
 		// something went wrong getting/creating the container
