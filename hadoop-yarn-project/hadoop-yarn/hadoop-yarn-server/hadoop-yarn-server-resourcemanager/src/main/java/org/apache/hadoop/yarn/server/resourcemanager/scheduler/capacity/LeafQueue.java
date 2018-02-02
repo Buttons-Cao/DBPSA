@@ -1458,6 +1458,7 @@ public class LeafQueue extends AbstractCSQueue {
 		if (canAssign(application, priority, node, NodeType.OFF_SWITCH,
 			reservedContainer)) {
 			LOG.info("into assignOffSwitchContainers...");
+			if(reservedContainer==null) LOG.warn("null pointer the reservedContaienr is...");
 			return assignContainer(clusterResource, node, application, priority,
 				offSwitchResourceRequest, NodeType.OFF_SWITCH, reservedContainer,
 				allocatedContainer, currentResoureLimits);
