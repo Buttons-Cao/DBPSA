@@ -773,7 +773,7 @@ public class LeafQueue extends AbstractCSQueue {
 		return labels;
 	}
 
-	//这个函数每次分配一个assignment
+	// 这个函数每次分配一个assignment
 	@Override
 	public synchronized CSAssignment assignContainers(Resource clusterResource,
 	                                                  FiCaSchedulerNode node, ResourceLimits currentResourceLimits) {
@@ -1296,7 +1296,6 @@ public class LeafQueue extends AbstractCSQueue {
 
 		NodeType requestType = null;
 		MutableObject allocatedContainer = new MutableObject();
-		if (reservedContainer==null) LOG.info("reservedContainer is null pointer");
 		//注意这里的优先级，先分配node local的，再分配rack local的最后分配rack off的
 		// Data-local
 		ResourceRequest nodeLocalResourceRequest =
@@ -1459,7 +1458,7 @@ public class LeafQueue extends AbstractCSQueue {
 	                                           ResourceLimits currentResoureLimits) {
 		if (canAssign(application, priority, node, NodeType.OFF_SWITCH,
 			reservedContainer)) {
-			if(reservedContainer==null) LOG.warn("null pointer the reservedContaienr is...");
+			//if(reservedContainer==null) LOG.warn("null pointer the reservedContaienr is...");
 			return assignContainer(clusterResource, node, application, priority,
 				offSwitchResourceRequest, NodeType.OFF_SWITCH, reservedContainer,
 				allocatedContainer, currentResoureLimits);
@@ -1529,13 +1528,11 @@ public class LeafQueue extends AbstractCSQueue {
 		//是否是reserve 的情况
 		LOG.info("getting container: "+ rmContainer.getContainer().getId());
 		return (rmContainer != null) ? rmContainer.getContainer() :
-			createContainer(application, node, capability, priority, rmContainer.getArrivalTime(), rmContainer.getDeadline(),
-					rmContainer.getnumOfBeingPreempted(), rmContainer.getPreemptionPriority());
+			createContainer(application, node, capability, priority);
 	}
 
 	Container createContainer(FiCaSchedulerApp application, FiCaSchedulerNode node,
-	                          Resource capability, Priority priority, long AppArrivalTime, long deadline,
-	                          int numOfBeingPreempted, float preemptionPriority) {
+	                          Resource capability, Priority priority) {
 
 		NodeId nodeId = node.getRMNode().getNodeID();
 		LOG.info("creating container on node "+nodeId);
@@ -1545,8 +1542,8 @@ public class LeafQueue extends AbstractCSQueue {
 		// Create the container
 		Container container =
 			BuilderUtils.newContainer(containerId, nodeId, node.getRMNode()
-				.getHttpAddress(), capability, priority, null, AppArrivalTime, deadline,
-		numOfBeingPreempted, preemptionPriority);
+				.getHttpAddress(), capability, priority, null, application.getArrivalTime(), application.getDeadline(),
+		0, 0);
 		LOG.info("creating container complete...");
 		return container;
 	}

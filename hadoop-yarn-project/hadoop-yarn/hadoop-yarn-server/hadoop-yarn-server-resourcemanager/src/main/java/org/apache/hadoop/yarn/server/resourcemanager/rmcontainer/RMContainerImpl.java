@@ -247,6 +247,7 @@ public class RMContainerImpl implements RMContainer {
 		rmContext.getRMApplicationHistoryWriter().containerStarted(this);
 		rmContext.getSystemMetricsPublisher().containerCreated(
 			this, this.creationTime);
+
 	}
 
 	//in case of suspending a container

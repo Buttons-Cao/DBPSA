@@ -649,4 +649,12 @@ public class SchedulerApplicationAttempt {
 				Resources.clone(headroom));
 		}
 	}
+
+	public long getArrivalTime(){
+		return rmContext.getArrivalTime();
+	}
+
+	public long getDeadline(){
+		return rmContext.getDeadline();
+	}
 }
