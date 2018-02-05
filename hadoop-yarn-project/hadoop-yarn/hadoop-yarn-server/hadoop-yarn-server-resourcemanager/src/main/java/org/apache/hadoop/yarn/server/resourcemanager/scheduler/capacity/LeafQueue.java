@@ -1526,9 +1526,8 @@ public class LeafQueue extends AbstractCSQueue {
 	                               FiCaSchedulerApp application, FiCaSchedulerNode node,
 	                               Resource capability, Priority priority) {
 		//是否是reserve 的情况
-		LOG.info("getting container: "+ rmContainer.getContainer().getId());
-		return (rmContainer != null) ? rmContainer.getContainer() :
-			createContainer(application, node, capability, priority);
+		//LOG.info("getting container: "+ rmContainer.getContainer().getId());
+		return (rmContainer != null) ? rmContainer.getContainer(): createContainer(application, node, capability, priority);
 	}
 
 	Container createContainer(FiCaSchedulerApp application, FiCaSchedulerNode node,
@@ -1662,10 +1661,7 @@ public class LeafQueue extends AbstractCSQueue {
 			resourceCalculator, clusterResource, available, Resources.none());
 		Container container = null;
 		// Create the container if necessary
-		if (rmContainer!=null){
-			LOG.info("rmContainer is not null");
-			container = getContainer(rmContainer, application, node, capability, priority);
-		}
+		container = getContainer(rmContainer, application, node, capability, priority);
 
 		// something went wrong getting/creating the container
 		if (container == null) {

@@ -190,7 +190,7 @@ public class TestReservations {
 				return container;
 			}
 		}).when(queue).createContainer(any(FiCaSchedulerApp.class),
-			any(FiCaSchedulerNode.class), any(Resource.class), any(Priority.class), Time.now(), 12435435, 0, 0);
+			any(FiCaSchedulerNode.class), any(Resource.class), any(Priority.class));
 
 		// 2. Stub out LeafQueue.parent.completedContainer
 		CSQueue parent = queue.getParent();

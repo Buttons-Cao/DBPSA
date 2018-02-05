@@ -1471,7 +1471,7 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 			LOG.info("beforeideal: " + idealAssigned);
 			Resource remain = Resources.subtract(avail, finalAccepted);
 			Resources.addTo(idealAssigned, finalAccepted);
-			LOG.info("avaul:       " + avail);
+			LOG.info("avail:       " + avail);
 			LOG.info("absMaxDelta: " + absMaxCapIdealAssignedDelta);
 			LOG.info("max:         " + maxCapacity);
 			LOG.info("current:     " + current);
