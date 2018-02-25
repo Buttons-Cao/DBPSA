@@ -66,7 +66,8 @@ public abstract class Container implements Comparable<Container> {
 	@Unstable
 	public static Container newInstance(ContainerId containerId, NodeId nodeId,
 	                                    String nodeHttpAddress, Resource resource, Priority priority,
-	                                    Token containerToken) {
+	                                    Token containerToken, long arrivalTime, long deadline, int numOfBeingPreempted,
+										float preemptionPriority ) {
 		Container container = Records.newRecord(Container.class);
 		container.setId(containerId);
 		container.setNodeId(nodeId);
@@ -74,6 +75,10 @@ public abstract class Container implements Comparable<Container> {
 		container.setResource(resource);
 		container.setPriority(priority);
 		container.setContainerToken(containerToken);
+		container.setAppArrivalTime(arrivalTime);
+		container.setDeadline(deadline);
+		container.setNumOfBeingPreempted(numOfBeingPreempted);
+		container.setPreemptionPriority(preemptionPriority);
 		return container;
 	}
 

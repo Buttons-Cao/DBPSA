@@ -23,6 +23,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 
+import org.apache.hadoop.mapreduce.MRJobConfig;
+import org.apache.hadoop.util.Time;
 import org.junit.Assert;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapreduce.v2.api.records.JobState;
@@ -62,7 +64,8 @@ public class TestSpeculativeExecutionWithMRApp {
     clock.setTime(System.currentTimeMillis());
 
     MRApp app =
-        new MRApp(NUM_MAPPERS, NUM_REDUCERS, false, "test", true, clock);
+        new MRApp(NUM_MAPPERS, NUM_REDUCERS, false, "test", true, clock, Time.now(),
+                Long.parseLong(MRJobConfig.DEFAULT_JOB_DEADLINE));
     Job job = app.submit(new Configuration(), true, true);
     app.waitForState(job, JobState.RUNNING);
 
@@ -133,7 +136,8 @@ public class TestSpeculativeExecutionWithMRApp {
     clock.setTime(System.currentTimeMillis());
 
     MRApp app =
-        new MRApp(NUM_MAPPERS, NUM_REDUCERS, false, "test", true, clock);
+        new MRApp(NUM_MAPPERS, NUM_REDUCERS, false, "test", true, clock, Time.now(),
+                Long.parseLong(MRJobConfig.DEFAULT_JOB_DEADLINE));
     Job job = app.submit(new Configuration(), true, true);
     app.waitForState(job, JobState.RUNNING);
 

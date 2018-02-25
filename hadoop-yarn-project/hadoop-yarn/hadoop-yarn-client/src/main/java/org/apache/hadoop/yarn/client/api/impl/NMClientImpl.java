@@ -191,6 +191,7 @@ public class NMClientImpl extends NMClient {
         proxy =
             cmProxy.getProxy(container.getNodeId().toString(),
                 container.getId());
+        // LOG.info("StartContainerRequest.newInstance..........");
         StartContainerRequest scRequest =
             StartContainerRequest.newInstance(containerLaunchContext,
               container.getContainerToken());

@@ -136,30 +136,30 @@ public class MRApp extends MRAppMaster {
 	}
 
 	public MRApp(int maps, int reduces, boolean autoComplete, String testName,
-	             boolean cleanOnStart, Clock clock) {
-		this(maps, reduces, autoComplete, testName, cleanOnStart, 1, clock, null);
+	             boolean cleanOnStart, Clock clock, long arrivalTime, long deadline) {
+		this(maps, reduces, autoComplete, testName, cleanOnStart, 1, clock, null, arrivalTime, deadline);
 	}
 
 	public MRApp(int maps, int reduces, boolean autoComplete, String testName,
-	             boolean cleanOnStart, Clock clock, boolean unregistered) {
+	             boolean cleanOnStart, Clock clock, boolean unregistered, long arrivalTime, long deadline) {
 		this(maps, reduces, autoComplete, testName, cleanOnStart, 1, clock,
-			unregistered);
+			unregistered, arrivalTime, deadline);
 	}
 
 	public MRApp(int maps, int reduces, boolean autoComplete, String testName,
-	             boolean cleanOnStart) {
-		this(maps, reduces, autoComplete, testName, cleanOnStart, 1);
+	             boolean cleanOnStart, long arrivalTime, long deadline) {
+		this(maps, reduces, autoComplete, testName, cleanOnStart, 1, arrivalTime, deadline);
 	}
 
 	public MRApp(int maps, int reduces, boolean autoComplete, String testName,
-	             boolean cleanOnStart, String assignedQueue) {
+	             boolean cleanOnStart, String assignedQueue, long arrivalTime, long deadline) {
 		this(maps, reduces, autoComplete, testName, cleanOnStart, 1,
-			new SystemClock(), assignedQueue);
+			new SystemClock(), assignedQueue, arrivalTime, deadline);
 	}
 
 	public MRApp(int maps, int reduces, boolean autoComplete, String testName,
-	             boolean cleanOnStart, boolean unregistered) {
-		this(maps, reduces, autoComplete, testName, cleanOnStart, 1, unregistered);
+	             boolean cleanOnStart, boolean unregistered, long arrivalTime, long deadline) {
+		this(maps, reduces, autoComplete, testName, cleanOnStart, 1, unregistered, arrivalTime, deadline);
 	}
 
 	@Override
@@ -186,51 +186,51 @@ public class MRApp extends MRAppMaster {
 	}
 
 	public MRApp(int maps, int reduces, boolean autoComplete, String testName,
-	             boolean cleanOnStart, int startCount) {
+	             boolean cleanOnStart, int startCount, long arrivalTime, long deadline) {
 		this(maps, reduces, autoComplete, testName, cleanOnStart, startCount,
-			new SystemClock(), null);
+			new SystemClock(), null, arrivalTime, deadline);
 	}
 
 	public MRApp(int maps, int reduces, boolean autoComplete, String testName,
-	             boolean cleanOnStart, int startCount, boolean unregistered) {
+	             boolean cleanOnStart, int startCount, boolean unregistered, long arrivalTime, long deadline) {
 		this(maps, reduces, autoComplete, testName, cleanOnStart, startCount,
-			new SystemClock(), unregistered);
+			new SystemClock(), unregistered, arrivalTime, deadline);
 	}
 
 	public MRApp(int maps, int reduces, boolean autoComplete, String testName,
-	             boolean cleanOnStart, int startCount, Clock clock, boolean unregistered) {
+	             boolean cleanOnStart, int startCount, Clock clock, boolean unregistered, long arrivalTime, long deadline) {
 		this(getApplicationAttemptId(applicationId, startCount), getContainerId(
 			applicationId, startCount), maps, reduces, autoComplete, testName,
-			cleanOnStart, startCount, clock, unregistered, null);
+			cleanOnStart, startCount, clock, unregistered, null, arrivalTime, deadline);
 	}
 
 	public MRApp(int maps, int reduces, boolean autoComplete, String testName,
-	             boolean cleanOnStart, int startCount, Clock clock, String assignedQueue) {
+	             boolean cleanOnStart, int startCount, Clock clock, String assignedQueue, long arrivalTime, long deadline) {
 		this(getApplicationAttemptId(applicationId, startCount), getContainerId(
 			applicationId, startCount), maps, reduces, autoComplete, testName,
-			cleanOnStart, startCount, clock, true, assignedQueue);
+			cleanOnStart, startCount, clock, true, assignedQueue, arrivalTime, deadline);
 	}
 
 	public MRApp(ApplicationAttemptId appAttemptId, ContainerId amContainerId,
 	             int maps, int reduces, boolean autoComplete, String testName,
-	             boolean cleanOnStart, int startCount, boolean unregistered) {
+	             boolean cleanOnStart, int startCount, boolean unregistered, long arrivalTime, long deadline) {
 		this(appAttemptId, amContainerId, maps, reduces, autoComplete, testName,
-			cleanOnStart, startCount, new SystemClock(), unregistered, null);
+			cleanOnStart, startCount, new SystemClock(), unregistered, null, arrivalTime, deadline);
 	}
 
 	public MRApp(ApplicationAttemptId appAttemptId, ContainerId amContainerId,
 	             int maps, int reduces, boolean autoComplete, String testName,
-	             boolean cleanOnStart, int startCount) {
+	             boolean cleanOnStart, int startCount, long arrivalTime, long deadline) {
 		this(appAttemptId, amContainerId, maps, reduces, autoComplete, testName,
-			cleanOnStart, startCount, new SystemClock(), true, null);
+			cleanOnStart, startCount, new SystemClock(), true, null, arrivalTime, deadline);
 	}
 
 	public MRApp(ApplicationAttemptId appAttemptId, ContainerId amContainerId,
 	             int maps, int reduces, boolean autoComplete, String testName,
 	             boolean cleanOnStart, int startCount, Clock clock, boolean unregistered,
-	             String assignedQueue) {
+	             String assignedQueue, long arrivalTime, long deadline) {
 		super(appAttemptId, amContainerId, NM_HOST, NM_PORT, NM_HTTP_PORT, clock,
-			Time.now(), Long.parseLong(MRJobConfig.DEFAULT_JOB_DEADLINE));
+			arrivalTime, deadline);
 		this.testWorkDir = new File("target", testName);
 		testAbsPath = new Path(testWorkDir.getAbsolutePath());
 		LOG.info("PathUsed: " + testAbsPath);
@@ -581,7 +581,8 @@ public class MRApp extends MRAppMaster {
 			Token containerToken = newContainerToken(nodeId, "password".getBytes(),
 				containerTokenIdentifier);
 			Container container = Container.newInstance(cId, nodeId,
-				NM_HOST + ":" + NM_HTTP_PORT, resource, null, containerToken);
+				NM_HOST + ":" + NM_HTTP_PORT, resource, null, containerToken, getAppSubmitTime(), getDeadline(),
+					0,0);
 			JobID id = TypeConverter.fromYarn(applicationId);
 			JobId jobId = TypeConverter.toYarn(id);
 			getContext().getEventHandler().handle(new JobHistoryEvent(jobId,

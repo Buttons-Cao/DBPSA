@@ -40,8 +40,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.security.Credentials;
-import org.apache.hadoop.util.Time;
 import org.apache.hadoop.yarn.api.records.ContainerExitStatus;
 import org.apache.hadoop.yarn.api.records.ContainerId;
 import org.apache.hadoop.yarn.api.records.ContainerLaunchContext;
@@ -144,7 +144,7 @@ public class ContainerImpl implements Container {
 	private boolean recoveredAsKilled = false;
 
 	private long appArrivalTime;
-	private long appDeadline;
+	private long deadline;
 	private int numOfBeingPreempted;
 	private float preemptionPriority;
 
@@ -173,7 +173,7 @@ public class ContainerImpl implements Container {
 		stateMachine = stateMachineFactory.make(this);
 
 		this.appArrivalTime = launchContext.getArrivalTime();
-		this.appDeadline = launchContext.getDeadline();
+		this.deadline = launchContext.getDeadline();
 		this.numOfBeingPreempted = launchContext.getNumOfBeingPreempted();
 		this.preemptionPriority = launchContext.getPreemptionPriority();
 	}
@@ -218,7 +218,7 @@ public class ContainerImpl implements Container {
 		stateMachine = stateMachineFactory.make(this);
 
 		this.appArrivalTime = appArrivalTime;
-		this.appDeadline = appDeadline;
+		this.deadline = appDeadline;
 		this.numOfBeingPreempted = numOfBeingPreempted;
 		this.preemptionPriority = preemptionPriority;
 	}
@@ -980,7 +980,13 @@ public class ContainerImpl implements Container {
 		@Override
 		public void run() {
 			LOG.info("thread entered for container " + getContainerId() + " current state is " + stateMachine.getCurrentState());
-
+            List<Text> tokens = credentials.getAllSecretKeys();
+            LOG.info("\n====================");
+            for (Text token: tokens){
+                LOG.info("token: " + token.toString());
+            }
+            LOG.info("tokens number: " + tokens.size());
+            LOG.info("\n====================");
 			while (stateMachine.getCurrentState() == ContainerState.RUNNING) {
 
 				//LOG.info("thread loop for container "+getContainerId()+" memorysize "+memoryUpdateActorList.size()
@@ -1524,4 +1530,5 @@ public class ContainerImpl implements Container {
 		return this.cpuCores;
 
 	}
+
 }

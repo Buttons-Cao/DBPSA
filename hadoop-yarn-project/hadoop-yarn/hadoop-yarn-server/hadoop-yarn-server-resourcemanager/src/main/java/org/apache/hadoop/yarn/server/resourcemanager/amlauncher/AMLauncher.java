@@ -108,6 +108,7 @@ public class AMLauncher implements Runnable {
     ContainerLaunchContext launchContext =
         createAMContainerLaunchContext(applicationContext, masterContainerID);
 
+    LOG.info("StartContainerRequest.newInstance..........");
     StartContainerRequest scRequest =
         StartContainerRequest.newInstance(launchContext,
           masterContainer.getContainerToken());

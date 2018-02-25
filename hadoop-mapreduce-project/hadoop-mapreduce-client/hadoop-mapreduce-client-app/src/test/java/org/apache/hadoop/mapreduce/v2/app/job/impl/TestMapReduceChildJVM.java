@@ -20,6 +20,7 @@ package org.apache.hadoop.mapreduce.v2.app.job.impl;
 
 import java.util.Map;
 
+import org.apache.hadoop.util.Time;
 import org.junit.Assert;
 
 import org.apache.commons.logging.Log;
@@ -182,7 +183,7 @@ public class TestMapReduceChildJVM {
 
     public MyMRApp(int maps, int reduces, boolean autoComplete,
         String testName, boolean cleanOnStart) {
-      super(maps, reduces, autoComplete, testName, cleanOnStart);
+      super(maps, reduces, autoComplete, testName, cleanOnStart, Time.now(), Long.parseLong(MRJobConfig.DEFAULT_JOB_DEADLINE));
     }
 
     @Override

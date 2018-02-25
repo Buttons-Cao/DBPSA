@@ -108,6 +108,9 @@ message ContainerReportProto {
     optional int32 container_exit_status = 10;
     optional ContainerStateProto container_state = 11;
     optional string node_http_address = 12;
+    optional int64 ApparrivalTime = 13;
+    optional int64 deadline = 14;
+    optional int32 numOfBeingPreempted = 15;
 }
 
 enum YarnApplicationStateProto {

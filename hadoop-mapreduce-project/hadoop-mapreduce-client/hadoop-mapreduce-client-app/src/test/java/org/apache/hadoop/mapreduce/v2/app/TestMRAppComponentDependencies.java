@@ -20,6 +20,8 @@ package org.apache.hadoop.mapreduce.v2.app;
 
 import java.io.IOException;
 
+import org.apache.hadoop.mapreduce.MRJobConfig;
+import org.apache.hadoop.util.Time;
 import org.junit.Assert;
 
 import org.apache.hadoop.conf.Configuration;
@@ -65,7 +67,7 @@ public class TestMRAppComponentDependencies {
 
     public TestMRApp(int maps, int reduces, boolean autoComplete,
         String testName, boolean cleanOnStart) {
-      super(maps, reduces, autoComplete, testName, cleanOnStart);
+      super(maps, reduces, autoComplete, testName, cleanOnStart, Time.now(), Long.parseLong(MRJobConfig.DEFAULT_JOB_DEADLINE));
       JobHistoryEventHandlerStopped = 0;
       clientServiceStopped = 0;
       numStops = 0;

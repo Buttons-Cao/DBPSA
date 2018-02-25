@@ -142,6 +142,7 @@ public class ContainerLauncherImpl extends AbstractService implements
           event.getContainerLaunchContext();
 
         // Now launch the actual container
+        //LOG.info("StartContainerRequest.newInstance..........");
         StartContainerRequest startRequest =
             StartContainerRequest.newInstance(containerLaunchContext,
               event.getContainerToken());

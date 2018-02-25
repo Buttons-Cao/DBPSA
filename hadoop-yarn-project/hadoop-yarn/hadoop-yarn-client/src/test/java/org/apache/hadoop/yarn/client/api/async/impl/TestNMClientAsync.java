@@ -26,16 +26,14 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 
+import org.apache.hadoop.util.Time;
 import org.junit.Assert;
 
 import org.apache.hadoop.conf.Configuration;
@@ -552,6 +550,7 @@ public class TestNMClientAsync {
     // Create an empty record
     containerToken = recordFactory.newRecordInstance(Token.class);
     return Container.newInstance(containerId, nodeId, null, null, null,
-      containerToken);
+      containerToken, Time.now(), 457321,
+            new Random().nextInt(3), 0);
   }
 }

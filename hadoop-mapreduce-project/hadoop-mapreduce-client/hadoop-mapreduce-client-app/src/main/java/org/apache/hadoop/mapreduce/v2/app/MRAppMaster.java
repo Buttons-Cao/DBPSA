@@ -1640,4 +1640,12 @@ public class MRAppMaster extends CompositeService {
 	public ClientService getClientService() {
 		return clientService;
 	}
+
+	public long getAppSubmitTime() {
+		return appSubmitTime;
+	}
+
+	public long getDeadline() {
+		return deadline;
+	}
 }

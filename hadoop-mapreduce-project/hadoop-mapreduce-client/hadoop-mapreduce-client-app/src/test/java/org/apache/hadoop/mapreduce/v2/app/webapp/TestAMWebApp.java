@@ -31,6 +31,8 @@ import java.util.Map.Entry;
 
 import javax.net.ssl.SSLException;
 
+import org.apache.hadoop.mapreduce.MRJobConfig;
+import org.apache.hadoop.util.Time;
 import org.junit.Assert;
 
 import org.apache.hadoop.conf.Configuration;
@@ -172,7 +174,8 @@ public class TestAMWebApp {
 
   @Test
   public void testMRWebAppSSLDisabled() throws Exception {
-    MRApp app = new MRApp(2, 2, true, this.getClass().getName(), true) {
+    MRApp app = new MRApp(2, 2, true, this.getClass().getName(), true, Time.now(),
+            Long.parseLong(MRJobConfig.DEFAULT_JOB_DEADLINE)) {
       @Override
       protected ClientService createClientService(AppContext context) {
         return new MRClientService(context);
@@ -224,7 +227,8 @@ public class TestAMWebApp {
     String[] schemePrefix =
         { WebAppUtils.HTTP_PREFIX, WebAppUtils.HTTPS_PREFIX };
     for (String scheme : schemePrefix) {
-      MRApp app = new MRApp(2, 2, true, this.getClass().getName(), true) {
+      MRApp app = new MRApp(2, 2, true, this.getClass().getName(), true, Time.now(),
+              Long.parseLong(MRJobConfig.DEFAULT_JOB_DEADLINE)) {
         @Override
         protected ClientService createClientService(AppContext context) {
           return new MRClientService(context);

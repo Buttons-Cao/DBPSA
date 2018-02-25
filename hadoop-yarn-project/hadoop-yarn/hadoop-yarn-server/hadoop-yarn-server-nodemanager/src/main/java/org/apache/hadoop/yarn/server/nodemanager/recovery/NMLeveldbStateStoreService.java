@@ -217,6 +217,7 @@ public class NMLeveldbStateStoreService extends NMStateStoreService {
 
       String suffix = key.substring(keyPrefix.length()-1);  // start with '/'
       if (suffix.equals(CONTAINER_REQUEST_KEY_SUFFIX)) {
+        //LOG.info("StartContainerRequestPBImpl...............");
         rcs.startRequest = new StartContainerRequestPBImpl(
             StartContainerRequestProto.parseFrom(entry.getValue()));
       } else if (suffix.equals(CONTAINER_DIAGS_KEY_SUFFIX)) {

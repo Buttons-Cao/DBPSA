@@ -376,6 +376,7 @@ public class Application {
             updateResourceRequests(requests.get(priority), type, task);
 
             // Launch the container
+            //LOG.info("StartContainerRequest.newInstance..........");
             StartContainerRequest scRequest =
                 StartContainerRequest.newInstance(createCLC(),
                   container.getContainerToken());

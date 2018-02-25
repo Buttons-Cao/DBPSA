@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +19,8 @@
 package org.apache.hadoop.yarn.api.protocolrecords.impl.pb;
 
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.classification.InterfaceAudience.Private;
 import org.apache.hadoop.classification.InterfaceStability.Unstable;
 import org.apache.hadoop.security.proto.SecurityProtos.TokenProto;
@@ -36,133 +38,137 @@ import com.google.protobuf.TextFormat;
 @Private
 @Unstable
 public class StartContainerRequestPBImpl extends StartContainerRequest {
-  StartContainerRequestProto proto = StartContainerRequestProto.getDefaultInstance();
-  StartContainerRequestProto.Builder builder = null;
-  boolean viaProto = false;
-  
-  private ContainerLaunchContext containerLaunchContext = null;
+    StartContainerRequestProto proto = StartContainerRequestProto.getDefaultInstance();
+    StartContainerRequestProto.Builder builder = null;
+    boolean viaProto = false;
 
-  private Token containerToken = null;
-  
-  public StartContainerRequestPBImpl() {
-    builder = StartContainerRequestProto.newBuilder();
-  }
+    private ContainerLaunchContext containerLaunchContext = null;
 
-  public StartContainerRequestPBImpl(StartContainerRequestProto proto) {
-    this.proto = proto;
-    viaProto = true;
-  }
-  
-  public StartContainerRequestProto getProto() {
-      mergeLocalToProto();
-    proto = viaProto ? proto : builder.build();
-    viaProto = true;
-    return proto;
-  }
+    private Token containerToken = null;
 
-  @Override
-  public int hashCode() {
-    return getProto().hashCode();
-  }
+    private static final Log LOG = LogFactory.getLog(StartContainerRequestPBImpl.class);
 
-  @Override
-  public boolean equals(Object other) {
-    if (other == null)
-      return false;
-    if (other.getClass().isAssignableFrom(this.getClass())) {
-      return this.getProto().equals(this.getClass().cast(other).getProto());
+    public StartContainerRequestPBImpl() {
+        builder = StartContainerRequestProto.newBuilder();
     }
-    return false;
-  }
 
-  @Override
-  public String toString() {
-    return TextFormat.shortDebugString(getProto());
-  }
-
-  private void mergeLocalToBuilder() {
-    if (this.containerLaunchContext != null) {
-      builder.setContainerLaunchContext(convertToProtoFormat(this.containerLaunchContext));
+    public StartContainerRequestPBImpl(StartContainerRequestProto proto) {
+        this.proto = proto;
+        viaProto = true;
     }
-    if(this.containerToken != null) {
-      builder.setContainerToken(convertToProtoFormat(this.containerToken));
+
+    public StartContainerRequestProto getProto() {
+        mergeLocalToProto();
+        proto = viaProto ? proto : builder.build();
+        viaProto = true;
+        return proto;
     }
-  }
 
-  private void mergeLocalToProto() {
-    if (viaProto) 
-      maybeInitBuilder();
-    mergeLocalToBuilder();
-    proto = builder.build();
-    viaProto = true;
-  }
-
-  private void maybeInitBuilder() {
-    if (viaProto || builder == null) {
-      builder = StartContainerRequestProto.newBuilder(proto);
+    @Override
+    public int hashCode() {
+        return getProto().hashCode();
     }
-    viaProto = false;
-  }
-    
-  
-  @Override
-  public ContainerLaunchContext getContainerLaunchContext() {
-    StartContainerRequestProtoOrBuilder p = viaProto ? proto : builder;
-    if (this.containerLaunchContext != null) {
-      return this.containerLaunchContext;
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == null)
+            return false;
+        if (other.getClass().isAssignableFrom(this.getClass())) {
+            return this.getProto().equals(this.getClass().cast(other).getProto());
+        }
+        return false;
     }
-    if (!p.hasContainerLaunchContext()) {
-      return null;
+
+    @Override
+    public String toString() {
+        return TextFormat.shortDebugString(getProto());
     }
-    this.containerLaunchContext = convertFromProtoFormat(p.getContainerLaunchContext());
-    return this.containerLaunchContext;
-  }
 
-  @Override
-  public void setContainerLaunchContext(ContainerLaunchContext containerLaunchContext) {
-    maybeInitBuilder();
-    if (containerLaunchContext == null) 
-      builder.clearContainerLaunchContext();
-    this.containerLaunchContext = containerLaunchContext;
-  }
-
-  @Override
-  public Token getContainerToken() {
-    StartContainerRequestProtoOrBuilder p = viaProto ? proto : builder;
-    if (this.containerToken != null) {
-      return this.containerToken;
+    private void mergeLocalToBuilder() {
+        if (this.containerLaunchContext != null) {
+            builder.setContainerLaunchContext(convertToProtoFormat(this.containerLaunchContext));
+        }
+        if (this.containerToken != null) {
+            builder.setContainerToken(convertToProtoFormat(this.containerToken));
+        }
     }
-    if (!p.hasContainerToken()) {
-      return null;
+
+    private void mergeLocalToProto() {
+        if (viaProto)
+            maybeInitBuilder();
+        mergeLocalToBuilder();
+        proto = builder.build();
+        viaProto = true;
     }
-    this.containerToken = convertFromProtoFormat(p.getContainerToken());
-    return this.containerToken;
-  }
 
-  @Override
-  public void setContainerToken(Token containerToken) {
-    maybeInitBuilder();
-    if(containerToken == null) {
-      builder.clearContainerToken();
+    private void maybeInitBuilder() {
+        if (viaProto || builder == null) {
+            builder = StartContainerRequestProto.newBuilder(proto);
+        }
+        viaProto = false;
     }
-    this.containerToken = containerToken;
-  }
-
-  private ContainerLaunchContextPBImpl convertFromProtoFormat(ContainerLaunchContextProto p) {
-    return new ContainerLaunchContextPBImpl(p);
-  }
-
-  private ContainerLaunchContextProto convertToProtoFormat(ContainerLaunchContext t) {
-    return ((ContainerLaunchContextPBImpl)t).getProto();
-  }
 
 
+    @Override
+    public ContainerLaunchContext getContainerLaunchContext() {
+        StartContainerRequestProtoOrBuilder p = viaProto ? proto : builder;
+        if (this.containerLaunchContext != null) {
+            return this.containerLaunchContext;
+        }
+        if (!p.hasContainerLaunchContext()) {
+            return null;
+        }
+        this.containerLaunchContext = convertFromProtoFormat(p.getContainerLaunchContext());
+        return this.containerLaunchContext;
+    }
 
-  private TokenPBImpl convertFromProtoFormat(TokenProto containerProto) {
-    return new TokenPBImpl(containerProto);
-  }
+    @Override
+    public void setContainerLaunchContext(ContainerLaunchContext containerLaunchContext) {
+        maybeInitBuilder();
+        if (containerLaunchContext == null)
+            builder.clearContainerLaunchContext();
+        this.containerLaunchContext = containerLaunchContext;
+    }
 
-  private TokenProto convertToProtoFormat(Token container) {
-    return ((TokenPBImpl)container).getProto();
-  }
+    @Override
+    public Token getContainerToken() {
+        StartContainerRequestProtoOrBuilder p = viaProto ? proto : builder;
+        if (p==null) LOG.warn("p is null");
+        if (this.containerToken != null) {
+            return this.containerToken;
+        }
+        if (!p.hasContainerToken()) {
+            LOG.info("no container token...");
+            if (!p.hasContainerLaunchContext()) LOG.info("nor launch context...");
+            return null;
+        }
+        this.containerToken = convertFromProtoFormat(p.getContainerToken());
+        return this.containerToken;
+    }
+
+    @Override
+    public void setContainerToken(Token containerToken) {
+        maybeInitBuilder();
+        if (containerToken == null) {
+            builder.clearContainerToken();
+        }
+        this.containerToken = containerToken;
+    }
+
+    private ContainerLaunchContextPBImpl convertFromProtoFormat(ContainerLaunchContextProto p) {
+        return new ContainerLaunchContextPBImpl(p);
+    }
+
+    private ContainerLaunchContextProto convertToProtoFormat(ContainerLaunchContext t) {
+        return ((ContainerLaunchContextPBImpl) t).getProto();
+    }
+
+
+    private TokenPBImpl convertFromProtoFormat(TokenProto containerProto) {
+        return new TokenPBImpl(containerProto);
+    }
+
+    private TokenProto convertToProtoFormat(Token container) {
+        return ((TokenPBImpl) container).getProto();
+    }
 }  

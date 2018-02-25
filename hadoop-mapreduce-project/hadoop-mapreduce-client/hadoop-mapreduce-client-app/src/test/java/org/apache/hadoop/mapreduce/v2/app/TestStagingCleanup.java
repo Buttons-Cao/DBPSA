@@ -377,7 +377,8 @@ public class TestStagingCleanup {
 
 		public MRAppTestCleanup(int maps, int reduces, boolean autoComplete,
 		                        String testName, boolean cleanOnStart) {
-			super(maps, reduces, autoComplete, testName, cleanOnStart);
+			super(maps, reduces, autoComplete, testName, cleanOnStart, Time.now(),
+					Long.parseLong(MRJobConfig.DEFAULT_JOB_DEADLINE));
 			stagingDirCleanedup = 0;
 			ContainerAllocatorStopped = 0;
 			numStops = 0;
