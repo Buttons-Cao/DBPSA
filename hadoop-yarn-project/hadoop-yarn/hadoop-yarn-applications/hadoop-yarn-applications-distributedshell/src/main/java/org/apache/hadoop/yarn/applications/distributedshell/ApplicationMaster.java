@@ -1029,7 +1029,6 @@ public class ApplicationMaster {
 			// download anyfiles in the distributed file-system. The tokens are
 			// otherwise also useful in cases, for e.g., when one is running a
 			// "hadoop dfs" command inside the distributed shell.
-			LOG.info("1. TOKENS:"+allTokens.duplicate().array());
 			ContainerLaunchContext ctx = ContainerLaunchContext.newInstance(
 				localResources, shellEnv, commands, null, allTokens.duplicate(), null,
 				container.getAppArrivalTime(), container.getDeadline(), 0, 0);

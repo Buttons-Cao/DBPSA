@@ -134,7 +134,6 @@ public class ContainerLauncherImpl extends AbstractService implements
 
 			ContainerManagementProtocolProxyData proxy = null;
 			try {
-				LOG.info("137-----");
 				proxy = getCMProxy(containerMgrAddress, containerID);
 
 				// Construct the actual Container
@@ -146,7 +145,7 @@ public class ContainerLauncherImpl extends AbstractService implements
 				List<StartContainerRequest> list = new ArrayList<StartContainerRequest>();
 				list.add(startRequest);
 				StartContainersRequest requestList = StartContainersRequest.newInstance(list);
-				StartContainersResponse response = proxy.getContainerManagementProtocol().startContainers(requestList); //此处远程调用了
+				StartContainersResponse response = proxy.getContainerManagementProtocol().startContainers(requestList);
 				if (response.getFailedRequests() != null
 					&& response.getFailedRequests().containsKey(containerID)) {
 					throw response.getFailedRequests().get(containerID).deSerialize();

@@ -64,11 +64,7 @@ public class ContainerManagementProtocolPBServiceImpl implements ContainerManage
                                                         StartContainersRequestProto proto) throws ServiceException {
         StartContainersRequestPBImpl request = new StartContainersRequestPBImpl(proto);
         try {
-            LOG.info("request: ");
-            for (StartContainerRequest r : request.getStartContainerRequests()) {
-                if(r.getContainerToken()==null)  LOG.info("container token does not exist");
-            }
-            StartContainersResponse response = real.startContainers(request);// 到这里时已经没有了
+            StartContainersResponse response = real.startContainers(request);
             return ((StartContainersResponsePBImpl) response).getProto();
         } catch (YarnException e) {
             throw new ServiceException(e);

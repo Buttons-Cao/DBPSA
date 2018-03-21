@@ -619,8 +619,6 @@ public class ProtobufRpcEngine implements RpcEngine {
 				Exception exception = null;
 				try {
 					server.rpcDetailedMetrics.init(protocolImpl.protocolClass);
-					LOG.info("trans param: " + param.toString()); // token cannot be transferred by this.
-					LOG.info("method index: " + methodDescriptor.getIndex()); // case 0?
 					result = service.callBlockingMethod(methodDescriptor, null, param);
 				} catch (ServiceException e) {
 					exception = (Exception) e.getCause();

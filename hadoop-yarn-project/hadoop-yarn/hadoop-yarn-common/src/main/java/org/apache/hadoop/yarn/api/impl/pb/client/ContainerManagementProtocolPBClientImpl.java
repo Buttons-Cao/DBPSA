@@ -92,9 +92,8 @@ public class ContainerManagementProtocolPBClientImpl implements ContainerManagem
 	public StartContainersResponse startContainers(StartContainersRequest requests) throws YarnException,
 		IOException {
 		StartContainersRequestProto requestProto = ((StartContainersRequestPBImpl) requests).getProto();
-		LOG.info("----the proto: "+requestProto);
 		try {
-			return new StartContainersResponsePBImpl(proxy.startContainers(null, requestProto)); // 错在这里
+			return new StartContainersResponsePBImpl(proxy.startContainers(null, requestProto));
 		} catch (ServiceException e) {
 			RPCUtil.unwrapAndThrowException(e);
 			return null;
