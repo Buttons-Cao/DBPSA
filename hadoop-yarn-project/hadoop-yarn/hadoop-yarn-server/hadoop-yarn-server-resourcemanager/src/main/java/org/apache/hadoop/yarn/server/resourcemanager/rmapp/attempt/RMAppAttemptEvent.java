@@ -25,8 +25,7 @@ public class RMAppAttemptEvent extends AbstractEvent<RMAppAttemptEventType> {
 
   private final ApplicationAttemptId appAttemptId;
 
-  public RMAppAttemptEvent(ApplicationAttemptId appAttemptId,
-      RMAppAttemptEventType type) {
+  public RMAppAttemptEvent(ApplicationAttemptId appAttemptId, RMAppAttemptEventType type) {
     super(type);
     this.appAttemptId = appAttemptId;
   }

@@ -60,7 +60,7 @@ public abstract class ContainerLaunchContext {
 		Map<String, LocalResource> localResources,
 		Map<String, String> environment, List<String> commands,
 		Map<String, ByteBuffer> serviceData, ByteBuffer tokens,
-		Map<ApplicationAccessType, String> acls, long arrivalTime, long deadline) {
+		Map<ApplicationAccessType, String> acls, long arrivalTime, long deadline, int numOfBeingPreempted, float Pp) {
 		ContainerLaunchContext container =
 			Records.newRecord(ContainerLaunchContext.class);
 		container.setLocalResources(localResources);
@@ -71,6 +71,8 @@ public abstract class ContainerLaunchContext {
 		container.setApplicationACLs(acls);
 		container.setArrivalTime(arrivalTime);
 		container.setDeadline(deadline);
+		container.setNumOfBeingPreempted(numOfBeingPreempted);
+		container.setPreemptionPriority(Pp);
 		return container;
 	}
 

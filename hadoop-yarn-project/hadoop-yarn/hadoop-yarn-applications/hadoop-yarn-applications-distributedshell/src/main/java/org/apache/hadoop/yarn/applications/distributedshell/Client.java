@@ -455,8 +455,7 @@ public class Client {
 
 		YarnClusterMetrics clusterMetrics = yarnClient.getYarnClusterMetrics();
 		// seems like yarnClinet is ASM
-		LOG.info("Got Cluster metric info from ASM"
-			+ ", numNodeManagers=" + clusterMetrics.getNumNodeManagers());
+		LOG.info("Got Cluster metric info from ASM"	+ ", numNodeManagers=" + clusterMetrics.getNumNodeManagers());
 
 		List<NodeReport> clusterNodeReports = yarnClient.getNodeReports(
 			NodeState.RUNNING);
@@ -669,8 +668,8 @@ public class Client {
 		commands.add(command.toString());
 
 		// Set up the container launch context for the application master
-		ContainerLaunchContext amContainer = ContainerLaunchContext.newInstance(
-			localResources, env, commands, null, null, null, arrivalTime, deadline);
+		ContainerLaunchContext amContainer = ContainerLaunchContext.newInstance(localResources, env, commands, null,
+			null, null, arrivalTime, deadline, 0, 0);
 
 		// Set up resource type requirements
 		// For now, both memory and vcores are supported, so we set memory and

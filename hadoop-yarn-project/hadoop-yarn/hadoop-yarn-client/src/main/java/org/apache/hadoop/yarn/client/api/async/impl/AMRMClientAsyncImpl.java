@@ -50,8 +50,7 @@ import com.google.common.annotations.VisibleForTesting;
 
 @Private
 @Unstable
-public class AMRMClientAsyncImpl<T extends ContainerRequest> 
-extends AMRMClientAsync<T> {
+public class AMRMClientAsyncImpl<T extends ContainerRequest> extends AMRMClientAsync<T> {
   
   private static final Log LOG = LogFactory.getLog(AMRMClientAsyncImpl.class);
   
@@ -73,8 +72,7 @@ extends AMRMClientAsync<T> {
   
   @Private
   @VisibleForTesting
-  public AMRMClientAsyncImpl(AMRMClient<T> client, int intervalMs,
-      CallbackHandler callbackHandler) {
+  public AMRMClientAsyncImpl(AMRMClient<T> client, int intervalMs, CallbackHandler callbackHandler) {
     super(client, intervalMs, callbackHandler);
     heartbeatThread = new HeartbeatThread();
     handlerThread = new CallbackHandlerThread();
@@ -294,8 +292,7 @@ extends AMRMClientAsync<T> {
             handler.onNodesUpdated(updatedNodes);
           }
 
-          List<ContainerStatus> completed =
-              response.getCompletedContainersStatuses();
+          List<ContainerStatus> completed = response.getCompletedContainersStatuses();
           if (!completed.isEmpty()) {
             handler.onContainersCompleted(completed);
           }

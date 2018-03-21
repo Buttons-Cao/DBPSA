@@ -43,8 +43,7 @@ import org.apache.hadoop.yarn.util.Records;
 public abstract class StartContainerRequest {
   @Public
   @Stable
-  public static StartContainerRequest newInstance(
-      ContainerLaunchContext context, Token container) {
+  public static StartContainerRequest newInstance(ContainerLaunchContext context, Token container) {
     StartContainerRequest request =
         Records.newRecord(StartContainerRequest.class);
     request.setContainerLaunchContext(context);

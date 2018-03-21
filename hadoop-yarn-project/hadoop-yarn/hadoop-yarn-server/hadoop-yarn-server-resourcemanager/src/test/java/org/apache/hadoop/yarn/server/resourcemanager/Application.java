@@ -376,15 +376,14 @@ public class Application {
             updateResourceRequests(requests.get(priority), type, task);
 
             // Launch the container
-            //LOG.info("StartContainerRequest.newInstance..........");
+            LOG.info("Application: StartContainerRequest.newInstance..."+ container.getContainerToken());
             StartContainerRequest scRequest =
                 StartContainerRequest.newInstance(createCLC(),
                   container.getContainerToken());
             List<StartContainerRequest> list =
                 new ArrayList<StartContainerRequest>();
             list.add(scRequest);
-            StartContainersRequest allRequests =
-                StartContainersRequest.newInstance(list);
+            StartContainersRequest allRequests = StartContainersRequest.newInstance(list);
             nodeManager.startContainers(allRequests);
             break;
           }

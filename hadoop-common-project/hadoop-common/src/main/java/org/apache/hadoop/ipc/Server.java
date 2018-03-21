@@ -208,8 +208,7 @@ public abstract class Server {
         }
     }
 
-    static Map<RPC.RpcKind, RpcKindMapValue> rpcKindMap = new
-            HashMap<RPC.RpcKind, RpcKindMapValue>(4);
+    static Map<RPC.RpcKind, RpcKindMapValue> rpcKindMap = new HashMap<RPC.RpcKind, RpcKindMapValue>(4);
 
 
     /**
@@ -252,8 +251,7 @@ public abstract class Server {
 
 
     public static final Log LOG = LogFactory.getLog(Server.class);
-    public static final Log AUDITLOG =
-            LogFactory.getLog("SecurityLogger." + Server.class.getName());
+    public static final Log AUDITLOG = LogFactory.getLog("SecurityLogger." + Server.class.getName());
     private static final String AUTH_FAILED_FOR = "Auth failed for ";
     private static final String AUTH_SUCCESSFUL_FOR = "Auth successful for ";
 
@@ -989,7 +987,7 @@ public abstract class Server {
                     call = responseQueue.removeFirst();
                     SocketChannel channel = call.connection.channel;
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug(Thread.currentThread().getName() + ": 992 ---> responding to " + call);
+                        LOG.debug(Thread.currentThread().getName() + ": responding to " + call);
                     }
                     //
                     // Send as much data as we can in the non-blocking fashion
@@ -1008,7 +1006,7 @@ public abstract class Server {
                             done = false;            // more calls pending to be sent.
                         }
                         if (LOG.isDebugEnabled()) {
-                            LOG.debug(Thread.currentThread().getName() + ": 1011 ---> responding to " + call
+                            LOG.debug(Thread.currentThread().getName() + ": responding to " + call
                                     + " Wrote " + numBytes + " bytes.");
                         }
                     } else {
@@ -1036,7 +1034,7 @@ public abstract class Server {
                             }
                         }
                         if (LOG.isDebugEnabled()) {
-                            LOG.debug(Thread.currentThread().getName() + ": 1039 ---> responding to " + call
+                            LOG.debug(Thread.currentThread().getName() + ": responding to " + call
                                     + " Wrote partial " + numBytes + " bytes.");
                         }
                     }
@@ -1451,7 +1449,6 @@ public abstract class Server {
         private void doSaslReply(Message message) throws IOException {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Sending sasl message " + message);
-                LOG.debug("-----> <-----");
             }
             //LOG.info("Sending sasl message " + message.toString());
             setupResponse(saslResponse, saslCall,
@@ -2063,6 +2060,9 @@ public abstract class Server {
                             value = call(call.rpcKind, call.connection.protocolName, call.rpcRequest,
                                     call.timestamp);
                         } else {
+                            if(LOG.isDebugEnabled()){
+                                LOG.debug("User"+call.connection.user.toString()+"calling...");
+                            }
                             value = call.connection.user.doAs(new PrivilegedExceptionAction<Writable>() {
                                                  @Override
                                                  public Writable run() throws Exception {
@@ -2512,8 +2512,7 @@ public abstract class Server {
     }
 
     /** Called for each call. */
-    public abstract Writable call(RPC.RpcKind rpcKind, String protocol,
-                                  Writable param, long receiveTime) throws Exception;
+    public abstract Writable call(RPC.RpcKind rpcKind, String protocol, Writable param, long receiveTime) throws Exception;
 
     /**
      * Authorize the incoming client connection.

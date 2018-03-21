@@ -262,8 +262,7 @@ public class AppSchedulingInfo {
 	 * @param container
 	 *          the containers allocated.
 	 */
-	synchronized public List<ResourceRequest> allocate(NodeType type,
-	                                                   SchedulerNode node, Priority priority, ResourceRequest request,
+	synchronized public List<ResourceRequest> allocate(NodeType type, SchedulerNode node, Priority priority, ResourceRequest request,
 	                                                   Container container) {
 		List<ResourceRequest> resourceRequests = new ArrayList<ResourceRequest>();
 		if (type == NodeType.NODE_LOCAL) {

@@ -1353,7 +1353,8 @@ public class RMWebServices {
 			ContainerLaunchContext.newInstance(hlr, newApp
 				.getContainerLaunchContextInfo().getEnvironment(), newApp
 				.getContainerLaunchContextInfo().getCommands(), hmap, tokens, newApp
-				.getContainerLaunchContextInfo().getAcls(), newApp.getArrivalTime(), Long.parseLong(newApp.getDeadline()));
+				.getContainerLaunchContextInfo().getAcls(), newApp.getArrivalTime(), Long.parseLong(newApp.getDeadline()),
+				0, 0);
 
 		return ctx;
 	}

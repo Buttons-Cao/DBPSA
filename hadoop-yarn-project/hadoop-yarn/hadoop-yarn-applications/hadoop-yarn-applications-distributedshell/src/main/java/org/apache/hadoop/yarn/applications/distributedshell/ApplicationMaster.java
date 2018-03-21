@@ -532,8 +532,7 @@ public class ApplicationMaster {
 
 		// Note: Credentials, Token, UserGroupInformation, DataOutputBuffer class
 		// are marked as LimitedPrivate
-		Credentials credentials =
-			UserGroupInformation.getCurrentUser().getCredentials();
+		Credentials credentials = UserGroupInformation.getCurrentUser().getCredentials();
 		DataOutputBuffer dob = new DataOutputBuffer();
 		credentials.writeTokenStorageToStream(dob);
 		// Now remove the AM->RM token so that containers cannot access it.
@@ -607,14 +606,12 @@ public class ApplicationMaster {
 			containerVirtualCores = maxVCores;
 		}
 
-		List<Container> previousAMRunningContainers =
-			response.getContainersFromPreviousAttempts();
+		List<Container> previousAMRunningContainers = response.getContainersFromPreviousAttempts();
 		LOG.info(appAttemptID + " received " + previousAMRunningContainers.size()
 			+ " previous attempts' running containers on AM registration.");
 		numAllocatedContainers.addAndGet(previousAMRunningContainers.size());
 
-		int numTotalContainersToRequest =
-			numTotalContainers - previousAMRunningContainers.size();
+		int numTotalContainersToRequest = numTotalContainers - previousAMRunningContainers.size();
 		// Setup ask for containers from RM
 		// Send request for containers to RM
 		// Until we get our fully allocated quota, we keep on polling RM for
@@ -622,7 +619,7 @@ public class ApplicationMaster {
 		// Keep looping until all the containers are launched and shell script
 		// executed on them ( regardless of success/failure).
 		for (int i = 0; i < numTotalContainersToRequest; ++i) {
-			ContainerRequest containerAsk = setupContainerAskForRM();
+			ContainerRequest containerAsk = setupContainerAskForRM(); /// here
 			amRMClient.addContainerRequest(containerAsk);
 		}
 		numRequestedContainers.set(numTotalContainers);
@@ -1032,10 +1029,10 @@ public class ApplicationMaster {
 			// download anyfiles in the distributed file-system. The tokens are
 			// otherwise also useful in cases, for e.g., when one is running a
 			// "hadoop dfs" command inside the distributed shell.
-			long arrivalTime = Time.now();
+			LOG.info("1. TOKENS:"+allTokens.duplicate().array());
 			ContainerLaunchContext ctx = ContainerLaunchContext.newInstance(
 				localResources, shellEnv, commands, null, allTokens.duplicate(), null,
-				container.getAppArrivalTime(), container.getDeadline());
+				container.getAppArrivalTime(), container.getDeadline(), 0, 0);
 			containerListener.addContainer(container.getId(), container);
 			nmClientAsync.startContainerAsync(container, ctx);
 		}
@@ -1069,11 +1066,9 @@ public class ApplicationMaster {
 
 		// Set up resource type requirements
 		// For now, memory and CPU are supported so we set memory and cpu requirements
-		Resource capability = Resource.newInstance(containerMemory,
-			containerVirtualCores);
+		Resource capability = Resource.newInstance(containerMemory,	containerVirtualCores);
 
-		ContainerRequest request = new ContainerRequest(capability, null, null,
-			pri, arrivalTime, deadline);
+		ContainerRequest request = new ContainerRequest(capability, null, null,	pri);
 		LOG.info("Requested container ask: " + request.toString());
 		return request;
 	}

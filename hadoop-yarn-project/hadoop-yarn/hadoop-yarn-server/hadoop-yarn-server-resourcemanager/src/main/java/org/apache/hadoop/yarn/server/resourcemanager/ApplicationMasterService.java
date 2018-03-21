@@ -419,9 +419,8 @@ public class ApplicationMasterService extends AbstractService implements
 		throws YarnException, IOException {
 
 		AMRMTokenIdentifier amrmTokenIdentifier = authorizeRequest();
-
-		ApplicationAttemptId appAttemptId =
-			amrmTokenIdentifier.getApplicationAttemptId();
+		LOG.info("Allocating container?");
+		ApplicationAttemptId appAttemptId =	amrmTokenIdentifier.getApplicationAttemptId();
 		ApplicationId applicationId = appAttemptId.getApplicationId();
 
 		this.amLivelinessMonitor.receivedPing(appAttemptId);
@@ -429,17 +428,14 @@ public class ApplicationMasterService extends AbstractService implements
     /* check if its in cache */
 		AllocateResponseLock lock = responseMap.get(appAttemptId);
 		if (lock == null) {
-			String message =
-				"Application attempt " + appAttemptId
-					+ " doesn't exist in ApplicationMasterService cache.";
+			String message = "Application attempt " + appAttemptId + " doesn't exist in ApplicationMasterService cache.";
 			LOG.error(message);
 			throw new ApplicationAttemptNotFoundException(message);
 		}
 		synchronized (lock) {
 			AllocateResponse lastResponse = lock.getAllocateResponse();
 			if (!hasApplicationMasterRegistered(appAttemptId)) {
-				String message =
-					"AM is not registered for known application attempt: " + appAttemptId
+				String message = "AM is not registered for known application attempt: " + appAttemptId
 						+ " or RM had restarted after AM registered . AM should re-register.";
 				LOG.info(message);
 				RMAuditLogger.logFailure(
@@ -485,8 +481,7 @@ public class ApplicationMasterService extends AbstractService implements
 			List<String> blacklistRemovals =
 				(blacklistRequest != null) ?
 					blacklistRequest.getBlacklistRemovals() : Collections.EMPTY_LIST;
-			RMApp app =
-				this.rmContext.getRMApps().get(applicationId);
+			RMApp app =	this.rmContext.getRMApps().get(applicationId);
 
 			// set label expression for Resource Requests if resourceName=ANY
 			ApplicationSubmissionContext asc = app.getApplicationSubmissionContext();
@@ -527,8 +522,7 @@ public class ApplicationMasterService extends AbstractService implements
 			}
 
 			// Send new requests to appAttempt.
-			Allocation allocation =
-				this.rScheduler.allocate(appAttemptId, ask, release,
+			Allocation allocation =	this.rScheduler.allocate(appAttemptId, ask, release,
 					blacklistAdditions, blacklistRemovals);
 
 			if (!blacklistAdditions.isEmpty() || !blacklistRemovals.isEmpty()) {
@@ -537,8 +531,7 @@ public class ApplicationMasterService extends AbstractService implements
 					"blacklistRemovals: " + blacklistRemovals);
 			}
 			RMAppAttempt appAttempt = app.getRMAppAttempt(appAttemptId);
-			AllocateResponse allocateResponse =
-				recordFactory.newRecordInstance(AllocateResponse.class);
+			AllocateResponse allocateResponse =	recordFactory.newRecordInstance(AllocateResponse.class);
 			if (!allocation.getContainers().isEmpty()) {
 				allocateResponse.setNMTokens(allocation.getNMTokens());
 			}
@@ -578,16 +571,13 @@ public class ApplicationMasterService extends AbstractService implements
 			allocateResponse.setNumClusterNodes(this.rScheduler.getNumClusterNodes());
 
 			// add preemption to the allocateResponse message (if any)
-			allocateResponse
-				.setPreemptionMessage(generatePreemptionMessage(allocation));
+			allocateResponse.setPreemptionMessage(generatePreemptionMessage(allocation));
 
 			// update AMRMToken if the token is rolled-up
-			MasterKeyData nextMasterKey =
-				this.rmContext.getAMRMTokenSecretManager().getNextMasterKeyData();
+			MasterKeyData nextMasterKey = this.rmContext.getAMRMTokenSecretManager().getNextMasterKeyData();
 
 			if (nextMasterKey != null
-				&& nextMasterKey.getMasterKey().getKeyId() != amrmTokenIdentifier
-				.getKeyId()) {
+				&& nextMasterKey.getMasterKey().getKeyId() != amrmTokenIdentifier.getKeyId()) {
 				RMAppAttemptImpl appAttemptImpl = (RMAppAttemptImpl) appAttempt;
 				Token<AMRMTokenIdentifier> amrmToken = appAttempt.getAMRMToken();
 				if (nextMasterKey.getMasterKey().getKeyId() !=

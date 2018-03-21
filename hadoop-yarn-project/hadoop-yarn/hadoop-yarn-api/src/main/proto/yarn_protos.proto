@@ -88,8 +88,8 @@ message ContainerProto {
     optional string node_http_address = 3;
     optional ResourceProto resource = 4;
     optional PriorityProto priority = 5;
-    optional float preemptionPriority = 6;
-    optional hadoop.common.TokenProto container_token = 7;
+    optional hadoop.common.TokenProto container_token = 6;
+    optional float preemptionPriority = 7;
     optional int64 deadline = 8;
     optional int64 appArrivalTime = 9;
     optional int32 numOfBeingPreempted = 10;
@@ -422,6 +422,10 @@ message ContainerLaunchContextProto {
     repeated StringStringMapProto environment = 4;
     repeated string command = 5;
     repeated ApplicationACLMapProto application_ACLs = 6;
+    optional int64 arrivalTime = 7;
+    optional int64 deadline = 8;
+    optional int32 numOfBeingPreempted=9;
+    optional float preemptionPriority = 10;
 }
 
 message ContainerStatusProto {

@@ -1076,7 +1076,7 @@ public class TestYarnClient {
 				long arrivalTime = Time.now();
 				ContainerLaunchContext clc = ContainerLaunchContext.newInstance(
 					null, null, null, null, tokens, null,
-					arrivalTime, arrivalTime + 123940);
+					arrivalTime, arrivalTime + 123940, 0, 0);
 				when(context.getAMContainerSpec()).thenReturn(clc);
 				client.submitApplication(context);
 				if (i == 0) {

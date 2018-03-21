@@ -785,8 +785,7 @@ public class RMAppAttemptImpl implements RMAppAttempt, Recoverable {
 
 		try {
 			ApplicationAttemptId appAttemptID = event.getApplicationAttemptId();
-			LOG.debug("Processing event for " + appAttemptID + " of type "
-				+ event.getType());
+			LOG.debug("Processing event for " + appAttemptID + " of type " + event.getType());
 			final RMAppAttemptState oldState = getAppAttemptState();
 			try {
         /* keep the master in sync with the state machine */

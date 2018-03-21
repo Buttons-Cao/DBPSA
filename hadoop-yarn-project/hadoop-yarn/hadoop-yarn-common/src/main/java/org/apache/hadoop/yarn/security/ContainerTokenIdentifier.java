@@ -183,8 +183,7 @@ public class ContainerTokenIdentifier extends TokenIdentifier {
     if (proto.hasContainerId()) {
       containerId = new ContainerIdPBImpl(proto.getContainerId()).toString();
     }
-    return UserGroupInformation.createRemoteUser(
-        containerId);
+    return UserGroupInformation.createRemoteUser(containerId);
   }
 
   // TODO: Needed?

@@ -62,8 +62,7 @@ public abstract class SchedulerNode {
 
 
   /* set of containers that are allocated containers */
-  private final Map<ContainerId, RMContainer> launchedContainers =
-      new HashMap<ContainerId, RMContainer>();
+  private final Map<ContainerId, RMContainer> launchedContainers = new HashMap<>();
   
   private final Set<ContainerId> suspendedContainers = new HashSet<ContainerId>();
 

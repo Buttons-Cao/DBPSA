@@ -652,32 +652,24 @@ public abstract class TaskAttemptImpl implements
 			} else {
 				// Job jar may be null. For e.g, for pipes, the job jar is the hadoop
 				// mapreduce jar itself which is already on the classpath.
-				LOG.info("Job jar is not present. "
-					+ "Not adding any jar to the list of resources.");
+				LOG.info("Job jar is not present. Not adding any jar to the list of resources.");
 			}
 			// //////////// End of JobJar setup
 
 			// //////////// Set up JobConf to be localized properly on the remote NM.
-			Path path =
-				MRApps.getStagingAreaDir(conf, UserGroupInformation
-					.getCurrentUser().getShortUserName());
-			Path remoteJobSubmitDir =
-				new Path(path, oldJobId.toString());
-			Path remoteJobConfPath =
-				new Path(remoteJobSubmitDir, MRJobConfig.JOB_CONF_FILE);
-			localResources.put(
-				MRJobConfig.JOB_CONF_FILE,
-				createLocalResource(remoteFS, remoteJobConfPath,
+			Path path =	MRApps.getStagingAreaDir(conf, UserGroupInformation.getCurrentUser().getShortUserName());
+			Path remoteJobSubmitDir = new Path(path, oldJobId.toString());
+			Path remoteJobConfPath = new Path(remoteJobSubmitDir, MRJobConfig.JOB_CONF_FILE);
+			localResources.put(MRJobConfig.JOB_CONF_FILE, createLocalResource(remoteFS, remoteJobConfPath,
 					LocalResourceType.FILE, LocalResourceVisibility.APPLICATION));
-			LOG.info("The job-conf file on the remote FS is "
-				+ remoteJobConfPath.toUri().toASCIIString());
+			LOG.info("The job-conf file on the remote FS is "+ remoteJobConfPath.toUri().toASCIIString());
 			// //////////// End of JobConf setup
 
 			// Setup DistributedCache
 			MRApps.setupDistributedCache(conf, localResources);
 
 			// Setup up task credentials buffer
-			LOG.info("Adding #" + credentials.numberOfTokens()
+			LOG.info("Adding #" + credentials.numberOfTokens() // why 0 token?
 				+ " tokens and #" + credentials.numberOfSecretKeys()
 				+ " secret keys for NM use for launching container");
 			Credentials taskCredentials = new Credentials(credentials);
@@ -777,7 +769,7 @@ public abstract class TaskAttemptImpl implements
 		// container separately.
 		ContainerLaunchContext container =
 			ContainerLaunchContext.newInstance(localResources, environment, null, serviceData,
-				taskCredentialsBuffer, applicationACLs, arrivalTime, deadline);
+				taskCredentialsBuffer, applicationACLs, arrivalTime, deadline, 0, 0);
 		return container;
 	}
 
@@ -825,7 +817,7 @@ public abstract class TaskAttemptImpl implements
 		// Construct the actual Container
 		ContainerLaunchContext container = ContainerLaunchContext.newInstance( commonContainerSpec.getLocalResources(),
 			myEnv, commands, myServiceData, commonContainerSpec.getTokens().duplicate(), applicationACLs, arrivalTime,
-			deadline);
+			deadline, 0, 0);
 
 		return container;
 	}
@@ -1046,8 +1038,7 @@ public abstract class TaskAttemptImpl implements
 	@Override
 	public void handle(TaskAttemptEvent event) {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("Processing " + event.getTaskAttemptID() + " of type "
-				+ event.getType());
+			LOG.debug("Processing " + event.getTaskAttemptID() + " of type " + event.getType());
 		}
 		writeLock.lock();
 		try {
@@ -1494,8 +1485,7 @@ public abstract class TaskAttemptImpl implements
 		@Override
 		public void transition(final TaskAttemptImpl taskAttempt,
 		                       TaskAttemptEvent event) {
-			final TaskAttemptContainerAssignedEvent cEvent =
-				(TaskAttemptContainerAssignedEvent) event;
+			final TaskAttemptContainerAssignedEvent cEvent = (TaskAttemptContainerAssignedEvent) event;
 			Container container = cEvent.getContainer();
 			taskAttempt.container = container;
 			// this is a _real_ Task (classic Hadoop mapred flavor):
@@ -1510,19 +1500,19 @@ public abstract class TaskAttemptImpl implements
 			taskAttempt.computeRackAndLocality();
 
 			//launch the container
+			if (taskAttempt.credentials.getAllTokens().isEmpty())  LOG.info("task attempt "+taskAttempt.attemptId+
+				" does not have credentials");
 			//create the container object to be launched for a given Task attempt
 			ContainerLaunchContext launchContext = createContainerLaunchContext(
 				cEvent.getApplicationACLs(), taskAttempt.conf, taskAttempt.jobToken,
 				taskAttempt.remoteTask, taskAttempt.oldJobId, taskAttempt.jvmID,
 				taskAttempt.taskAttemptListener, taskAttempt.credentials, taskAttempt.getArrivalTime(),
 				taskAttempt.getDeadline());
-			taskAttempt.eventHandler
-				.handle(new ContainerRemoteLaunchEvent(taskAttempt.attemptId,
+			taskAttempt.eventHandler.handle(new ContainerRemoteLaunchEvent(taskAttempt.attemptId,
 					launchContext, container, taskAttempt.remoteTask));
 
 			// send event to speculator that our container needs are satisfied
-			taskAttempt.eventHandler.handle
-				(new SpeculatorEvent(taskAttempt.getID().getTaskId(), -1));
+			taskAttempt.eventHandler.handle(new SpeculatorEvent(taskAttempt.getID().getTaskId(), -1));
 		}
 	}
 

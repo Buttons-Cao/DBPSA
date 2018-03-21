@@ -133,8 +133,7 @@ public abstract class NMClientAsync extends AbstractService {
     this.setCallbackHandler(callbackHandler);
   }
 
-  public abstract void startContainerAsync(
-      Container container, ContainerLaunchContext containerLaunchContext);
+  public abstract void startContainerAsync(Container container, ContainerLaunchContext containerLaunchContext);
 
   public abstract void stopContainerAsync(
       ContainerId containerId, NodeId nodeId);

@@ -203,6 +203,8 @@ public class NMTokenSecretManagerInRM extends BaseNMTokenSecretManager {
               createNMToken(container.getId().getApplicationAttemptId(),
                 container.getNodeId(), applicationSubmitter);
           nmToken = NMToken.newInstance(container.getNodeId(), token);
+          if (null == nmToken) LOG.warn("cannot generate nm token...");
+          if (null != nmToken) LOG.info("The NMToken for container " + container.getId() + " is " + nmToken.toString());
           nodeSet.add(container.getNodeId());
         }
       }

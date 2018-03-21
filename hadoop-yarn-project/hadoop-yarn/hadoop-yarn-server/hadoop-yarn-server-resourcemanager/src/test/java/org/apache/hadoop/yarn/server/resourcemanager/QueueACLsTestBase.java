@@ -223,7 +223,7 @@ public abstract class QueueACLsTestBase {
 		long arrivalTime = Time.now();
 		ContainerLaunchContext amContainerSpec =
 			ContainerLaunchContext.newInstance(null, null, null, null, null, acls,
-				arrivalTime, arrivalTime + 12346);
+				arrivalTime, arrivalTime + 12346, 0, 0);
 
 		ApplicationSubmissionContext appSubmissionContext =
 

@@ -82,8 +82,7 @@ public class SchedulerApplicationAttempt {
 	protected ApplicationAttemptId attemptId;
 	protected Map<ContainerId, RMContainer> liveContainers =
 		new HashMap<>();
-	protected final Map<Priority, Map<NodeId, RMContainer>> reservedContainers =
-		new HashMap<Priority, Map<NodeId, RMContainer>>();
+	protected final Map<Priority, Map<NodeId, RMContainer>> reservedContainers = new HashMap<Priority, Map<NodeId, RMContainer>>();
 
 	private final Multiset<Priority> reReservations = HashMultiset.create();
 
@@ -464,6 +463,9 @@ public class SchedulerApplicationAttempt {
 				NMToken nmToken =
 					rmContext.getNMTokenSecretManager().createAndGetNMToken(getUser(),
 						getApplicationAttemptId(), container);
+				if (nmToken == null){
+					LOG.info("cannot create NMToken...");
+				}
 				if (nmToken != null) {
 					nmTokens.add(nmToken);
 				}

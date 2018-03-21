@@ -707,8 +707,7 @@ public class ContainerManagerImpl extends CompositeService implements
      * Start a list of containers on this NodeManager.
      */
     @Override
-    public StartContainersResponse
-    startContainers(StartContainersRequest requests) throws YarnException,
+    public StartContainersResponse startContainers(StartContainersRequest requests) throws YarnException,
             IOException {
         if (blockNewContainerRequests.get()) {
             throw new NMNotYetReadyException(
@@ -724,15 +723,12 @@ public class ContainerManagerImpl extends CompositeService implements
         for (StartContainerRequest request : requests.getStartContainerRequests()) {
             ContainerId containerId = null;
             try {
-                //LOG.info(request.getContainerLaunchContext().getArrivalTime());
-				if(request.getContainerToken()==null) LOG.warn("container token is null!");
                 ContainerTokenIdentifier containerTokenIdentifier =
                         BuilderUtils.newContainerTokenIdentifier(request.getContainerToken());
                 verifyAndGetContainerTokenIdentifier(request.getContainerToken(),
                         containerTokenIdentifier);
                 containerId = containerTokenIdentifier.getContainerID();
-                startContainerInternal(nmTokenIdentifier, containerTokenIdentifier,
-                        request);
+                startContainerInternal(nmTokenIdentifier, containerTokenIdentifier, request);
                 succeededContainers.add(containerId);
             } catch (YarnException e) {
                 failedContainers.put(containerId, SerializedException.newInstance(e));

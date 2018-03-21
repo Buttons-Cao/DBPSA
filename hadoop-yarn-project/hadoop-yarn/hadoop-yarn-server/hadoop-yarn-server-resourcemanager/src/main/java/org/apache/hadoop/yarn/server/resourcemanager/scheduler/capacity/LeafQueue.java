@@ -214,9 +214,7 @@ public class LeafQueue extends AbstractCSQueue {
 		nodeLocalityDelay = conf.getNodeLocalityDelay();
 
 		// re-init this since max allocation could have changed
-		this.minimumAllocationFactor =
-			Resources.ratio(resourceCalculator,
-				Resources.subtract(maximumAllocation, minimumAllocation),
+		this.minimumAllocationFactor = Resources.ratio(resourceCalculator, Resources.subtract(maximumAllocation, minimumAllocation),
 				maximumAllocation);
 
 		StringBuilder aclsString = new StringBuilder();
@@ -454,8 +452,7 @@ public class LeafQueue extends AbstractCSQueue {
 	}
 
 	@Override
-	public synchronized void reinitialize(
-		CSQueue newlyParsedQueue, Resource clusterResource)
+	public synchronized void reinitialize(CSQueue newlyParsedQueue, Resource clusterResource)
 		throws IOException {
 		// Sanity check
 		if (!(newlyParsedQueue instanceof LeafQueue) ||
@@ -488,8 +485,7 @@ public class LeafQueue extends AbstractCSQueue {
 	}
 
 	@Override
-	public void submitApplicationAttempt(FiCaSchedulerApp application,
-	                                     String userName) {
+	public void submitApplicationAttempt(FiCaSchedulerApp application, String userName) {
 		// Careful! Locking order is important!
 		synchronized (this) {
 			User user = getUser(userName);
@@ -785,8 +781,7 @@ public class LeafQueue extends AbstractCSQueue {
 		}
 
 		// if our queue cannot access this node, just return
-		if (!SchedulerUtils.checkQueueAccessToNode(accessibleLabels,
-			node.getLabels())) {
+		if (!SchedulerUtils.checkQueueAccessToNode(accessibleLabels, node.getLabels())) {
 			return NULL_ASSIGNMENT;
 		}
 
@@ -1155,7 +1150,7 @@ public class LeafQueue extends AbstractCSQueue {
 
 		//UserCapacity_limit  =currentCapacity*userLimit     //can not be less than this if multiple user share cluster,如果用户数太多，导致每个人的share
 		//小于这个数值则不再为新提交的job分配资源，而是把它queue起来
-		//UserCapacity_Average=currentCapacity/activeUSers   //如果多用户提交则平局一下
+		//UserCapacity_Average=currentCapacity/activeUSers   //如果多用户提交则平均
 
 		//UserCapacity        =max{UserCapacity_limit, UserCapacity_Average}
 
@@ -1526,7 +1521,8 @@ public class LeafQueue extends AbstractCSQueue {
 	                               FiCaSchedulerApp application, FiCaSchedulerNode node,
 	                               Resource capability, Priority priority) {
 		//是否是reserve 的情况
-		//LOG.info("getting container: "+ rmContainer.getContainer().getId());
+		if (null != rmContainer)  LOG.info("getting container: "+ rmContainer.getContainer().getId());
+		else  LOG.info("no rmContainer... ");
 		return (rmContainer != null) ? rmContainer.getContainer(): createContainer(application, node, capability, priority);
 	}
 
@@ -1535,12 +1531,10 @@ public class LeafQueue extends AbstractCSQueue {
 
 		NodeId nodeId = node.getRMNode().getNodeID();
 		LOG.info("creating container on node "+nodeId);
-		ContainerId containerId = BuilderUtils.newContainerId(application
-			.getApplicationAttemptId(), application.getNewContainerId());
+		ContainerId containerId = BuilderUtils.newContainerId(application.getApplicationAttemptId(), application.getNewContainerId());
 
 		// Create the container
-		Container container =
-			BuilderUtils.newContainer(containerId, nodeId, node.getRMNode()
+		Container container =BuilderUtils.newContainer(containerId, nodeId, node.getRMNode()
 				.getHttpAddress(), capability, priority, null, application.getArrivalTime(), application.getDeadline(),
 		0, 0);
 		LOG.info("creating container complete...");
@@ -1657,8 +1651,7 @@ public class LeafQueue extends AbstractCSQueue {
 		}
 
 		//节点上有资源
-		assert Resources.greaterThan(
-			resourceCalculator, clusterResource, available, Resources.none());
+		assert Resources.greaterThan(resourceCalculator, clusterResource, available, Resources.none());
 		Container container = null;
 		// Create the container if necessary
 		container = getContainer(rmContainer, application, node, capability, priority);
@@ -1669,12 +1662,10 @@ public class LeafQueue extends AbstractCSQueue {
 			return Resources.none();
 		}
 
-		boolean shouldAllocOrReserveNewContainer = shouldAllocOrReserveNewContainer(
-			application, priority, capability);
+		boolean shouldAllocOrReserveNewContainer = shouldAllocOrReserveNewContainer(application, priority, capability);
 
 		// Can we allocate a container on this node?
-		int availableContainers =
-			resourceCalculator.computeAvailableContainers(available, capability);
+		int availableContainers = resourceCalculator.computeAvailableContainers(available, capability);
 
 		boolean needToUnreserve = Resources.greaterThan(resourceCalculator, clusterResource,
 			currentResoureLimits.getAmountNeededUnreserve(), Resources.none());
@@ -1715,8 +1706,7 @@ public class LeafQueue extends AbstractCSQueue {
 			}
 
 			// Inform the application。同时修改各个节点资源的需求，通过更新request变量
-			RMContainer allocatedContainer =
-				application.allocate(type, node, priority, request, container);
+			RMContainer allocatedContainer = application.allocate(type, node, priority, request, container);
 
 			// Does the application need this resource?
 			if (allocatedContainer == null) {

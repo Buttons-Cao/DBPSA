@@ -19,11 +19,16 @@
 package org.apache.hadoop.yarn.api.impl.pb.service;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.util.logging.Level;
 
+import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.classification.InterfaceAudience.Private;
 import org.apache.hadoop.yarn.api.ContainerManagementProtocol;
 import org.apache.hadoop.yarn.api.ContainerManagementProtocolPB;
 import org.apache.hadoop.yarn.api.protocolrecords.GetContainerStatusesResponse;
+import org.apache.hadoop.yarn.api.protocolrecords.StartContainerRequest;
 import org.apache.hadoop.yarn.api.protocolrecords.StartContainersResponse;
 import org.apache.hadoop.yarn.api.protocolrecords.StopContainersResponse;
 import org.apache.hadoop.yarn.api.protocolrecords.impl.pb.GetContainerStatusesRequestPBImpl;
@@ -42,11 +47,13 @@ import org.apache.hadoop.yarn.proto.YarnServiceProtos.StopContainersResponseProt
 
 import com.google.protobuf.RpcController;
 import com.google.protobuf.ServiceException;
+import sun.rmi.runtime.Log;
 
 @Private
 public class ContainerManagementProtocolPBServiceImpl implements ContainerManagementProtocolPB {
 
     private ContainerManagementProtocol real;
+    public static final org.apache.commons.logging.Log LOG = LogFactory.getLog(ContainerManagementProtocolPBServiceImpl.class);
 
     public ContainerManagementProtocolPBServiceImpl(ContainerManagementProtocol impl) {
         this.real = impl;
@@ -57,8 +64,11 @@ public class ContainerManagementProtocolPBServiceImpl implements ContainerManage
                                                         StartContainersRequestProto proto) throws ServiceException {
         StartContainersRequestPBImpl request = new StartContainersRequestPBImpl(proto);
         try {
-
-            StartContainersResponse response = real.startContainers(request);
+            LOG.info("request: ");
+            for (StartContainerRequest r : request.getStartContainerRequests()) {
+                if(r.getContainerToken()==null)  LOG.info("container token does not exist");
+            }
+            StartContainersResponse response = real.startContainers(request);// 到这里时已经没有了
             return ((StartContainersResponsePBImpl) response).getProto();
         } catch (YarnException e) {
             throw new ServiceException(e);

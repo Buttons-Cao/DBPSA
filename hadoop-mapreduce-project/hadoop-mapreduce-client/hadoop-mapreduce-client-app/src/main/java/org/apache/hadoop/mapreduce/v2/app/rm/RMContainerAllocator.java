@@ -137,8 +137,7 @@ public class RMContainerAllocator extends RMContainerRequestor
   */
 
 	//reduces which are not yet scheduled
-	private final LinkedList<ContainerRequest> pendingReduces =
-		new LinkedList<ContainerRequest>();
+	private final LinkedList<ContainerRequest> pendingReduces = new LinkedList<ContainerRequest>();
 
 	//holds information about the assigned containers to task attempts
 	private final AssignedRequests assignedRequests = new AssignedRequests();

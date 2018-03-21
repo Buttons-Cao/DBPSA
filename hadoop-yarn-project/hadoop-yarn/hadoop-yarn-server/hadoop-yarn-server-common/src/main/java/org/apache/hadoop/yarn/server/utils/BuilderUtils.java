@@ -269,7 +269,7 @@ public class BuilderUtils {
 	public static ContainerTokenIdentifier newContainerTokenIdentifier(
 		Token containerToken) throws IOException {
 		org.apache.hadoop.security.token.Token<ContainerTokenIdentifier> token =
-			new org.apache.hadoop.security.token.Token<ContainerTokenIdentifier>(
+			new org.apache.hadoop.security.token.Token<>(
 				containerToken.getIdentifier()
 					.array(), containerToken.getPassword().array(), new Text(
 				containerToken.getKind()),

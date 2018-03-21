@@ -894,8 +894,7 @@ public class CapacityScheduler extends
 
 		FiCaSchedulerApp application = getApplicationAttempt(applicationAttemptId);
 		if (application == null) {
-			LOG.info("Calling allocate on removed " +
-				"or non existant application " + applicationAttemptId);
+			LOG.info("Calling allocate on removed or non existant application " + applicationAttemptId);
 			return EMPTY_ALLOCATION;
 		}
 
@@ -905,7 +904,6 @@ public class CapacityScheduler extends
 			getMinimumResourceCapability(), getMaximumResourceCapability());
 
 		// Release containers
-
 		releaseContainers(release, application);
 
 		synchronized (application) {
@@ -1086,10 +1084,7 @@ public class CapacityScheduler extends
 				node.getNodeID());
 
 			LeafQueue queue = ((LeafQueue) reservedApplication.getQueue());
-			CSAssignment assignment =
-				queue.assignContainers(
-					clusterResource,
-					node,
+			CSAssignment assignment = queue.assignContainers(clusterResource, node,
 					// TODO, now we only consider limits for parent for non-labeled
 					// resources, should consider labeled resources as well.
 					new ResourceLimits(labelManager.getResourceByLabel(

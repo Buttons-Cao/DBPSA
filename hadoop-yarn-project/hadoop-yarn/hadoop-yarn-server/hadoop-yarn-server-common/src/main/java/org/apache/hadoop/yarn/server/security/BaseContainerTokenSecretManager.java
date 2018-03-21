@@ -96,9 +96,9 @@ public class BaseContainerTokenSecretManager extends
             byte[] passwd = createPassword(identifier.getBytes(), this.currentMasterKey.getSecretKey());
 
             if (LOG.isDebugEnabled()){
-                LOG.debug("The password for " + identifier.getContainerID() + "for user " +
+                LOG.debug("The password for " + identifier.getContainerID() + " for user " +
                 identifier.getUser() + "to be run on NM" + identifier.getNmHostAddress() + "is" +
-                passwd.toString());
+                new String(passwd));
             }
             return passwd;
         } finally {

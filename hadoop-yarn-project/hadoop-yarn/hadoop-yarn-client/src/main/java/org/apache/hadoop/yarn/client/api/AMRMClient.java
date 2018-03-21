@@ -106,8 +106,6 @@ public abstract class AMRMClient<T extends AMRMClient.ContainerRequest> extends
 		final Priority priority;
 		final boolean relaxLocality;
 		final String nodeLabelsExpression;
-		private long appArrivalTime;
-		private long appDeadline;
 
 		/**
 		 * Instantiates a {@link ContainerRequest} with the given constraints and
@@ -196,34 +194,6 @@ public abstract class AMRMClient<T extends AMRMClient.ContainerRequest> extends
 			this.nodeLabelsExpression = nodeLabelsExpression;
 		}
 
-		public ContainerRequest(Resource capability, String[] nodes,
-		                        String[] racks, Priority priority, long appArrivalTime, long appDeadline) {
-			this(capability, nodes, racks, priority, true, null, appArrivalTime, appDeadline);
-		}
-
-		public ContainerRequest(Resource capability, String[] nodes,
-		                        String[] racks, Priority priority, boolean relaxLocality,
-		                        String nodeLabelsExpression, long arrivalTime, long deadline) {
-			// Validate request
-			Preconditions.checkArgument(capability != null,
-				"The Resource to be requested for each container " +
-					"should not be null ");
-			Preconditions.checkArgument(priority != null,
-				"The priority at which to request containers should not be null ");
-			Preconditions.checkArgument(
-				!(!relaxLocality && (racks == null || racks.length == 0)
-					&& (nodes == null || nodes.length == 0)),
-				"Can't turn off locality relaxation on a " +
-					"request with no location constraints");
-			this.capability = capability;
-			this.nodes = (nodes != null ? ImmutableList.copyOf(nodes) : null);
-			this.racks = (racks != null ? ImmutableList.copyOf(racks) : null);
-			this.priority = priority;
-			this.relaxLocality = relaxLocality;
-			this.nodeLabelsExpression = nodeLabelsExpression;
-			this.appArrivalTime = arrivalTime;
-			appDeadline = deadline;
-		}
 
 		public Resource getCapability() {
 			return capability;

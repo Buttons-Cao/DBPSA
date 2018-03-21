@@ -133,13 +133,10 @@ public class StartContainerRequestPBImpl extends StartContainerRequest {
     @Override
     public Token getContainerToken() {
         StartContainerRequestProtoOrBuilder p = viaProto ? proto : builder;
-        if (p==null) LOG.warn("p is null");
         if (this.containerToken != null) {
             return this.containerToken;
         }
         if (!p.hasContainerToken()) {
-            LOG.info("no container token...");
-            if (!p.hasContainerLaunchContext()) LOG.info("nor launch context...");
             return null;
         }
         this.containerToken = convertFromProtoFormat(p.getContainerToken());

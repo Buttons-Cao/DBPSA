@@ -33,6 +33,7 @@ import org.apache.hadoop.classification.InterfaceAudience.Private;
 import org.apache.hadoop.classification.InterfaceStability.Unstable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.security.token.SecretManager.InvalidToken;
+import org.apache.hadoop.yarn.api.impl.pb.service.ContainerManagementProtocolPBServiceImpl;
 import org.apache.hadoop.yarn.api.protocolrecords.GetContainerStatusesRequest;
 import org.apache.hadoop.yarn.api.protocolrecords.GetContainerStatusesResponse;
 import org.apache.hadoop.yarn.api.protocolrecords.StartContainerRequest;
@@ -81,7 +82,6 @@ import org.apache.hadoop.yarn.ipc.RPCUtil;
 public class NMClientImpl extends NMClient {
 
   private static final Log LOG = LogFactory.getLog(NMClientImpl.class);
-
   // The logically coherent operations on startedContainers is synchronized to
   // ensure they are atomic
   protected ConcurrentMap<ContainerId, StartedContainer> startedContainers =
@@ -165,18 +165,15 @@ public class NMClientImpl extends NMClient {
 
   private void addStartingContainer(StartedContainer startedContainer)
       throws YarnException {
-    if (startedContainers.putIfAbsent(startedContainer.containerId,
-        startedContainer) != null) {
-      throw RPCUtil.getRemoteException("Container "
-          + startedContainer.containerId.toString() + " is already started");
+    if (startedContainers.putIfAbsent(startedContainer.containerId, startedContainer) != null) {
+      throw RPCUtil.getRemoteException("Container " + startedContainer.containerId.toString() + " is already started");
     }
     startedContainers
         .put(startedContainer.getContainerId(), startedContainer);
   }
 
   @Override
-  public Map<String, ByteBuffer> startContainer(
-      Container container, ContainerLaunchContext containerLaunchContext)
+  public Map<String, ByteBuffer> startContainer(Container container, ContainerLaunchContext containerLaunchContext)
           throws YarnException, IOException {
     // Do synchronization on StartedContainer to prevent race condition
     // between startContainer and stopContainer only when startContainer is
@@ -191,7 +188,6 @@ public class NMClientImpl extends NMClient {
         proxy =
             cmProxy.getProxy(container.getNodeId().toString(),
                 container.getId());
-        // LOG.info("StartContainerRequest.newInstance..........");
         StartContainerRequest scRequest =
             StartContainerRequest.newInstance(containerLaunchContext,
               container.getContainerToken());

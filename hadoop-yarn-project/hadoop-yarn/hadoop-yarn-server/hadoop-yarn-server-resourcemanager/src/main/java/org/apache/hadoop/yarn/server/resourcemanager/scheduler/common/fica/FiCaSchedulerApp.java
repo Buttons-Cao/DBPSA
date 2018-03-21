@@ -289,8 +289,7 @@ public class FiCaSchedulerApp extends SchedulerApplicationAttempt {
 		}
 
 		// Create RMContainer
-		RMContainer rmContainer = new RMContainerImpl(container, this
-			.getApplicationAttemptId(), node.getNodeID(),
+		RMContainer rmContainer = new RMContainerImpl(container, this.getApplicationAttemptId(), node.getNodeID(),
 			appSchedulingInfo.getUser(), this.rmContext);
 
 		// Add it to allContainers list.
@@ -298,16 +297,14 @@ public class FiCaSchedulerApp extends SchedulerApplicationAttempt {
 		liveContainers.put(container.getId(), rmContainer);
 
 		// Update consumption and track allocations
-		List<ResourceRequest> resourceRequestList = appSchedulingInfo.allocate(
-			type, node, priority, request, container);
+		List<ResourceRequest> resourceRequestList = appSchedulingInfo.allocate(type, node, priority, request, container);
 		Resources.addTo(currentConsumption, container.getResource());
 
 		// Update resource requests related to "request" and store in RMContainer
 		((RMContainerImpl) rmContainer).setResourceRequests(resourceRequestList);
 
 		// Inform the container
-		rmContainer.handle(
-			new RMContainerEvent(container.getId(), RMContainerEventType.START));
+		rmContainer.handle(new RMContainerEvent(container.getId(), RMContainerEventType.START));
 
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("allocate: applicationAttemptId="
@@ -315,8 +312,7 @@ public class FiCaSchedulerApp extends SchedulerApplicationAttempt {
 				+ " container=" + container.getId() + " host="
 				+ container.getNodeId().getHost() + " type=" + type);
 		}
-		RMAuditLogger.logSuccess(getUser(),
-			AuditConstants.ALLOC_CONTAINER, "SchedulerApp",
+		RMAuditLogger.logSuccess(getUser(),	AuditConstants.ALLOC_CONTAINER, "SchedulerApp",
 			getApplicationId(), container.getId());
 
 		return rmContainer;
@@ -410,8 +406,7 @@ public class FiCaSchedulerApp extends SchedulerApplicationAttempt {
 		ResourceRequest rr = ResourceRequest.newInstance(
 			Priority.UNDEFINED, ResourceRequest.ANY,
 			minimumAllocation, numCont);
-		ContainersAndNMTokensAllocation allocation =
-			pullNewlyAllocatedContainersAndNMTokens();
+		ContainersAndNMTokensAllocation allocation = pullNewlyAllocatedContainersAndNMTokens();
 		Resource headroom = getHeadroom();
 		setApplicationHeadroomForMetrics(headroom);
 		return new Allocation(allocation.getContainerList(), headroom, null,
