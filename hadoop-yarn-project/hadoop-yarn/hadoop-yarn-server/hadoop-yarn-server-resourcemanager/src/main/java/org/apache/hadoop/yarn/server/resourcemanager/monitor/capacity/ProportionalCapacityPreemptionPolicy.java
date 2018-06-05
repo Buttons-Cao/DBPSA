@@ -789,7 +789,7 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 					preemptMap.put(
 						fc.getApplicationAttemptId(),
 						preemptFromAppUsingPreemptionPriorityToSort(fc, clusterResource, Resources.multiply(tmp, factor),
-							skippedAMContainerlist, skippedAMSize));
+							skippedAMContainerlist, skippedAMSize, "step"));
 					Resources.mins(rc, clusterResource, resToObtain, tmp);
 					if (Resources.lessThanOrEqual(rc, clusterResource, resToObtain,
 						Resources.none())) {
@@ -841,7 +841,7 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 				preemptMap.put(
 					fc.getApplicationAttemptId(),
 					preemptFromAppUsingPreemptionPriorityToSort(fc, clusterResource, resToObtain,
-						skippedAMContainerlist, skippedAMSize));
+						skippedAMContainerlist, skippedAMSize, "primary"));
 			}
 			//we allow preempt AM for kill based approach
 			if (false) {
@@ -886,7 +886,7 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 				preemptMap.put(
 					fc.getApplicationAttemptId(),
 					preemptFromAppUsingPreemptionPriorityToSort(fc, clusterResource, eachToObtain,
-						skippedAMContainerlist, skippedAMSize));
+						skippedAMContainerlist, skippedAMSize, "averaging"));
 				eachToObtain = Resources.multiply(resToObtain, 1/n);
 			}
 			if (false) {
@@ -949,7 +949,7 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 				preemptMap.put(
 					fc.getApplicationAttemptId(),
 					preemptFromAppUsingPreemptionPriorityToSort(fc, clusterResource, eachToObtain,
-						skippedAMContainerlist, skippedAMSize));
+						skippedAMContainerlist, skippedAMSize, "ratio"));
 			}
 			if (false) {
 				//we will never preempt am resource
@@ -1041,8 +1041,8 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 	private Map<RMContainer, Resource> preemptFromAppUsingPreemptionPriorityToSort(FiCaSchedulerApp app, Resource clusterResource,
 	                                                                               Resource rsrcPreempt,
 	                                                                               List<RMContainer> skippedAMContainerlist,
-	                                                                               Resource skippedAMSize) {
-		return preemptFromApp(app, clusterResource, rsrcPreempt, skippedAMContainerlist, skippedAMSize, "priority");
+	                                                                               Resource skippedAMSize, String method) {
+		return preemptFromApp(app, clusterResource, rsrcPreempt, skippedAMContainerlist, skippedAMSize, method);
 	}
 
 	/**
@@ -1068,13 +1068,13 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 	 * @param app
 	 * @param clusterResource
 	 * @param rsrcPreempt
-	 * @param kw              "resource" or "priority", determine how the container is sorted and scheduled
+	 * @param method   determine how much resource the container to be reclaimed
 	 * @return Map<RMContainer,Resource> mapping from container to resource
 	 */
 	private Map<RMContainer, Resource> preemptFromApp(FiCaSchedulerApp app,
 	                                                  Resource clusterResource, Resource rsrcPreempt,
 	                                                  List<RMContainer> skippedAMContainerlist, Resource skippedAMSize,
-	                                                  String kw) {
+	                                                  String method) {
 		List<RMContainer> reservedContainers = app.getReservedContainers();
 		Map<RMContainer, Resource> result = new HashMap<>(reservedContainers.size());
 		for (RMContainer container : reservedContainers
@@ -1090,55 +1090,95 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 			Resources.subtractFrom(rsrcPreempt, container.getContainer().getResource());
 		}
 
-		List<RMContainer> containers =
-			new ArrayList<>(((FiCaSchedulerApp) app).getUnPreemtedContainers());
-		if ("priority".equals(kw)) {
-			sortContainersByPriority(containers);
-		} else if ("resource".equals(kw)) {
-			sortContainersByResource(containers, clusterResource);
-		} else if ("preemption priority".equals(kw)) {
-			sortContainersByPreemptionPriority(containers);
-		}
+		List<RMContainer> containers = 	new ArrayList<>(((FiCaSchedulerApp) app).getUnPreemtedContainers());
+		sortContainersByPreemptionPriority(containers);
+		if ("averaging".equals(method)) {
+			// a bug here: size must be less than or euqal to containers.size(),
+			// but usually a large app retains much more resource than a shot app, so fix it in the future.
+			int size = rsrcPreempt.getVirtualCores();
+			int mem = (int) Math.ceil(rsrcPreempt.getMemory() / size);
+			for (int i=0; i < size; i++){
+				RMContainer container = containers.get(i);
 
-
-		for (RMContainer container : containers) {
-			if (Resources.lessThanOrEqual(rc, clusterResource,
-				rsrcPreempt, Resources.none())) {
-				return result;
+				// Skip AM Container from preemption for now.
+				if (container.isAMContainer()) {
+					skippedAMContainerlist.add(container);
+					Resources.addTo(skippedAMSize, container.getContainer().getResource());
+					i--;
+					continue;
+				}
+				// skip Labeled resource
+				if (isLabeledContainer(container)) {
+					i--;
+					continue;
+				}
+				result.put(container, Resource.newInstance(mem, 1));
 			}
-
-			// Skip AM Container from preemption for now.
-			if (container.isAMContainer()) {
-				skippedAMContainerlist.add(container);
-				Resources.addTo(skippedAMSize, container.getContainer().getResource());
-				continue;
+		} else if ("ratio".equals(method)) {
+			for (RMContainer container : containers){
+				// Skip AM Container from preemption for now.
+				if (container.isAMContainer()) {
+					skippedAMContainerlist.add(container);
+					containers.remove(container);
+					continue;
+				}
+				// skip Labeled resource
+				if (isLabeledContainer(container)) {
+					containers.remove(container);
+					continue;
+				}
 			}
-			// skip Labeled resource
-			if (isLabeledContainer(container)) {
-				continue;
+			int size = rsrcPreempt.getVirtualCores();
+			int mem = 0;
+			for (int i=0; i<size; i++){
+				mem += containers.get(i).getContainer().getResource().getMemory();
 			}
+			double ratio = rsrcPreempt.getMemory()*1.0 / mem;
+			for (int i=0; i<size; i++){
+				RMContainer rmContainer = containers.get(i);
+				result.put(rmContainer, Resource.newInstance((int) Math.ceil(ratio * rmContainer.getContainer().getResource().getMemory()),
+					1));
+			}
+		}else{
+			for (RMContainer container : containers) {
+				if (Resources.lessThanOrEqual(rc, clusterResource,
+					rsrcPreempt, Resources.none())) {
+					return result;
+				}
 
-			Resource preempteThisTime; //这一回合抢占的
-			if (isSuspended) {
-				//compute preempted resource this round
-				//min(c.currentUsed,rsrcPreempt,c.SespendandResumeUnit)
-				preempteThisTime = Resources.mins(rc, clusterResource, rsrcPreempt,
-					Resources.mins(rc, clusterResource,
-						container.getCurrentUsedResource(), container.getSRResourceUnit()));
-
-				//if this container has all reousce preempted, continue
-				if (Resources.equals(preempteThisTime, Resources.none())) {
+				// Skip AM Container from preemption for now.
+				if (container.isAMContainer()) {
+					skippedAMContainerlist.add(container);
+					Resources.addTo(skippedAMSize, container.getContainer().getResource());
+					continue;
+				}
+				// skip Labeled resource
+				if (isLabeledContainer(container)) {
 					continue;
 				}
 
-			} else {
-				preempteThisTime = container.getContainer().getResource();
-			}
+				Resource preempteThisTime; //这一回合抢占的
+				if (isSuspended) {
+					//compute preempted resource this round
+					//min(c.currentUsed,rsrcPreempt,c.SespendandResumeUnit)
+					preempteThisTime = Resources.mins(rc, clusterResource, rsrcPreempt,
+						Resources.mins(rc, clusterResource,
+							container.getCurrentUsedResource(), container.getSRResourceUnit()));
 
-			result.put(container, preempteThisTime);
-			LOG.info("get preempted Resource: " + preempteThisTime + " and container: " + container.getContainerId() + "current resource: " + container.getCurrentUsedResource());
-			//substract preempted resource
-			Resources.subtractFrom(rsrcPreempt, preempteThisTime);
+					//if this container has all reousce preempted, continue
+					if (Resources.equals(preempteThisTime, Resources.none())) {
+						continue;
+					}
+
+				} else {
+					preempteThisTime = container.getContainer().getResource();
+				}
+
+				result.put(container, preempteThisTime);
+				LOG.info("get preempted Resource: " + preempteThisTime + " and container: " + container.getContainerId() + "current resource: " + container.getCurrentUsedResource());
+				//substract preempted resource
+				Resources.subtractFrom(rsrcPreempt, preempteThisTime);
+			}
 		}
 		return result;
 	}

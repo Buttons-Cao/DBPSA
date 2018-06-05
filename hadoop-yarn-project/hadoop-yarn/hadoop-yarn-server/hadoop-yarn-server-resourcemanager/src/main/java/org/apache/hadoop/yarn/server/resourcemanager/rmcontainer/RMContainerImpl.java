@@ -187,7 +187,7 @@ public class RMContainerImpl implements RMContainer {
 	private long finishTime;
 	private int resumeOpportunity;
 
-	static public int PR_NUMBER = 2;
+	static public int PR_NUMBER = 1;
 
 	private boolean isSuspending = false;
 
