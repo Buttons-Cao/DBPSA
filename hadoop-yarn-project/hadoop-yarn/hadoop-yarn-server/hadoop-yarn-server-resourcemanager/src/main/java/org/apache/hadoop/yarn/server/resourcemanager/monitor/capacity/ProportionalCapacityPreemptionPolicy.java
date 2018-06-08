@@ -260,7 +260,8 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 		synchronized (scheduler) {
 			tRoot = cloneQueues(root, clusterResources);
 		}
-
+		float alpha = 0.2;
+		float beta = 0.2;
 		// compute the ideal distribution of resources among queues
 		// updates cloned queues state accordingly
 		tRoot.idealAssigned = tRoot.guaranteed;
@@ -314,8 +315,8 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 							long ddl = container.getDeadline() + container.getArrivalTime();
 							int fte = ddl > Time.now()? 1: 0;
 							container.setPreemptionPriority(nbp +
-								rc.divide(clusterResources, container.getCurrentUsedResource(), clusterResources) +
-								fte + (ddl)/ Math.abs((ddl - Time.now())));
+								alpha * rc.divide(clusterResources, container.getCurrentUsedResource(), clusterResources) +
+								fte + beta * (ddl)/ Math.abs((ddl - Time.now())));
 							// -------------------------------------------------------------------------------
 
 							LOG.info("get container " + container.getContainerId() + " to suspend resource is "
