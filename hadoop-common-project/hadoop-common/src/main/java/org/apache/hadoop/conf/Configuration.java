@@ -230,7 +230,7 @@ public class Configuration implements Iterable<Map.Entry<String, String>>,
 	 * List of configuration parameters marked <b>final</b>.
 	 */
 	private Set<String> finalParameters = Collections.newSetFromMap(
-		new ConcurrentHashMap<String, Boolean>()); // 一系列布尔类型的值？应该是mapred-site.xml里面的? 为什么有个final？
+		new ConcurrentHashMap<String, Boolean>()); // 一系列布尔类型的值？应该是mapred-site.xml里面的?
 
 	private boolean loadDefaults = true;
 

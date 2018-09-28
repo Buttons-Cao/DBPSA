@@ -129,6 +129,9 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 	public static final String IS_NAIVE_EENABLED =
 		"yarn.resourcemanager.monitor.capacity.preemption.naive";
 
+	public static final String PREEMPTION_METHOD =
+			"yarn.resourcemanager.monitor.capacity.preemption.method";
+
 
 	// the dispatcher to send preempt and kill events
 	public EventHandler<ContainerPreemptEvent> dispatcher;
@@ -152,6 +155,7 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 	private static int testNumber;
 	//at when the container should be preempted in seconds
 	private static int testTime;
+	private static String method;
 
 	public ProportionalCapacityPreemptionPolicy() {
 		clock = new SystemClock();
@@ -191,6 +195,7 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 			config.getFloat(TOTAL_PREEMPTION_PER_ROUND, (float) 0.1);
 		observeOnly = config.getBoolean(OBSERVE_ONLY, false);
 		isSuspended = config.getBoolean(IS_SUPEND_ENABLED, true);
+		method = config.get(PREEMPTION_METHOD, "ratio");
 		isNaive = scheduler.getConfiguration().getNaive("root");
 		LOG.info("isNaive:" + isNaive);
 		isTest = scheduler.getConfiguration().getTest("root");
@@ -747,8 +752,13 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 				if (resToObtain.getMemory() > 0) {
 					LOG.info("resToObtain memory: " + resToObtain.getMemory());
 				}
-
-				primarilyPreempte(clusterResource, skippedAMContainerlist, skippedAMSize, qT, resToObtain, preemptMap);
+				switch (method){
+					case "averaging": averagingPreempte(clusterResource, skippedAMContainerlist, skippedAMSize, qT, resToObtain, preemptMap);
+					case "ratio": ratioPreempte(clusterResource, skippedAMContainerlist, skippedAMSize, qT, resToObtain, preemptMap);
+					case "step": stepPreempte(clusterResource, skippedAMContainerlist, skippedAMSize, qT, resToObtain, preemptMap, 0.02);
+					default: primarilyPreempte(clusterResource, skippedAMContainerlist, skippedAMSize, qT, resToObtain, preemptMap);
+				}
+				// primarilyPreempte(clusterResource, skippedAMContainerlist, skippedAMSize, qT, resToObtain, preemptMap);
 				//averagingPreempte(clusterResource, skippedAMContainerlist, skippedAMSize, qT, resToObtain, preemptMap);
 				//ratioPreempte(clusterResource, skippedAMContainerlist, skippedAMSize, qT, resToObtain, preemptMap);
 				//stepPreempte(clusterResource, skippedAMContainerlist, skippedAMSize, qT, resToObtain, preemptMap, 0.02);
@@ -790,7 +800,7 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 					preemptMap.put(
 						fc.getApplicationAttemptId(),
 						preemptFromAppUsingPreemptionPriorityToSort(fc, clusterResource, Resources.multiply(tmp, factor),
-							skippedAMContainerlist, skippedAMSize, "step"));
+							skippedAMContainerlist, skippedAMSize, method));
 					Resources.mins(rc, clusterResource, resToObtain, tmp);
 					if (Resources.lessThanOrEqual(rc, clusterResource, resToObtain,
 						Resources.none())) {
@@ -887,7 +897,7 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 				preemptMap.put(
 					fc.getApplicationAttemptId(),
 					preemptFromAppUsingPreemptionPriorityToSort(fc, clusterResource, eachToObtain,
-						skippedAMContainerlist, skippedAMSize, "averaging"));
+						skippedAMContainerlist, skippedAMSize, method));
 				eachToObtain = Resources.multiply(resToObtain, 1/n);
 			}
 			if (false) {
@@ -950,7 +960,7 @@ public class ProportionalCapacityPreemptionPolicy implements SchedulingEditPolic
 				preemptMap.put(
 					fc.getApplicationAttemptId(),
 					preemptFromAppUsingPreemptionPriorityToSort(fc, clusterResource, eachToObtain,
-						skippedAMContainerlist, skippedAMSize, "ratio"));
+						skippedAMContainerlist, skippedAMSize, method));
 			}
 			if (false) {
 				//we will never preempt am resource
